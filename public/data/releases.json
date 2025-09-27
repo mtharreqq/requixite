@@ -1,0 +1,17 @@
+[
+  {
+    "version": "0.2.0",
+    "releaseDate": "27 Sep 2025",
+    "description": "implement API for fetching release versions and update UI to display them"
+  },
+  {
+    "version": "0.1.1",
+    "releaseDate": "27 Sep 2025",
+    "description": "add ScrollArea and Separator components with versioning support"
+  },
+  {
+    "version": "0.1.0",
+    "releaseDate": "27 Sep 2025",
+    "description": "Initial release"
+  }
+]

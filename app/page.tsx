@@ -28,19 +28,6 @@ import {
 } from "@/components/ui/hover-card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-const VERSIONS = [
-  {
-    version: "0.1.1",
-    releaseDate: "27 Sep 2025",
-    description:
-      "add ScrollArea and Separator components with versioning support",
-  },
-  {
-    version: "0.1.0",
-    releaseDate: "27 Sep 2025",
-    description: "Initial release",
-  },
-];
 const GREETINGS = [
   "안녕",
   "Bro",
@@ -68,10 +55,34 @@ function getRandomIndex(max: number) {
   return Math.floor(Math.random() * max);
 }
 
+type Release = {
+  version: string;
+  releaseDate: string;
+  description: string;
+};
+
 export default function Home() {
   const [greeting, setGreeting] = useState<string>("");
+  const [versions, setVersions] = useState<Release[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
+    const run = async () => {
+      try {
+        const res = await fetch("/api/home", { cache: "no-store" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        setVersions(data);
+        setError(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     setGreeting(GREETINGS[getRandomIndex(GREETINGS.length)]);
+    run();
   }, []);
 
   return (
@@ -98,13 +109,29 @@ export default function Home() {
         </HoverCard>
         <HoverCard>
           <HoverCardTrigger asChild>
-            <Badge variant={"outline"} className="text-muted-foreground">
-              {VERSIONS[0].version}
-            </Badge>
+            <div className="flex items-center gap-2">
+              {loading && (
+                <Badge variant="outline" className="text-muted-foreground">
+                  Loading...
+                </Badge>
+              )}
+
+              {!loading && error && (
+                <Badge variant="destructive" className="text-white">
+                  Error{typeof error === "string" ? `: ${error}` : ""}
+                </Badge>
+              )}
+
+              {!loading && !error && versions?.[0]?.version && (
+                <Badge variant="outline" className="text-muted-foreground">
+                  {versions[0].version}
+                </Badge>
+              )}
+            </div>
           </HoverCardTrigger>
           <HoverCardContent className="px-4 py-1">
             <ScrollArea className="flex max-h-64 flex-col">
-              {VERSIONS.map((v) => (
+              {versions.map((v) => (
                 <div
                   key={v.version}
                   className="flex items-center justify-between border-b py-2 last:border-0"
@@ -119,49 +146,103 @@ export default function Home() {
           </HoverCardContent>
         </HoverCard>
       </header>
-      <main className="row-start-2 flex w-full flex-col items-start gap-4 sm:items-center md:text-2xl">
-        <div className="flex flex-wrap items-center justify-start gap-2 text-lg sm:justify-start md:text-2xl">
-          <span>{greeting},</span>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <p className="cursor-pointer underline decoration-red-300 decoration-wavy hover:decoration-red-500">
-                I'am
-              </p>
-            </TooltipTrigger>
-            <TooltipContent className="flex items-center gap-2 pl-2">
-              <Avatar className="size-5 sm:size-8">
-                <AvatarImage src="/avatar.jpg" alt="@mtharreq" />
-                <AvatarFallback className="text-primary">ME</AvatarFallback>
-              </Avatar>
-              <p className="font-mono sm:text-lg">@mtharreq</p>
-            </TooltipContent>
-          </Tooltip>
-          a{" "}
-          <RotatingTypewriter
-            items={["UI Designer.", "Front-end Developer."]}
-            intervalMs={20000}
-          />
+      <main className="row-start-2 flex w-full flex-col items-start gap-4 md:items-center md:text-2xl">
+        <div className="flex flex-wrap items-center justify-start gap-2 text-lg md:justify-start md:text-2xl">
+          <motion.span
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 0.8,
+              delay: 0,
+              ease: [0, 0.71, 0.2, 1.01],
+            }}
+          >
+            {greeting},
+          </motion.span>
+          <motion.span
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 0.8,
+              delay: 0.5,
+              ease: [0, 0.71, 0.2, 1.01],
+            }}
+            className="inline-flex items-center gap-2"
+          >
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <p className="cursor-pointer underline decoration-red-300 decoration-wavy hover:decoration-red-500">
+                  I&apos;am
+                </p>
+              </TooltipTrigger>
+              <TooltipContent className="flex items-center gap-2 pl-2">
+                <Avatar className="size-5 sm:size-8">
+                  <AvatarImage src="/avatar.jpg" alt="@mtharreq" />
+                  <AvatarFallback className="text-primary">ME</AvatarFallback>
+                </Avatar>
+                <p className="font-mono sm:text-lg">@mtharreq</p>
+              </TooltipContent>
+            </Tooltip>
+            a{" "}
+            <RotatingTypewriter
+              items={["UI Designer.", "Front-end Developer."]}
+              intervalMs={20000}
+            />
+          </motion.span>
         </div>
-        <div className="flex flex-wrap items-center justify-start gap-2 text-lg sm:justify-start md:text-2xl">
-          <div className="flex items-center gap-2">
+
+        {/* I CAN CREATE */}
+        <motion.div className="flex flex-col flex-wrap justify-start gap-2 text-lg md:flex-row md:justify-start md:text-2xl">
+          <motion.div
+            initial={{ opacity: 0, scale: 1, x: "-50%" }}
+            animate={{ opacity: 1, scale: 1, x: "0%" }}
+            transition={{
+              duration: 0.8,
+              delay: 2,
+              ease: [0, 0.71, 0.2, 1.01],
+            }}
+            className="flex items-center gap-2"
+          >
             I can
             <CarouselButton
               items={ACTION_ITEMS}
-              duration={3000}
+              duration={4000}
               fixedWidth={false}
             />
-          </div>
-          <div className="flex items-center gap-2">
+          </motion.div>
+
+          {/* YOUR UI COMPONENTS */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, x: "-20%" }}
+            animate={{ opacity: 1, scale: 1, x: "0%" }}
+            transition={{
+              duration: 0.5,
+              delay: 2.5,
+              ease: [0, 0.71, 0.2, 1.01],
+            }}
+            className="flex items-center gap-2"
+          >
             <span>
               your<span className="invisible md:hidden">_</span>
             </span>
             <CarouselButton
               items={PROJECT_ITEMS}
-              duration={10000}
+              duration={7000}
               fixedWidth={false}
             />
-          </div>
-          <div className="flex items-center gap-2">
+          </motion.div>
+
+          {/* WITH FIGMA */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, x: "-20%" }}
+            animate={{ opacity: 1, scale: 1, x: "0%" }}
+            transition={{
+              duration: 0.5,
+              delay: 3,
+              ease: [0, 0.71, 0.2, 1.01],
+            }}
+            className="flex items-center gap-2"
+          >
             <span>
               with<span className="invisible md:hidden">_</span>
             </span>
@@ -170,8 +251,8 @@ export default function Home() {
               duration={20000}
               fixedWidth={false}
             />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </main>
       <footer className="text-muted-foreground row-start-3 flex flex-wrap items-center justify-center gap-[24px]">
         <Button
@@ -227,9 +308,9 @@ type CarouselItem = {
 
 const ACTION_ITEMS: CarouselItem[] = [
   { label: "Create", icon: Plus },
+  { label: "Design", icon: PenTool },
   { label: "Upscale", icon: CircleFadingArrowUp },
   { label: "Prototype", icon: Play },
-  { label: "Design", icon: PenTool },
 ];
 
 const PROJECT_ITEMS: CarouselItem[] = [
@@ -287,7 +368,7 @@ function CarouselButton({
       setI((v) => (v + 1) % items.length);
     }, duration);
     return () => window.clearInterval(id);
-  }, [paused]);
+  }, [paused, duration, items.length]);
 
   const active = items[i];
   const Icon = active.icon;
@@ -296,9 +377,9 @@ function CarouselButton({
     <AnimatePresence mode="wait" initial={false}>
       <motion.span
         key={active.label}
-        initial={{ y: "-100%", opacity: 0 }}
-        animate={{ y: "0%", opacity: 1 }}
-        exit={{ y: "100%", opacity: 0 }}
+        initial={{ y: "-100%", opacity: 0, scale: 0.9 }}
+        animate={{ y: "0%", opacity: 1, scale: 1 }}
+        exit={{ y: "100%", opacity: 0, scale: 0.9 }}
         transition={{
           type: "spring",
           stiffness: 600,
@@ -353,30 +434,43 @@ function CarouselButton({
 
 export type TypewriterProps = Readonly<{
   text: string;
+  delay?: number;
   enterStagger?: number;
   exitStagger?: number;
 }>;
 
 export function Typewriter({
   text,
-  enterStagger = 0.08,
+  enterStagger = 0.05,
   exitStagger = 0.05,
+  delay = 1,
   ...rest
 }: TypewriterProps) {
   // bikin variants per render supaya nilai stagger bisa berubah via props
   const sentenceVariants = useMemo(
     () => ({
-      hidden: {},
-      visible: { transition: { staggerChildren: enterStagger } },
+      hidden: {
+        opacity: 0,
+      },
+      visible: {
+        opacity: 1,
+        transition: {
+          delayChildren: delay,
+          staggerChildren: enterStagger,
+        },
+      },
       exit: {
         transition: { staggerChildren: exitStagger, staggerDirection: -1 },
       },
     }),
-    [enterStagger, exitStagger],
+    [enterStagger, exitStagger, delay],
   );
 
   const letterVariants = {
-    hidden: { opacity: 0, display: "none" },
+    hidden: {
+      opacity: 0,
+      display: "none",
+    },
 
     visible: {
       opacity: 1,
@@ -396,7 +490,7 @@ export function Typewriter({
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="inline-block w-auto font-semibold whitespace-pre"
+      className="font-semibold whitespace-pre"
       {...rest}
     >
       {/* Array.from agar emoji/UTF-16 surrogate pairs tidak terpecah */}
@@ -412,7 +506,6 @@ export function Typewriter({
     </motion.p>
   );
 }
-
 // Rotator: ganti teks setiap interval
 type RotatingTypewriterProps = Readonly<{
   items: string[];
@@ -430,9 +523,9 @@ function RotatingTypewriter({
   const [i, setI] = useState(0);
   const [show, setShow] = useState(true);
 
-  useEffect(() => {
-    setI(getRandomIndex(items.length));
-  }, [items.length]);
+  // useEffect(() => {
+  //   setI(getRandomIndex(items.length));
+  // }, [items.length]);
 
   // Jadwalkan “hapus teks” setelah interval selesai.
   useEffect(() => {
