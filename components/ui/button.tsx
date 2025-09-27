@@ -22,11 +22,14 @@ const buttonVariants = cva(
 
         // Custom variants
         black: "bg-black text-white hover:bg-black/90",
-        gray: "bg-gray-50 text-gray-800 hover:bg-gray-100",
-        purple: "bg-purple-50 text-purple-800 hover:bg-purple-100",
-        yellow: "bg-yellow-50 text-yellow-800 hover:bg-yellow-100",
-        green: "bg-green-50 text-green-800 hover:bg-green-100",
-        blue: "bg-blue-50 text-blue-800 hover:bg-blue-100",
+        gray: "bg-gray-50 text-gray-800 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700",
+        purple:
+          "bg-purple-50 text-purple-800 hover:bg-purple-100 dark:bg-purple-800 dark:text-purple-100 dark:hover:bg-purple-700",
+        yellow:
+          "bg-yellow-50 text-yellow-800 hover:bg-yellow-100 dark:bg-yellow-800 dark:text-yellow-100 dark:hover:bg-yellow-700",
+        green:
+          "bg-green-50 text-green-800 hover:bg-green-100 dark:bg-green-800 dark:text-green-100 dark:hover:bg-green-700",
+        blue: "bg-blue-50 text-blue-800 hover:bg-blue-100 dark:bg-blue-800 dark:text-blue-100 dark:hover:bg-blue-700",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

@@ -10,7 +10,7 @@ import {
   LayoutDashboard,
   Smartphone,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,6 +27,9 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import Squares from "@/components/squares";
+import TextType from "@/components/text-type";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 const GREETINGS = [
   "안녕",
@@ -86,65 +89,71 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="mx-auto grid min-h-screen max-w-7xl grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 bg-[url(/grid.svg)] bg-fixed bg-center p-8 pb-20 font-mono sm:p-20">
-      <header className="flex w-full items-center justify-start">
-        <HoverCard>
-          <HoverCardTrigger className="-ml-4" asChild>
-            <Button
-              variant={"ghost"}
-              className="text-xl font-semibold sm:text-2xl"
-            >
-              requixite
-            </Button>
-          </HoverCardTrigger>
-          <HoverCardContent>
-            <p className="font-mono leading-none font-medium">req·ui·xite</p>
-            <p className="text-muted-foreground font-mono text-xs leading-none font-medium">
-              /ˈrek.wə.zɪt/
-            </p>
-            <p className="mt-2 font-mono text-xs">
-              something that is necessary, essential, or mandatory.
-            </p>
-          </HoverCardContent>
-        </HoverCard>
-        <HoverCard>
-          <HoverCardTrigger asChild>
-            <div className="flex items-center gap-2">
-              {loading && (
-                <Badge variant="outline" className="text-muted-foreground">
-                  Loading...
-                </Badge>
-              )}
+    <div className="relative mx-auto grid min-h-screen max-w-7xl grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-mono sm:p-20">
+      <Squares speed={0.01} squareSize={60} direction="up" />
+      <header className="flex w-full items-center justify-between">
+        <div className="flex items-center">
+          <HoverCard>
+            <HoverCardTrigger className="-ml-4" asChild>
+              <Button
+                variant={"ghost"}
+                className="text-xl font-semibold sm:text-2xl"
+              >
+                requixite
+              </Button>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <p className="font-mono leading-none font-medium">req·ui·xite</p>
+              <p className="text-muted-foreground font-mono text-xs leading-none font-medium">
+                /ˈrek.wə.zɪt/
+              </p>
+              <p className="mt-2 font-mono text-xs">
+                something that is necessary, essential, or mandatory.
+              </p>
+            </HoverCardContent>
+          </HoverCard>
+          <HoverCard>
+            <HoverCardTrigger asChild>
+              <div className="flex items-center gap-2">
+                {loading && (
+                  <Badge variant="outline" className="text-muted-foreground">
+                    Loading...
+                  </Badge>
+                )}
 
-              {!loading && error && (
-                <Badge variant="destructive" className="text-white">
-                  Error{typeof error === "string" ? `: ${error}` : ""}
-                </Badge>
-              )}
+                {!loading && error && (
+                  <Badge variant="destructive" className="text-white">
+                    Error{typeof error === "string" ? `: ${error}` : ""}
+                  </Badge>
+                )}
 
-              {!loading && !error && versions?.[0]?.version && (
-                <Badge variant="outline" className="text-muted-foreground">
-                  {versions[0].version}
-                </Badge>
-              )}
-            </div>
-          </HoverCardTrigger>
-          <HoverCardContent className="px-4 py-1">
-            <ScrollArea className="flex max-h-64 flex-col">
-              {versions.map((v) => (
-                <div
-                  key={v.version}
-                  className="flex items-center justify-between border-b py-2 last:border-0"
-                >
-                  <p className="font-mono text-xs font-medium">v{v.version}</p>
-                  <p className="text-muted-foreground font-mono text-xs">
-                    {v.releaseDate}
-                  </p>
-                </div>
-              ))}
-            </ScrollArea>
-          </HoverCardContent>
-        </HoverCard>
+                {!loading && !error && versions?.[0]?.version && (
+                  <Badge variant="outline" className="text-muted-foreground">
+                    {versions[0].version}
+                  </Badge>
+                )}
+              </div>
+            </HoverCardTrigger>
+            <HoverCardContent className="px-4 py-1">
+              <ScrollArea className="flex max-h-64 flex-col">
+                {versions.map((v) => (
+                  <div
+                    key={v.version}
+                    className="flex items-center justify-between border-b py-2 last:border-0"
+                  >
+                    <p className="font-mono text-xs font-medium">
+                      v{v.version}
+                    </p>
+                    <p className="text-muted-foreground font-mono text-xs">
+                      {v.releaseDate}
+                    </p>
+                  </div>
+                ))}
+              </ScrollArea>
+            </HoverCardContent>
+          </HoverCard>
+        </div>
+        <ModeToggle />
       </header>
       <main className="row-start-2 flex w-full flex-col items-start gap-4 md:items-center md:text-2xl">
         <div className="flex flex-wrap items-center justify-start gap-2 text-lg md:justify-start md:text-2xl">
@@ -159,19 +168,27 @@ export default function Home() {
           >
             {greeting},
           </motion.span>
+          {/* <FadeContent
+            blur={true}
+            duration={500}
+            easing="ease-out"
+            initialOpacity={0}
+          >
+            {greeting}
+          </FadeContent> */}
           <motion.span
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{
               duration: 0.8,
-              delay: 0.5,
+              delay: 1.2,
               ease: [0, 0.71, 0.2, 1.01],
             }}
             className="inline-flex items-center gap-2"
           >
             <Tooltip>
               <TooltipTrigger asChild>
-                <p className="cursor-pointer underline decoration-red-300 decoration-wavy hover:decoration-red-500">
+                <p className="cursor-pointer underline decoration-red-300 decoration-wavy hover:decoration-red-500 dark:decoration-red-700 dark:hover:decoration-red-500">
                   I&apos;am
                 </p>
               </TooltipTrigger>
@@ -184,9 +201,16 @@ export default function Home() {
               </TooltipContent>
             </Tooltip>
             a{" "}
-            <RotatingTypewriter
-              items={["UI Designer.", "Front-end Developer."]}
-              intervalMs={20000}
+            <TextType
+              text={["UI Designer.", "Front-end Developer."]}
+              typingSpeed={75}
+              initialDelay={1200}
+              pauseDuration={10_000}
+              showCursor={true}
+              cursorCharacter="▎"
+              className="font-semibold"
+              textColors={["hsl(var(--foreground))"]}
+              cursorClassName="text-border dark:text-white"
             />
           </motion.span>
         </div>
@@ -198,7 +222,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1, x: "0%" }}
             transition={{
               duration: 0.8,
-              delay: 2,
+              delay: 3,
               ease: [0, 0.71, 0.2, 1.01],
             }}
             className="flex items-center gap-2"
@@ -206,7 +230,7 @@ export default function Home() {
             I can
             <CarouselButton
               items={ACTION_ITEMS}
-              duration={4000}
+              duration={5000}
               fixedWidth={false}
             />
           </motion.div>
@@ -217,7 +241,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1, x: "0%" }}
             transition={{
               duration: 0.5,
-              delay: 2.5,
+              delay: 4,
               ease: [0, 0.71, 0.2, 1.01],
             }}
             className="flex items-center gap-2"
@@ -238,7 +262,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1, x: "0%" }}
             transition={{
               duration: 0.5,
-              delay: 3,
+              delay: 4.8,
               ease: [0, 0.71, 0.2, 1.01],
             }}
             className="flex items-center gap-2"
@@ -428,129 +452,6 @@ function CarouselButton({
           )}
         </Button>
       </motion.span>
-    </AnimatePresence>
-  );
-}
-
-export type TypewriterProps = Readonly<{
-  text: string;
-  delay?: number;
-  enterStagger?: number;
-  exitStagger?: number;
-}>;
-
-export function Typewriter({
-  text,
-  enterStagger = 0.05,
-  exitStagger = 0.05,
-  delay = 1,
-  ...rest
-}: TypewriterProps) {
-  // bikin variants per render supaya nilai stagger bisa berubah via props
-  const sentenceVariants = useMemo(
-    () => ({
-      hidden: {
-        opacity: 0,
-      },
-      visible: {
-        opacity: 1,
-        transition: {
-          delayChildren: delay,
-          staggerChildren: enterStagger,
-        },
-      },
-      exit: {
-        transition: { staggerChildren: exitStagger, staggerDirection: -1 },
-      },
-    }),
-    [enterStagger, exitStagger, delay],
-  );
-
-  const letterVariants = {
-    hidden: {
-      opacity: 0,
-      display: "none",
-    },
-
-    visible: {
-      opacity: 1,
-      display: "inline-block",
-      transition: { duration: 0 }, // muncul instan; timing diatur oleh stagger
-    },
-    exit: {
-      opacity: 0,
-      transition: { duration: 0 }, // hilang instan; timing diatur oleh stagger
-      transitionEnd: { display: "none" }, // setelah hilang, lepaskan ruangnya
-    },
-  };
-  return (
-    <motion.p
-      key={text}
-      variants={sentenceVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      className="font-semibold whitespace-pre"
-      {...rest}
-    >
-      {/* Array.from agar emoji/UTF-16 surrogate pairs tidak terpecah */}
-      {Array.from(text).map((char, i) => (
-        <motion.span
-          key={`${char}-${i}`}
-          variants={letterVariants}
-          className="align-baseline"
-        >
-          {char}
-        </motion.span>
-      ))}
-    </motion.p>
-  );
-}
-// Rotator: ganti teks setiap interval
-type RotatingTypewriterProps = Readonly<{
-  items: string[];
-  intervalMs?: number;
-  enterStagger?: number;
-  exitStagger?: number;
-}>;
-
-function RotatingTypewriter({
-  items = [],
-  intervalMs = 10000,
-  enterStagger,
-  exitStagger,
-}: RotatingTypewriterProps) {
-  const [i, setI] = useState(0);
-  const [show, setShow] = useState(true);
-
-  // useEffect(() => {
-  //   setI(getRandomIndex(items.length));
-  // }, [items.length]);
-
-  // Jadwalkan “hapus teks” setelah interval selesai.
-  useEffect(() => {
-    if (!show) return;
-    const id = window.setTimeout(() => setShow(false), intervalMs);
-    return () => window.clearTimeout(id);
-  }, [show, i, intervalMs]);
-
-  return (
-    <AnimatePresence
-      mode="wait"
-      onExitComplete={() => {
-        // Setelah semua huruf “terhapus”, ganti item dan tampilkan lagi
-        setI((v) => (v + 1) % items.length);
-        setShow(true);
-      }}
-    >
-      {show && (
-        <Typewriter
-          key={items[i]} // penting agar re-mount & re-animate
-          text={items[i]}
-          enterStagger={enterStagger}
-          exitStagger={exitStagger}
-        />
-      )}
     </AnimatePresence>
   );
 }
