@@ -26,7 +26,21 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
+const VERSIONS = [
+  {
+    version: "0.1.1",
+    releaseDate: "27 Sep 2025",
+    description:
+      "add ScrollArea and Separator components with versioning support",
+  },
+  {
+    version: "0.1.0",
+    releaseDate: "27 Sep 2025",
+    description: "Initial release",
+  },
+];
 const GREETINGS = [
   "안녕",
   "Bro",
@@ -62,7 +76,7 @@ export default function Home() {
 
   return (
     <div className="mx-auto grid min-h-screen max-w-7xl grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 bg-[url(/grid.svg)] bg-fixed bg-center p-8 pb-20 font-mono sm:p-20">
-      <header className="flex w-full items-center justify-start gap-2">
+      <header className="flex w-full items-center justify-start">
         <HoverCard>
           <HoverCardTrigger className="-ml-4" asChild>
             <Button
@@ -82,11 +96,28 @@ export default function Home() {
             </p>
           </HoverCardContent>
         </HoverCard>
-        <Tooltip>
-          <TooltipTrigger asChild></TooltipTrigger>
-          <TooltipContent></TooltipContent>
-        </Tooltip>
-        <Badge variant={"outline"}>0.1</Badge>
+        <HoverCard>
+          <HoverCardTrigger asChild>
+            <Badge variant={"outline"} className="text-muted-foreground">
+              {VERSIONS[0].version}
+            </Badge>
+          </HoverCardTrigger>
+          <HoverCardContent className="px-4 py-1">
+            <ScrollArea className="flex max-h-64 flex-col">
+              {VERSIONS.map((v) => (
+                <div
+                  key={v.version}
+                  className="flex items-center justify-between border-b py-2 last:border-0"
+                >
+                  <p className="font-mono text-xs font-medium">v{v.version}</p>
+                  <p className="text-muted-foreground font-mono text-xs">
+                    {v.releaseDate}
+                  </p>
+                </div>
+              ))}
+            </ScrollArea>
+          </HoverCardContent>
+        </HoverCard>
       </header>
       <main className="row-start-2 flex w-full flex-col items-start gap-4 sm:items-center md:text-2xl">
         <div className="flex flex-wrap items-center justify-start gap-2 text-lg sm:justify-start md:text-2xl">
