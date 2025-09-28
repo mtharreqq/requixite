@@ -149,8 +149,8 @@ export default function Home() {
                 )}
               </div>
             </HoverCardTrigger>
-            <HoverCardContent className="px-4 py-1">
-              <ScrollArea className="flex max-h-64 flex-col">
+            <HoverCardContent className="py-1 pr-1 pl-4">
+              <ScrollArea className="flex max-h-64 flex-col pr-3">
                 {versions.map((v) => (
                   <div
                     key={v.version}

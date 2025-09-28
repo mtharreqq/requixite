@@ -11,22 +11,19 @@ type Release = {
 
 async function loadReleases(): Promise<Release[]> {
   const supabase = await createClient();
-  const { data } = await supabase.from("releases").select();
+  const { data } = await supabase
+    .from("releases")
+    .select()
+    .order("release_date", { ascending: false });
   return data as Release[];
 }
 
 export async function GET() {
   try {
-    // cara 1: dari database (Supabase)
     const data = await loadReleases();
 
-    const sorted = [...data].sort(
-      (a, b) =>
-        new Date(b.release_date).getTime() - new Date(a.release_date).getTime(),
-    );
-
-    // cache hint (Edge/CDN friendly). Ubah sesuai kebutuhan.
-    return NextResponse.json(sorted, {
+    // cache hint (Edge/CDN friendly).
+    return NextResponse.json(data, {
       headers: {
         "Cache-Control":
           "public, max-age=60, s-maxage=300, stale-while-revalidate=600",
