@@ -27,10 +27,16 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import Squares from "@/components/squares";
 import TextType from "@/components/text-type";
-import { ModeToggle } from "@/components/ui/mode-toggle";
 import dayjs from "dayjs";
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
+import { cn } from "@/lib/utils";
+import { GridPattern } from "@/components/ui/grid-pattern";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const GREETINGS = [
   "안녕",
@@ -73,6 +79,13 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [isTouch, setIsTouch] = useState(false);
+
+  useEffect(() => {
+    // simple heuristic: if device supports touch events, prefer Popover
+    setIsTouch(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
+
   useEffect(() => {
     const run = async () => {
       try {
@@ -93,7 +106,6 @@ export default function Home() {
 
   return (
     <div className="relative mx-auto grid min-h-screen max-w-7xl grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-mono sm:p-20">
-      <Squares speed={0.01} squareSize={60} direction="up" />
       <header className="flex w-full items-center justify-between">
         <div className="flex items-center">
           <HoverCard>
@@ -156,7 +168,7 @@ export default function Home() {
             </HoverCardContent>
           </HoverCard>
         </div>
-        <ModeToggle />
+        <AnimatedThemeToggler />
       </header>
       <main className="row-start-2 flex w-full flex-col items-start gap-4 md:items-center md:text-2xl">
         <div className="flex flex-wrap items-center justify-start gap-2 text-lg md:justify-start md:text-2xl">
@@ -181,20 +193,40 @@ export default function Home() {
             }}
             className="inline-flex items-center gap-2"
           >
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <p className="cursor-pointer underline decoration-red-300 decoration-wavy hover:decoration-red-500 dark:decoration-red-700 dark:hover:decoration-red-500">
-                  I&apos;am
-                </p>
-              </TooltipTrigger>
-              <TooltipContent className="flex items-center gap-2 pl-2">
-                <Avatar className="size-5 sm:size-8">
-                  <AvatarImage src="/avatar.jpg" alt="@mtharreq" />
-                  <AvatarFallback className="text-primary">ME</AvatarFallback>
-                </Avatar>
-                <p className="font-mono sm:text-lg">@mtharreq</p>
-              </TooltipContent>
-            </Tooltip>
+            {isTouch ? (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <p className="cursor-pointer underline decoration-red-300 decoration-wavy hover:decoration-red-500 dark:decoration-red-700 dark:hover:decoration-red-500">
+                    I&apos;am
+                  </p>
+                </PopoverTrigger>
+                <PopoverContent
+                  side="top"
+                  className="bg-background flex w-fit items-center gap-2 py-2 pl-2"
+                >
+                  <Avatar className="size-5 sm:size-8">
+                    <AvatarImage src="/avatar.jpg" alt="@mtharreq" />
+                    <AvatarFallback className="text-primary">ME</AvatarFallback>
+                  </Avatar>
+                  <p className="font-mono sm:text-lg">@mtharreq</p>
+                </PopoverContent>
+              </Popover>
+            ) : (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <p className="cursor-pointer underline decoration-red-300 decoration-wavy hover:decoration-red-500 dark:decoration-red-700 dark:hover:decoration-red-500">
+                    I&apos;am
+                  </p>
+                </TooltipTrigger>
+                <TooltipContent className="flex items-center gap-2 pl-2">
+                  <Avatar className="size-5 sm:size-8">
+                    <AvatarImage src="/avatar.jpg" alt="@mtharreq" />
+                    <AvatarFallback className="text-primary">ME</AvatarFallback>
+                  </Avatar>
+                  <p className="font-mono sm:text-lg">@mtharreq</p>
+                </TooltipContent>
+              </Tooltip>
+            )}
             a{" "}
             <TextType
               text={["UI Designer.", "Front-end Developer."]}
@@ -308,6 +340,15 @@ export default function Home() {
           </Link>
         </Button>
       </footer>
+      <GridPattern
+        width={55}
+        height={55}
+        x={-1}
+        y={-1}
+        className={cn(
+          "-z-10 [mask-image:radial-gradient(800px_circle_at_center,white,transparent)]",
+        )}
+      />
     </div>
   );
 }

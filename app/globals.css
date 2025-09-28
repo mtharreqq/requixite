@@ -120,3 +120,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::selection {
+  background: theme("colors.black");
+  color: theme("colors.white");
+}
+
+.dark ::selection {
+  background: theme("colors.white");
+  color: theme("colors.black");
+}
