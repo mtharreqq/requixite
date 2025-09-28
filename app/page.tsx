@@ -30,6 +30,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Squares from "@/components/squares";
 import TextType from "@/components/text-type";
 import { ModeToggle } from "@/components/ui/mode-toggle";
+import dayjs from "dayjs";
 
 const GREETINGS = [
   "안녕",
@@ -59,8 +60,10 @@ function getRandomIndex(max: number) {
 }
 
 type Release = {
+  id: number;
+  created_at: Date;
   version: string;
-  releaseDate: string;
+  release_date: Date;
   description: string;
 };
 
@@ -145,7 +148,7 @@ export default function Home() {
                       v{v.version}
                     </p>
                     <p className="text-muted-foreground font-mono text-xs">
-                      {v.releaseDate}
+                      {dayjs(v.release_date).format("DD MMM YYYY")}
                     </p>
                   </div>
                 ))}
@@ -168,14 +171,6 @@ export default function Home() {
           >
             {greeting},
           </motion.span>
-          {/* <FadeContent
-            blur={true}
-            duration={500}
-            easing="ease-out"
-            initialOpacity={0}
-          >
-            {greeting}
-          </FadeContent> */}
           <motion.span
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}

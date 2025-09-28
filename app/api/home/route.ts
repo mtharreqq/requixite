@@ -1,28 +1,28 @@
 import { NextResponse } from "next/server";
-import path from "path";
-import { promises as fs } from "fs";
+import { createClient } from "@/utils/supabase/server";
 
 type Release = {
+  id: number;
+  created_at: Date;
   version: string;
-  releaseDate: string; // bebas: string/Date sesuai kebutuhan
+  release_date: Date;
   description: string;
 };
 
+async function loadReleases(): Promise<Release[]> {
+  const supabase = await createClient();
+  const { data } = await supabase.from("releases").select();
+  return data as Release[];
+}
+
 export async function GET() {
   try {
-    const filePath = path.join(
-      process.cwd(),
-      "public",
-      "data",
-      "releases.json",
-    );
-    const file = await fs.readFile(filePath, "utf-8");
-    const data = JSON.parse(file) as Release[];
+    // cara 1: dari database (Supabase)
+    const data = await loadReleases();
 
-    // (opsional) sort terbaru dulu
     const sorted = [...data].sort(
       (a, b) =>
-        new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime(),
+        new Date(b.release_date).getTime() - new Date(a.release_date).getTime(),
     );
 
     // cache hint (Edge/CDN friendly). Ubah sesuai kebutuhan.
