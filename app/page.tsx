@@ -37,6 +37,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import type { Release } from "@/types/release";
 
 const GREETINGS = [
   "안녕",
@@ -64,14 +65,6 @@ const GREETINGS = [
 function getRandomIndex(max: number) {
   return Math.floor(Math.random() * max);
 }
-
-type Release = {
-  id: number;
-  created_at: Date;
-  version: string;
-  release_date: Date;
-  description: string;
-};
 
 export default function Home() {
   const [greeting, setGreeting] = useState<string>("");
@@ -142,9 +135,9 @@ export default function Home() {
                   </Badge>
                 )}
 
-                {!loading && !error && versions?.[0]?.version && (
+                {!loading && !error && versions?.[0]?.tag && (
                   <Badge variant="outline" className="text-muted-foreground">
-                    {versions[0].version}
+                    {versions[0].tag}
                   </Badge>
                 )}
               </div>
@@ -153,14 +146,12 @@ export default function Home() {
               <ScrollArea className="flex max-h-64 flex-col pr-3">
                 {versions.map((v) => (
                   <div
-                    key={v.version}
+                    key={v.tag}
                     className="flex items-center justify-between border-b py-2 last:border-0"
                   >
-                    <p className="font-mono text-xs font-medium">
-                      v{v.version}
-                    </p>
+                    <p className="font-mono text-xs font-medium">{v.tag}</p>
                     <p className="text-muted-foreground font-mono text-xs">
-                      {dayjs(v.release_date).format("DD MMM YYYY")}
+                      {dayjs(v.released_at).format("DD MMM YYYY")}
                     </p>
                   </div>
                 ))}
