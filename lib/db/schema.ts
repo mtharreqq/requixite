@@ -10,8 +10,8 @@ import {
 export const todos = pgTable("todos", {
   id: uuid("id").primaryKey().defaultRandom(),
   title: text("title").notNull(),
-  done: boolean("done").default(false),
-  created_at: timestamp("created_at").defaultNow(),
+  done: boolean("done").notNull().default(false),
+  created_at: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const releases = pgTable("releases", {
