@@ -28,10 +28,10 @@ export default function TodosPage() {
   // ------- Optimistic helpers -------
   function withRollback(
     next: Todo[] | ((prev: Todo[]) => Todo[]),
-    action: () => Promise<any>,
+    action: () => Promise<unknown>,
   ) {
     const prev = items;
-    const nextItems = typeof next === "function" ? (next as any)(prev) : next;
+    const nextItems = typeof next === "function" ? next(prev) : next;
     setItems(nextItems);
     return action().catch((err) => {
       setItems(prev);
@@ -51,7 +51,7 @@ export default function TodosPage() {
       id: tempId(),
       title: title.trim(),
       done: false,
-      created_at: new Date().toISOString(),
+      created_at: new Date(),
     };
     // push temp immediately
     await withRollback(

@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
       limit: number;
       offset: number;
     }>({
-      data: rows as Todo[],
+      data: rows,
       count: countResult[0].count,
       limit,
       offset,
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const [row] = await db.insert(todos).values({ title, done }).returning();
-    return NextResponse.json<{ data: Todo }>({ data: row as Todo }, { status: 201 });
+    return NextResponse.json<{ data: Todo }>({ data: row }, { status: 201 });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Internal server error";
     return NextResponse.json({ error: message }, { status: 500 });
@@ -92,7 +92,7 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "Todo not found" }, { status: 404 });
     }
 
-    return NextResponse.json<{ data: Todo }>({ data: row as Todo });
+    return NextResponse.json<{ data: Todo }>({ data: row });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Internal server error";
     return NextResponse.json({ error: message }, { status: 500 });
