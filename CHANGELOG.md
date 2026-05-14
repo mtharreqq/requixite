@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/mtharreqq/requixite/compare/requixite-v0.6.0...requixite-v0.6.1) (2026-05-14)
+
+
+### Bug Fixes
+
+* align todo types with drizzle and rename middleware to proxy ([de62cfd](https://github.com/mtharreqq/requixite/commit/de62cfd516790d0ce51aa287df3de154f89a78fb))
+
 ## [0.6.0](https://github.com/mtharreqq/requixite/compare/requixite-v0.5.1...requixite-v0.6.0) (2026-05-14)
 
 
