@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Requixite
+
+> **Precise. Exquisite. Requisite.**  
+> Independent product and web studio by Tharreq.
+
+A clean, blazing-fast personal portfolio landing page built with Next.js 16 (Turbopack), React 19, Tailwind CSS v4, and Framer Motion. Zero databases, zero CMS complexity — all content is static, type-safe, and maintained directly in code.
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router, Turbopack)
+- **Library**: React 19
+- **Styling**: Tailwind CSS v4
+- **Animation**: Framer Motion & GSAP
+- **Icons & UI**: Radix UI / shadcn & Lucide Icons
+- **Analytics**: Vercel Speed Insights & Analytics
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Managing Projects & Content
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+All portfolio items live in [`data/projects.ts`](data/projects.ts).
 
-## Learn More
+To add or update a project, simply edit the `PROJECTS` array:
 
-To learn more about Next.js, take a look at the following resources:
+```ts
+{
+  id: "my-project",
+  slug: "my-project",
+  title: "My Project",
+  description: "A short synopsis of the project...",
+  category: { slug: "product", name: "Product Studio", color: "#10B981" },
+  color: "#10B981",
+  art: "token",
+  start_date: "2026-06-01",
+  status: "in_progress", // "planning" | "in_progress" | "done"
+  tags: ["Next.js", "TypeScript", "Tailwind CSS"],
+  highlights: [
+    { title: "Key Feature", description: "Details..." }
+  ],
+  liveUrl: "https://example.com",
+  repoUrl: "https://github.com/...",
+  published: true,
+}
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Once modified, simply commit and push to Git.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Commands
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` — Next.js dev server (Turbopack)
+- `npm run build` — Prerender static production build
+- `npm run start` — Serve the production build
+- `npm run lint` — ESLint
