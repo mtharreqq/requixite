@@ -1,27 +1,29 @@
-import { HomeMain } from "@/components/home-main";
-import { GridPattern } from "@/components/ui/grid-pattern";
-import { HomeDock } from "@/components/home-dock";
-import { HomeHeader } from "@/components/home-header";
-import { cn } from "@/lib/utils";
-import { PROJECTS } from "@/data/projects";
+import { HeroSection } from "@/components/salmoon/hero-section";
+import { DilemmaSection } from "@/components/salmoon/dilemma-section";
+import { ProofSection } from "@/components/salmoon/proof-section";
+import { ProcessSection } from "@/components/salmoon/process-section";
+import { WorkSection } from "@/components/salmoon/work-section";
+import { ConnectSection } from "@/components/salmoon/connect-section";
+import { FloatingDock } from "@/components/salmoon/floating-dock";
 
 export default function Home() {
-  const publishedProjects = PROJECTS.filter((p) => p.published);
-
   return (
-    <div className="relative mx-auto grid min-h-screen max-w-7xl grid-rows-[20px_1fr] items-center justify-items-center gap-16 p-8 pb-28 font-mono sm:p-20 sm:pb-28">
-      <HomeHeader />
-      <HomeMain />
-      <GridPattern
-        width={55}
-        height={55}
-        x={-1}
-        y={-1}
-        className={cn(
-          "-z-10 [mask-image:radial-gradient(800px_circle_at_center,white,transparent)]",
-        )}
-      />
-      <HomeDock projects={publishedProjects} />
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-start bg-background text-foreground selection:bg-foreground selection:text-background">
+      {/* Top subtle fade gradient (Salmoon style) */}
+      <div className="pointer-events-none fixed top-0 left-0 z-40 h-8 w-full bg-gradient-to-b from-background to-transparent md:h-12" />
+
+      {/* Main Intimate Centered Column */}
+      <main className="flex w-full max-w-lg md:max-w-xl flex-col items-center gap-y-16 px-4 py-16 md:gap-y-20 md:py-24">
+        <HeroSection />
+        <DilemmaSection />
+        <ProofSection />
+        <ProcessSection />
+        <WorkSection />
+        <ConnectSection />
+      </main>
+
+      {/* Floating Pill Dock at Bottom */}
+      <FloatingDock />
     </div>
   );
 }
