@@ -1,35 +1,138 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import {
+  GithubSvg,
+  InstagramSvg,
+  LinkedinSvg,
+  TwitterVerifiedBadgeSvg,
+  XSvg,
+} from "@/components/dock-icons";
 
 export function HeroSection() {
   return (
     <section id="home" className="w-full space-y-8 pt-4">
       {/* Title & Identity */}
-      <div className="space-y-1">
-        <div className="flex items-center gap-x-2">
-          <h1 className="text-base leading-none font-semibold md:text-lg text-foreground">
-            Tharreq
-          </h1>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="#1db7f9"
-            stroke="hsl(var(--background))"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="shrink-0"
-          >
-            <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
-            <path d="m9 12 2 2 4-4" />
-          </svg>
+      <div className="flex items-center gap-3">
+        <div className="relative size-9 md:size-10 shrink-0 overflow-hidden rounded-full border border-border/80 shadow-xs bg-muted">
+          <Image
+            src="/avatar.png"
+            alt="Tharreq"
+            width={40}
+            height={40}
+            className="size-full object-cover"
+            priority
+          />
         </div>
-        <p className="text-muted-foreground text-xs leading-none font-medium md:text-sm font-mono">
-          Product Engineer &amp; Designer &bull; Requixite
-        </p>
+        <div className="space-y-1">
+          <div className="flex items-center gap-x-1.5">
+            <HoverCard openDelay={120} closeDelay={150}>
+              <HoverCardTrigger asChild>
+                <button
+                  type="button"
+                  className="cursor-pointer text-base leading-none font-semibold md:text-lg text-foreground hover:underline decoration-muted-foreground/40 underline-offset-4 transition-colors text-left"
+                >
+                  Tharreq
+                </button>
+              </HoverCardTrigger>
+              <HoverCardContent
+                align="start"
+                sideOffset={8}
+                className="w-80 p-4 bg-popover/95 backdrop-blur-md border border-border/80 shadow-xl rounded-lg text-foreground"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="relative size-10 shrink-0 overflow-hidden rounded-full border border-border/80 shadow-xs bg-muted">
+                    <Image
+                      src="/avatar.png"
+                      alt="Tharreq"
+                      width={40}
+                      height={40}
+                      className="size-full object-cover"
+                    />
+                  </div>
+                  <div className="space-y-0.5 min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-semibold text-sm leading-tight text-foreground truncate">
+                        Tharreq
+                      </span>
+                      <TwitterVerifiedBadgeSvg className="size-4 shrink-0" />
+                    </div>
+                    <p className="text-muted-foreground text-xs font-mono truncate">
+                      @tooreeq
+                    </p>
+                  </div>
+                </div>
+
+                <p className="mt-2.5 text-xs text-muted-foreground leading-relaxed font-sans">
+                  Product engineer &amp; designer based in Bandung. Crafting software with sub-pixel polish at Requixite.
+                </p>
+
+                <div className="mt-2.5 flex items-center gap-2 text-[11px] text-muted-foreground font-mono">
+                  <span>📍 Bandung, ID</span>
+                  <span>&bull;</span>
+                  <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
+                    <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    Available
+                  </span>
+                </div>
+
+                {/* Social links row */}
+                <div className="mt-3.5 pt-3 border-t border-border/60 grid grid-cols-4 gap-1.5">
+                  <a
+                    href="https://instagram.com/tooreeq"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-col items-center justify-center gap-1 py-1.5 px-1 rounded-md bg-muted/60 hover:bg-[#E1306C]/10 hover:text-[#E1306C] text-muted-foreground border border-border/40 transition-colors group"
+                    title="Instagram @tooreeq"
+                  >
+                    <InstagramSvg className="size-4 group-hover:scale-110 transition-transform" />
+                    <span className="text-[10px] font-mono font-medium">IG</span>
+                  </a>
+                  <a
+                    href="https://x.com/tooreeq"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-col items-center justify-center gap-1 py-1.5 px-1 rounded-md bg-muted/60 hover:bg-[#1D9BF0]/10 hover:text-[#1D9BF0] text-muted-foreground border border-border/40 transition-colors group"
+                    title="Twitter / X @tooreeq"
+                  >
+                    <XSvg className="size-4 group-hover:scale-110 transition-transform" />
+                    <span className="text-[10px] font-mono font-medium">X</span>
+                  </a>
+                  <a
+                    href="https://linkedin.com/in/mtharreq/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-col items-center justify-center gap-1 py-1.5 px-1 rounded-md bg-muted/60 hover:bg-[#0A66C2]/10 hover:text-[#0A66C2] text-muted-foreground border border-border/40 transition-colors group"
+                    title="LinkedIn @mtharreq"
+                  >
+                    <LinkedinSvg className="size-4 group-hover:scale-110 transition-transform" />
+                    <span className="text-[10px] font-mono font-medium">LinkedIn</span>
+                  </a>
+                  <a
+                    href="https://github.com/mtharreqq"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-col items-center justify-center gap-1 py-1.5 px-1 rounded-md bg-muted/60 hover:bg-foreground hover:text-background text-muted-foreground border border-border/40 transition-colors group"
+                    title="GitHub @mtharreqq"
+                  >
+                    <GithubSvg className="size-4 group-hover:scale-110 transition-transform" />
+                    <span className="text-[10px] font-mono font-medium">GitHub</span>
+                  </a>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
+            <TwitterVerifiedBadgeSvg className="size-4 shrink-0" />
+          </div>
+          <p className="text-muted-foreground text-xs leading-none font-medium md:text-sm font-mono">
+            Product Engineer &amp; Designer &bull; Requixite
+          </p>
+        </div>
       </div>
 
       {/* Bio Paragraphs */}

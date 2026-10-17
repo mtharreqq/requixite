@@ -20,6 +20,14 @@ export const metadata: Metadata = {
   title: "Requixite — Precise. Exquisite. Requisite.",
   description:
     "Independent product and web studio by Tharreq. Crafting refined, purpose-driven digital experiences.",
+  icons: {
+    icon: [
+      { url: "/icon.png", sizes: "128x128", type: "image/png" },
+      { url: "/avatar.png", type: "image/png" },
+    ],
+    apple: "/apple-icon.png",
+    shortcut: "/icon.png",
+  },
 };
 
 export default function RootLayout({

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Mail, Copy, Check } from "lucide-react";
-import { GithubSvg, LinkedinSvg, XSvg } from "@/components/dock-icons";
+import { GithubSvg, InstagramSvg, LinkedinSvg, XSvg } from "@/components/dock-icons";
 
 export function ConnectSection() {
   const [copied, setCopied] = useState(false);
@@ -37,7 +37,7 @@ export function ConnectSection() {
       </div>
 
       {/* Button Grid matching Salmoon */}
-      <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-5 pt-1">
+      <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-6 pt-1">
         {/* Button 1: Copy Email */}
         <button
           onClick={handleCopy}
@@ -67,7 +67,18 @@ export function ConnectSection() {
           <span>Email</span>
         </a>
 
-        {/* Button 3: X */}
+        {/* Button 3: Instagram */}
+        <a
+          href="https://instagram.com/tooreeq"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group bg-muted text-muted-foreground flex h-12 w-full cursor-pointer items-center justify-center rounded-[2px] border border-border/60 transition-colors hover:bg-[#E1306C] hover:text-white"
+          aria-label="Instagram"
+        >
+          <InstagramSvg className="size-5 transition-transform group-hover:scale-110" />
+        </a>
+
+        {/* Button 4: X */}
         <a
           href="https://x.com/tooreeq"
           target="_blank"
@@ -78,7 +89,7 @@ export function ConnectSection() {
           <XSvg />
         </a>
 
-        {/* Button 4: GitHub */}
+        {/* Button 5: GitHub */}
         <a
           href="https://github.com/mtharreqq"
           target="_blank"
@@ -89,7 +100,7 @@ export function ConnectSection() {
           <GithubSvg />
         </a>
 
-        {/* Button 5: LinkedIn */}
+        {/* Button 6: LinkedIn */}
         <a
           href="https://linkedin.com/in/mtharreq/"
           target="_blank"
