@@ -5,6 +5,8 @@ import { ArrowUpRight, Github } from "lucide-react";
 import { PROJECTS } from "@/data/projects";
 import { TagPill } from "@/components/work/tag-pill";
 import type { Project } from "@/types/project";
+import { WORST_EMPTY, WORST_ONE, WORST_PROJECTS } from "@/data/projects.worst";
+import { DevDataToggle, useDevDataset } from "@/components/dev/data-toggle";
 
 function ProjectPreview({ project }: { project: Project }) {
   if (project.image) {
@@ -152,7 +154,16 @@ function ProjectCard({
 }
 
 export function WorkSection() {
-  const publishedProjects = PROJECTS.filter((p) => p.published);
+  const dataset = useDevDataset();
+  const source =
+    dataset === "worst"
+      ? WORST_PROJECTS
+      : dataset === "one"
+        ? WORST_ONE
+        : dataset === "empty"
+          ? WORST_EMPTY
+          : PROJECTS;
+  const publishedProjects = source.filter((p) => p.published);
   const featured = publishedProjects.length === 1;
 
   return (
@@ -182,6 +193,7 @@ export function WorkSection() {
           <ProjectCard key={project.id} project={project} featured={featured} />
         ))}
       </div>
+      <DevDataToggle current={dataset} />
     </section>
   );
 }
