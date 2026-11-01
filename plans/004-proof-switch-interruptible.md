@@ -1,6 +1,6 @@
 # 004 — Make the Proof card switch interruptible and smooth
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: e1816d6
 - **Severity**: MEDIUM
 - **Category**: Interruptibility
