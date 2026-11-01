@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { Check } from "lucide-react";
 import {
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/tooltip";
 
 const EMAIL = "mtharreq@gmail.com";
+const EASE_OUT = [0.23, 1, 0.32, 1] as const; // matches --ease-out token
 
 const SOCIALS = [
   { label: "X", href: "https://x.com/tooreeq", Icon: XSvg },
@@ -36,11 +38,15 @@ const SOCIALS = [
 
 export function ConnectSection() {
   const [copied, setCopied] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
 
   function handleCopy() {
     navigator.clipboard.writeText(EMAIL);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+    // Repeated clicks restart the 2.5s window instead of stacking timers.
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setCopied(false), 2500);
   }
 
   return (
@@ -77,16 +83,27 @@ export function ConnectSection() {
             <button
               type="button"
               onClick={handleCopy}
-              className="tactile-control bg-foreground text-background inline-flex h-[38px] min-w-[116px] cursor-pointer items-center justify-center gap-1.5 rounded-full px-4 text-[13px] font-medium transition-opacity hover:opacity-85 active:scale-[0.98]"
+              className="tactile-control bg-foreground text-background relative inline-flex h-[38px] min-w-[116px] cursor-pointer items-center justify-center gap-1.5 rounded-full px-4 text-[13px] font-medium transition-opacity hover:opacity-85 active:scale-[0.98]"
             >
-              {copied ? (
-                <>
-                  <Check className="size-3.5" />
-                  Copied
-                </>
-              ) : (
-                "Copy email"
-              )}
+              <AnimatePresence mode="popLayout" initial={false}>
+                <motion.span
+                  key={copied ? "copied" : "idle"}
+                  className="inline-flex items-center gap-1.5"
+                  initial={{ opacity: 0, transform: "scale(0.9)", filter: "blur(2px)" }}
+                  animate={{ opacity: 1, transform: "scale(1)", filter: "blur(0px)" }}
+                  exit={{ opacity: 0, transform: "scale(0.9)", filter: "blur(2px)" }}
+                  transition={{ duration: 0.16, ease: EASE_OUT }}
+                >
+                  {copied ? (
+                    <>
+                      <Check className="size-3.5" />
+                      Copied
+                    </>
+                  ) : (
+                    "Copy email"
+                  )}
+                </motion.span>
+              </AnimatePresence>
             </button>
           </Magnetic>
           <Magnetic>

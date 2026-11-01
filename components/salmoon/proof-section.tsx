@@ -304,6 +304,7 @@ function Pin({
   placement: "below-end" | "above-start";
 }) {
   const isDefect = variant === "defect";
+  const offset = placement === "below-end" ? -4 : 4;
   return (
     <div className={cn("z-20", className)}>
       <button
@@ -318,18 +319,26 @@ function Pin({
         {isDefect ? "!" : "✓"}
       </button>
 
-      {active && (
-        <div
-          className={cn(
-            "absolute z-30 w-max max-w-56 px-2 py-1 rounded-md bg-popover border border-border text-popover-foreground text-[10px] leading-snug shadow-md",
-            placement === "below-end"
-              ? "top-full mt-1.5 right-0 origin-top-right"
-              : "bottom-full mb-1.5 left-0 origin-bottom-left",
-          )}
-        >
-          {label}
-        </div>
-      )}
+      <AnimatePresence initial={false}>
+        {active && (
+          <motion.div
+            key="label"
+            className={cn(
+              "absolute z-30 w-max max-w-56 px-2 py-1 rounded-md bg-popover border border-border text-popover-foreground text-[10px] leading-snug shadow-md",
+              placement === "below-end"
+                ? "top-full mt-1.5 right-0 origin-top-right"
+                : "bottom-full mb-1.5 left-0 origin-bottom-left",
+            )}
+            // Grows out of the pin it belongs to.
+            initial={{ opacity: 0, transform: `translateY(${offset}px) scale(0.96)` }}
+            animate={{ opacity: 1, transform: "translateY(0px) scale(1)" }}
+            exit={{ opacity: 0, transform: `translateY(${offset}px) scale(0.96)` }}
+            transition={{ duration: 0.15, ease: EASE_OUT }}
+          >
+            {label}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

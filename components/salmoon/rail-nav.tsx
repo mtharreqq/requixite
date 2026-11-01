@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { HAS_PUBLISHED_WORK } from "@/data/projects";
 
 const ALL_SECTIONS = [
@@ -16,6 +17,8 @@ const ALL_SECTIONS = [
 ];
 // No published projects means no Work section, so no rail stop for it either.
 const SECTIONS = ALL_SECTIONS.filter((s) => s.id !== "work" || HAS_PUBLISHED_WORK);
+
+const EASE_OUT = [0.23, 1, 0.32, 1] as const; // matches --ease-out token
 
 const MINOR_PER_SECTION = 3;
 const STEP = MINOR_PER_SECTION + 1;
@@ -281,10 +284,27 @@ export function RailNav() {
       <button
         type="button"
         onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-        className="text-muted-foreground hover:text-foreground -ml-2 mt-6 grid size-7 cursor-pointer place-items-center rounded-full transition-colors"
+        className="text-muted-foreground hover:text-foreground relative -ml-2 mt-6 grid size-7 cursor-pointer place-items-center rounded-full transition-colors"
         aria-label="Toggle theme"
       >
-        {mounted && resolvedTheme === "dark" ? <Sun className="size-3.5" /> : <Moon className="size-3.5" />}
+        {/* Mount the presence only after hydration so the correct icon
+            appears without a moon-to-sun animation on load. */}
+        {!mounted ? (
+          <span className="size-3.5" />
+        ) : (
+          <AnimatePresence mode="popLayout" initial={false}>
+            <motion.span
+              key={resolvedTheme === "dark" ? "sun" : "moon"}
+              className="grid place-items-center"
+              initial={{ opacity: 0, transform: "rotate(-45deg) scale(0.9)" }}
+              animate={{ opacity: 1, transform: "rotate(0deg) scale(1)" }}
+              exit={{ opacity: 0, transform: "rotate(45deg) scale(0.9)" }}
+              transition={{ duration: 0.2, ease: EASE_OUT }}
+            >
+              {resolvedTheme === "dark" ? <Sun className="size-3.5" /> : <Moon className="size-3.5" />}
+            </motion.span>
+          </AnimatePresence>
+        )}
       </button>
     </nav>
   );

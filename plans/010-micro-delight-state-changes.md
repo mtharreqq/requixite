@@ -1,6 +1,6 @@
 # 010 — Animate three state changes that currently teleport
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: e1816d6
 - **Severity**: LOW
 - **Category**: Missed opportunities

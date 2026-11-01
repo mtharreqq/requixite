@@ -13,7 +13,7 @@ Produced by the `improve-animations` skill (Emil Kowalski's motion bar) at commi
 | 007 | [Easing tokens](007-easing-tokens.md) | LOW | Cohesion & tokens | DONE |
 | 008 | [Transform strings for Magnetic/Polaroid](008-motion-transform-strings.md) | LOW | Performance | DONE |
 | 009 | [Lighter section reveal](009-lighter-section-reveal.md) | LOW | Cohesion & tokens | DONE |
-| 010 | [Micro-delight for 3 state changes](010-micro-delight-state-changes.md) | LOW | Missed opportunities | TODO |
+| 010 | [Micro-delight for 3 state changes](010-micro-delight-state-changes.md) | LOW | Missed opportunities | DONE |
 | 011 | [Work card overflow](011-work-card-overflow.md) | HIGH | Break-ui | DONE |
 | 012 | [Proof pin labels never clipped](012-proof-pin-labels.md) | HIGH | Break-ui | DONE |
 | 013 | [Hide empty Work section](013-hide-empty-work.md) | MEDIUM | Break-ui | DONE |
