@@ -1,6 +1,6 @@
 # 005 — Group the social tooltips so only the first one waits
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: e1816d6
 - **Severity**: MEDIUM
 - **Category**: Purpose & frequency

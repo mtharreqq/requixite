@@ -8,7 +8,7 @@ Produced by the `improve-animations` skill (Emil Kowalski's motion bar) at commi
 | 002 | [No reveal for sections visible at load](002-no-reveal-for-initially-visible-sections.md) | MEDIUM | Purpose & frequency | DONE |
 | 003 | [Gentler reduced motion](003-gentler-reduced-motion.md) | MEDIUM | Accessibility | DONE |
 | 004 | [Interruptible Proof card switch](004-proof-switch-interruptible.md) | MEDIUM | Interruptibility | DONE |
-| 005 | [Grouped social tooltips](005-grouped-social-tooltips.md) | MEDIUM | Purpose & frequency | TODO |
+| 005 | [Grouped social tooltips](005-grouped-social-tooltips.md) | MEDIUM | Purpose & frequency | DONE |
 | 006 | [Replace transition-all](006-replace-transition-all.md) | MEDIUM | Performance | DONE |
 | 007 | [Easing tokens](007-easing-tokens.md) | LOW | Cohesion & tokens | DONE |
 | 008 | [Transform strings for Magnetic/Polaroid](008-motion-transform-strings.md) | LOW | Performance | TODO |
