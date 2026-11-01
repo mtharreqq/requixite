@@ -9,7 +9,7 @@ import type { Project } from "@/types/project";
 function ProjectPreview({ project }: { project: Project }) {
   if (project.image) {
     return (
-      <div className="bg-muted overflow-hidden rounded-[2px] aspect-video w-full relative border border-border/50">
+      <div className="bg-muted border-border/50 relative aspect-video w-full overflow-hidden rounded-[2px] border">
         <Image
           src={project.image}
           alt={`${project.title} website`}
@@ -22,23 +22,53 @@ function ProjectPreview({ project }: { project: Project }) {
   }
 
   return (
-    <div className="bg-muted overflow-hidden rounded-[2px] aspect-video w-full relative flex items-center justify-center border border-border/50">
+    <div className="bg-muted border-border/50 relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-[2px] border">
       <div
         className="absolute inset-0 opacity-15 transition-transform duration-300 group-hover/card:scale-105"
         style={{ backgroundColor: project.color }}
       />
-      <span className="z-10 text-xs font-semibold text-foreground tracking-tight">
+      <span className="text-foreground z-10 text-xs font-semibold tracking-tight">
         {project.title}
       </span>
     </div>
   );
 }
 
-function ProjectCard({ project, featured }: { project: Project; featured: boolean }) {
+function ProjectCard({
+  project,
+  featured,
+}: {
+  project: Project;
+  featured: boolean;
+}) {
   return (
-    <div className="group/card w-full flex flex-col space-y-2 border border-border/70 rounded-[4px] p-3 bg-card/40 transition-colors hover:border-border hover:bg-card/70">
+    <div
+      className="project-tactile group/card border-border/70 bg-card/40 hover:border-border hover:bg-card/70 flex w-full flex-col space-y-2 rounded-[4px] border p-3 transition-colors"
+      onPointerMove={(event) => {
+        if (
+          event.pointerType !== "mouse" ||
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        )
+          return;
+        const bounds = event.currentTarget.getBoundingClientRect();
+        event.currentTarget.style.setProperty(
+          "--spotlight-x",
+          `${event.clientX - bounds.left}px`,
+        );
+        event.currentTarget.style.setProperty(
+          "--spotlight-y",
+          `${event.clientY - bounds.top}px`,
+        );
+      }}
+    >
       {project.liveUrl ? (
-        <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" tabIndex={-1} aria-hidden>
+        <a
+          href={project.liveUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          tabIndex={-1}
+          aria-hidden
+        >
           <ProjectPreview project={project} />
         </a>
       ) : (
@@ -47,14 +77,18 @@ function ProjectCard({ project, featured }: { project: Project; featured: boolea
 
       {/* Meta & Title */}
       <div className="flex items-center justify-between pt-1">
-        <TagPill name={project.category.name} color={project.category.color} size="sm" />
+        <TagPill
+          name={project.category.name}
+          color={project.category.color}
+          size="sm"
+        />
         <div className="flex items-center gap-2">
           {project.liveUrl && (
             <a
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-0.5 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground hover:text-foreground inline-flex items-center gap-0.5 text-[11px] transition-colors"
               aria-label={`Visit ${project.title}`}
             >
               {project.liveUrl.replace(/^https?:\/\/(www\.)?/, "")}
@@ -76,14 +110,16 @@ function ProjectCard({ project, featured }: { project: Project; featured: boolea
       </div>
 
       <div className="space-y-0.5">
-        <h3 className="text-foreground text-sm font-semibold">{project.title}</h3>
+        <h3 className="text-foreground text-sm font-semibold">
+          {project.title}
+        </h3>
         {project.role && (
           <p className="text-muted-foreground text-[11px]">{project.role}</p>
         )}
       </div>
 
       <p
-        className={`text-muted-foreground text-xs font-sans leading-relaxed ${featured ? "" : "line-clamp-2"}`}
+        className={`text-muted-foreground font-sans text-xs leading-relaxed ${featured ? "" : "line-clamp-2"}`}
       >
         {project.description}
       </p>
@@ -91,7 +127,7 @@ function ProjectCard({ project, featured }: { project: Project; featured: boolea
       {featured && project.highlights && (
         <ul className="flex flex-col gap-2 pt-1">
           {project.highlights.map((h) => (
-            <li key={h.title} className="text-xs leading-relaxed font-sans">
+            <li key={h.title} className="font-sans text-xs leading-relaxed">
               <span className="text-foreground font-medium">{h.title}.</span>{" "}
               <span className="text-muted-foreground">{h.description}</span>
             </li>
@@ -104,7 +140,7 @@ function ProjectCard({ project, featured }: { project: Project; featured: boolea
           {project.tags.map((tag) => (
             <span
               key={tag}
-              className="rounded-[2px] border border-border/60 bg-muted/60 px-1.5 py-0.5 text-[10px] text-muted-foreground"
+              className="border-border/60 bg-muted/60 text-muted-foreground rounded-[2px] border px-1.5 py-0.5 text-[10px]"
             >
               {tag}
             </span>
@@ -125,20 +161,23 @@ export function WorkSection() {
       <div className="w-full space-y-1">
         <div className="flex w-full flex-col">
           <div className="flex h-8 w-full items-center justify-between gap-x-4">
-            <h2 className="text-foreground text-sm leading-none font-bold uppercase tracking-wider">
+            <h2 className="text-foreground text-sm leading-none font-bold tracking-wider uppercase">
               Selected Work
             </h2>
           </div>
         </div>
-        <div className="text-muted-foreground flex flex-col gap-y-4 text-sm md:text-base leading-relaxed font-sans">
+        <div className="text-muted-foreground flex flex-col gap-y-4 font-sans text-sm leading-relaxed md:text-base">
           <p>
-            Live products I designed and built from first sketch to production. More are on the way.
+            Live products I designed and built from first sketch to production.
+            More are on the way.
           </p>
         </div>
       </div>
 
       {/* Projects Grid */}
-      <div className={`grid w-full grid-cols-1 gap-4 pt-2 ${featured ? "" : "sm:grid-cols-2"}`}>
+      <div
+        className={`grid w-full grid-cols-1 gap-4 pt-2 ${featured ? "" : "sm:grid-cols-2"}`}
+      >
         {publishedProjects.map((project) => (
           <ProjectCard key={project.id} project={project} featured={featured} />
         ))}

@@ -23,6 +23,16 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to view the site.
 
+## Portfolio Motion
+
+The landing page keeps a compact hero with tactile interactions, using the existing Framer Motion dependency and CSS without requiring another animation package.
+
+- Blur-and-rise reveals run throughout the page, including sections already visible on first load. Each section's content blocks enter in sequence once.
+- Polaroids tilt on mouse movement; contact buttons have a small magnetic response.
+- Project cards have pointer-following spotlights; social links use the existing Radix tooltips.
+- Reduced-motion preferences disable decorative animation. Touch devices keep normal links and buttons without pointer-following effects.
+- Content remains visible without JavaScript or IntersectionObserver support.
+
 ## Managing Projects & Content
 
 All portfolio items live in [`data/projects.ts`](data/projects.ts).
