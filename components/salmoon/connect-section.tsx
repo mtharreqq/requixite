@@ -109,7 +109,7 @@ export function ConnectSection() {
           <Magnetic>
             <a
               href={`mailto:${EMAIL}?subject=Project%20Inquiry%20%E2%80%94%20Requixite`}
-              className="tactile-control bg-card text-foreground hover:bg-muted border-border/80 inline-flex h-[38px] items-center rounded-full border px-4 text-[13px] font-medium transition-colors"
+              className="tactile-control bg-card text-foreground hover:bg-muted border-border/80 inline-flex h-[38px] items-center rounded-full border px-4 text-[13px] font-medium transition-colors active:scale-[0.98]"
             >
               Send email
             </a>

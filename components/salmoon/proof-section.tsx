@@ -78,7 +78,7 @@ export function ProofSection() {
             setActivePin(null);
           }}
           className={cn(
-            "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md transition-[color,background-color,border-color,box-shadow] duration-150 ease-[ease]",
+            "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md transition-[color,background-color,border-color,box-shadow,scale] duration-150 ease-[ease] active:scale-[0.98]",
             mode === "slop"
               ? "bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30 font-semibold shadow-xs"
               : "border border-transparent text-muted-foreground hover:text-foreground"
@@ -93,7 +93,7 @@ export function ProofSection() {
             setActivePin(null);
           }}
           className={cn(
-            "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md transition-[color,background-color,border-color,box-shadow] duration-150 ease-[ease]",
+            "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md transition-[color,background-color,border-color,box-shadow,scale] duration-150 ease-[ease] active:scale-[0.98]",
             mode === "refined"
               ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-semibold shadow-xs"
               : "border border-transparent text-muted-foreground hover:text-foreground"
@@ -310,7 +310,7 @@ function Pin({
       <button
         onClick={onClick}
         className={cn(
-          "size-5 rounded-full flex items-center justify-center text-[9px] font-bold shadow-md transition-transform hover:scale-110",
+          "size-5 rounded-full flex items-center justify-center text-[9px] font-bold shadow-md transition-transform hover:scale-110 active:scale-95",
           isDefect
             ? "bg-red-500 text-white border border-white dark:border-zinc-900"
             : "bg-emerald-500 text-white border border-white dark:border-zinc-900"
