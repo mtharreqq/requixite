@@ -6,7 +6,7 @@ Produced by the `improve-animations` skill (Emil Kowalski's motion bar) at commi
 | --- | --- | --- | --- | --- |
 | 001 | [Rail ticks: transform instead of width](001-rail-ticks-transform.md) | HIGH | Performance | DONE |
 | 002 | [No reveal for sections visible at load](002-no-reveal-for-initially-visible-sections.md) | MEDIUM | Purpose & frequency | DONE |
-| 003 | [Gentler reduced motion](003-gentler-reduced-motion.md) | MEDIUM | Accessibility | TODO |
+| 003 | [Gentler reduced motion](003-gentler-reduced-motion.md) | MEDIUM | Accessibility | DONE |
 | 004 | [Interruptible Proof card switch](004-proof-switch-interruptible.md) | MEDIUM | Interruptibility | TODO |
 | 005 | [Grouped social tooltips](005-grouped-social-tooltips.md) | MEDIUM | Purpose & frequency | TODO |
 | 006 | [Replace transition-all](006-replace-transition-all.md) | MEDIUM | Performance | TODO |

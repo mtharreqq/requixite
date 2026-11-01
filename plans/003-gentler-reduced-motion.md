@@ -1,6 +1,6 @@
 # 003 — Reduced motion removes movement, not all feedback
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: e1816d6
 - **Severity**: MEDIUM
 - **Category**: Accessibility

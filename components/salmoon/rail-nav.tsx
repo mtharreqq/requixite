@@ -200,7 +200,8 @@ export function RailNav() {
   function onPointerUp(e: PointerEvent<HTMLDivElement>) {
     if (!scrubbing) return;
     const target = document.getElementById(SECTIONS[sectionAt(e.clientY)].id);
-    target?.scrollIntoView({ behavior: "smooth" });
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    target?.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
     setScrubbing(false);
     hover(null);
   }
