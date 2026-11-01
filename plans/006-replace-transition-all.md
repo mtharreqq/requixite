@@ -1,6 +1,6 @@
 # 006 — Replace `transition-all` with explicit properties
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: e1816d6
 - **Severity**: MEDIUM
 - **Category**: Performance

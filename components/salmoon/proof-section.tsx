@@ -47,10 +47,10 @@ export function ProofSection() {
             setActivePin(null);
           }}
           className={cn(
-            "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md transition-all",
+            "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md transition-[color,background-color,border-color,box-shadow] duration-150 ease-[ease]",
             mode === "slop"
               ? "bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30 font-semibold shadow-xs"
-              : "text-muted-foreground hover:text-foreground"
+              : "border border-transparent text-muted-foreground hover:text-foreground"
           )}
         >
           <AlertTriangle className="size-3.5 text-red-500" />
@@ -62,10 +62,10 @@ export function ProofSection() {
             setActivePin(null);
           }}
           className={cn(
-            "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md transition-all",
+            "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md transition-[color,background-color,border-color,box-shadow] duration-150 ease-[ease]",
             mode === "refined"
               ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-semibold shadow-xs"
-              : "text-muted-foreground hover:text-foreground"
+              : "border border-transparent text-muted-foreground hover:text-foreground"
           )}
         >
           <CheckCircle2 className="size-3.5 text-emerald-500" />
