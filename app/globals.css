@@ -367,6 +367,18 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Controls: no text selection on long-press, no double-tap-zoom delay.
+     Never on body: copy and descriptions must stay selectable. */
+  button,
+  [role="button"] {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  button,
+  a,
+  [role="button"] {
+    touch-action: manipulation;
+  }
 }
 
 ::view-transition-old(root),

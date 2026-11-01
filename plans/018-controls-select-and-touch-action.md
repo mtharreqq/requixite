@@ -1,6 +1,6 @@
 # 018 — Controls don't select text on long-press; no tap delay
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: bdceefd
 - **Severity**: LOW
 - **Category**: Mobile-native
