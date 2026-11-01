@@ -1,6 +1,6 @@
 # 007 — Consolidate easing into tokens and give every transition a curve
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: e1816d6
 - **Severity**: LOW
 - **Category**: Cohesion & tokens
