@@ -10,7 +10,7 @@ Produced by the `improve-animations` skill (Emil Kowalski's motion bar) at commi
 | 004 | [Interruptible Proof card switch](004-proof-switch-interruptible.md) | MEDIUM | Interruptibility | TODO |
 | 005 | [Grouped social tooltips](005-grouped-social-tooltips.md) | MEDIUM | Purpose & frequency | TODO |
 | 006 | [Replace transition-all](006-replace-transition-all.md) | MEDIUM | Performance | TODO |
-| 007 | [Easing tokens](007-easing-tokens.md) | LOW | Cohesion & tokens | TODO |
+| 007 | [Easing tokens](007-easing-tokens.md) | LOW | Cohesion & tokens | DONE |
 | 008 | [Transform strings for Magnetic/Polaroid](008-motion-transform-strings.md) | LOW | Performance | TODO |
 | 009 | [Lighter section reveal](009-lighter-section-reveal.md) | LOW | Cohesion & tokens | TODO |
 | 010 | [Micro-delight for 3 state changes](010-micro-delight-state-changes.md) | LOW | Missed opportunities | TODO |

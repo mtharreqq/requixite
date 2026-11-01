@@ -28,10 +28,10 @@
 }
 
 .hero-identity {
-  animation: portfolio-focus 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: portfolio-focus 700ms var(--ease-out) both;
 }
 .hero-copy > p {
-  animation: portfolio-focus 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: portfolio-focus 800ms var(--ease-out) both;
 }
 .hero-copy > p:nth-child(1) {
   animation-delay: 80ms;
@@ -43,14 +43,14 @@
   animation-delay: 220ms;
 }
 .hero-polaroids {
-  animation: portfolio-arrive 800ms 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: portfolio-arrive 800ms 280ms var(--ease-out) both;
 }
 
 .portfolio-motion [data-reveal="pending"] {
   opacity: 0;
 }
 .portfolio-motion [data-reveal="visible"] > section > * {
-  animation: portfolio-focus 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: portfolio-focus 800ms var(--ease-out) both;
 }
 .portfolio-motion [data-reveal="visible"] > section > :nth-child(2) {
   animation-delay: 90ms;
@@ -85,17 +85,17 @@
     transparent 70%
   );
   transform: translateX(-120%);
-  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 650ms var(--ease-out);
 }
 
 .project-tactile {
   position: relative;
   isolation: isolate;
   transition:
-    border-color 220ms,
-    background-color 220ms,
-    box-shadow 300ms,
-    translate 300ms;
+    border-color 220ms ease,
+    background-color 220ms ease,
+    box-shadow 300ms var(--ease-out),
+    translate 300ms var(--ease-out);
 }
 .project-tactile::after {
   content: "";
@@ -111,25 +111,25 @@
   );
   box-shadow: inset 0 1px 0
     color-mix(in srgb, var(--foreground) 12%, transparent);
-  transition: opacity 300ms;
+  transition: opacity 300ms ease;
 }
 .project-tactile:focus-within::after {
   opacity: 0.65;
 }
 .tactile-control {
   transition:
-    opacity 180ms,
-    background-color 180ms,
-    scale 180ms;
+    opacity 180ms ease,
+    background-color 180ms ease,
+    scale 160ms var(--ease-out);
 }
 .social-tactile {
   transition:
     background-color 180ms,
     color 180ms,
-    transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+    transform 300ms var(--ease-out);
 }
 .social-tactile svg {
-  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 300ms var(--ease-out);
 }
 
 .portfolio-motion :is(a, button):focus-visible {
@@ -233,6 +233,13 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* Motion tokens. Overrides Tailwind's defaults so ease-out / ease-in-out
+   utilities use the same strong curves as the hand-written CSS. */
+@theme {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1); /* strong ease-out for UI */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1); /* on-screen movement */
 }
 
 :root {
