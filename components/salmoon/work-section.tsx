@@ -8,6 +8,14 @@ import type { Project } from "@/types/project";
 import { WORST_EMPTY, WORST_ONE, WORST_PROJECTS } from "@/data/projects.worst";
 import { DevDataToggle, useDevDataset } from "@/components/dev/data-toggle";
 
+function displayHost(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url.replace(/^https?:\/\/(www\.)?/, "");
+  }
+}
+
 function ProjectPreview({ project }: { project: Project }) {
   if (project.image) {
     return (
@@ -45,7 +53,7 @@ function ProjectCard({
 }) {
   return (
     <div
-      className="project-tactile group/card border-border/70 bg-card/40 hover:border-border hover:bg-card/70 flex w-full flex-col space-y-2 rounded-[4px] border p-3 transition-colors"
+      className="project-tactile group/card border-border/70 bg-card/40 hover:border-border hover:bg-card/70 flex w-full min-w-0 flex-col space-y-2 rounded-[4px] border p-3 transition-colors"
       onPointerMove={(event) => {
         if (
           event.pointerType !== "mouse" ||
@@ -78,23 +86,26 @@ function ProjectCard({
       )}
 
       {/* Meta & Title */}
-      <div className="flex items-center justify-between pt-1">
-        <TagPill
-          name={project.category.name}
-          color={project.category.color}
-          size="sm"
-        />
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between gap-3 pt-1">
+        <span className="shrink-0">
+          <TagPill
+            name={project.category.name}
+            color={project.category.color}
+            size="sm"
+          />
+        </span>
+        <div className="flex min-w-0 items-center gap-2">
           {project.liveUrl && (
             <a
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground inline-flex items-center gap-0.5 text-[11px] transition-colors"
+              className="text-muted-foreground hover:text-foreground inline-flex min-w-0 items-center gap-0.5 text-[11px] transition-colors"
               aria-label={`Visit ${project.title}`}
+              title={displayHost(project.liveUrl)}
             >
-              {project.liveUrl.replace(/^https?:\/\/(www\.)?/, "")}
-              <ArrowUpRight className="size-3.5" />
+              <span className="truncate">{displayHost(project.liveUrl)}</span>
+              <ArrowUpRight className="size-3.5 shrink-0" />
             </a>
           )}
           {project.repoUrl && (
@@ -102,7 +113,7 @@ function ProjectCard({
               href={project.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground hover:text-foreground shrink-0 transition-colors"
               aria-label={`${project.title} source code`}
             >
               <Github className="size-3.5" />
@@ -112,7 +123,7 @@ function ProjectCard({
       </div>
 
       <div className="space-y-0.5">
-        <h3 className="text-foreground text-sm font-semibold">
+        <h3 className="text-foreground text-sm font-semibold [overflow-wrap:anywhere]">
           {project.title}
         </h3>
         {project.role && (
@@ -121,7 +132,7 @@ function ProjectCard({
       </div>
 
       <p
-        className={`text-muted-foreground font-sans text-xs leading-relaxed ${featured ? "" : "line-clamp-2"}`}
+        className={`text-muted-foreground font-sans text-xs leading-relaxed [overflow-wrap:anywhere] ${featured ? "" : "line-clamp-2"}`}
       >
         {project.description}
       </p>

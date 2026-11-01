@@ -1,6 +1,6 @@
 # 011 — Work card: keep long URLs and titles inside the card
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: bdceefd
 - **Severity**: HIGH (break-ui: Broken)
 - **Category**: Break-ui / layout
