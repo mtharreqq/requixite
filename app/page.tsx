@@ -6,6 +6,7 @@ import { WorkSection } from "@/components/salmoon/work-section";
 import { ExperienceSection } from "@/components/salmoon/experience-section";
 import { ConnectSection } from "@/components/salmoon/connect-section";
 import { RailNav } from "@/components/salmoon/rail-nav";
+import { HAS_PUBLISHED_WORK } from "@/data/projects";
 import {
   PortfolioMotion,
   SectionReveal,
@@ -29,9 +30,11 @@ export default function Home() {
         <SectionReveal>
           <ProcessSection />
         </SectionReveal>
-        <SectionReveal>
-          <WorkSection />
-        </SectionReveal>
+        {HAS_PUBLISHED_WORK && (
+          <SectionReveal>
+            <WorkSection />
+          </SectionReveal>
+        )}
         <SectionReveal>
           <ExperienceSection />
         </SectionReveal>
