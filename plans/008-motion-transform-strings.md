@@ -1,6 +1,6 @@
 # 008 — Drive Magnetic and Polaroid with full transform strings
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: e1816d6
 - **Severity**: LOW
 - **Category**: Performance
