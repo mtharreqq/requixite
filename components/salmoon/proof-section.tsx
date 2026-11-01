@@ -97,6 +97,7 @@ export function ProofSection() {
                   active={activePin === "p1"}
                   onClick={() => setActivePin(activePin === "p1" ? null : "p1")}
                   className="absolute -top-2.5 -right-2.5"
+                  placement="below-end"
                   variant="defect"
                   label="13px/19px asymmetric padding"
                 />
@@ -128,6 +129,7 @@ export function ProofSection() {
                     active={activePin === "p2"}
                     onClick={() => setActivePin(activePin === "p2" ? null : "p2")}
                     className="absolute -bottom-2.5 -left-2.5"
+                    placement="above-start"
                     variant="defect"
                     label="7px inner vs 26px outer radius clash"
                   />
@@ -163,6 +165,7 @@ export function ProofSection() {
                   active={activePin === "p3"}
                   onClick={() => setActivePin(activePin === "p3" ? null : "p3")}
                   className="absolute -top-2.5 -right-2.5"
+                  placement="below-end"
                   variant="refined"
                   label="Strict 24px (8px grid) spacing"
                 />
@@ -197,6 +200,7 @@ export function ProofSection() {
                     active={activePin === "p4"}
                     onClick={() => setActivePin(activePin === "p4" ? null : "p4")}
                     className="absolute -bottom-2.5 -left-2.5"
+                    placement="above-start"
                     variant="refined"
                     label="Harmonic concentric squircle radii"
                   />
@@ -250,12 +254,14 @@ function Pin({
   className,
   variant,
   label,
+  placement,
 }: {
   active: boolean;
   onClick: () => void;
   className?: string;
   variant: "defect" | "refined";
   label: string;
+  placement: "below-end" | "above-start";
 }) {
   const isDefect = variant === "defect";
   return (
@@ -273,7 +279,14 @@ function Pin({
       </button>
 
       {active && (
-        <div className="absolute z-30 bottom-full mb-1.5 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-1 rounded-md bg-popover border border-border text-popover-foreground text-[10px] shadow-md">
+        <div
+          className={cn(
+            "absolute z-30 w-max max-w-56 px-2 py-1 rounded-md bg-popover border border-border text-popover-foreground text-[10px] leading-snug shadow-md",
+            placement === "below-end"
+              ? "top-full mt-1.5 right-0 origin-top-right"
+              : "bottom-full mb-1.5 left-0 origin-bottom-left",
+          )}
+        >
           {label}
         </div>
       )}
