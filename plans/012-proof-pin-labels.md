@@ -1,6 +1,6 @@
 # 012 — Proof pin labels: never clipped by the stage
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: bdceefd
 - **Severity**: HIGH (break-ui: Broken)
 - **Category**: Break-ui / layout
