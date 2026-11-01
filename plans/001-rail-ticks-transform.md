@@ -1,6 +1,6 @@
 # 001 — Animate rail ticks with transform instead of width
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: e1816d6
 - **Severity**: HIGH
 - **Category**: Performance

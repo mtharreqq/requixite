@@ -27,6 +27,9 @@ const REACH = 2.5;
 const HOVER_REACH = 1.5;
 // Tick height (2px) + gap (7px).
 const TICK_PITCH = 9;
+// Widest tick: major 14px + full pull 18px. Ticks keep this layout width and
+// are scaled on the compositor, so scrolling never triggers layout.
+const MAX_TICK = 32;
 // Each section's hit area spans from halfway to the previous section to halfway to the next.
 const BAND = STEP * TICK_PITCH;
 // Share of the remaining distance covered each frame. High enough to track a
@@ -68,8 +71,9 @@ function tickStyle(i: number, cursor: number, hoverPos: number, hoverAmount: num
   const scrollPull = Math.max(0, 1 - Math.abs(i - cursor) / REACH);
   const hoverPull = hoverAmount * Math.max(0, 1 - Math.abs(i - hoverPos) / HOVER_REACH);
   const pull = Math.max(scrollPull, hoverPull);
+  const width = ((major ? 14 : 9) + pull * 18) * scale;
   return {
-    width: ((major ? 14 : 9) + pull * 18) * scale,
+    transform: `scaleX(${width / MAX_TICK})`,
     opacity: (major ? 0.45 : 0.22) + pull * 0.55,
   };
 }
@@ -107,8 +111,8 @@ export function RailNav() {
     const paint = () => {
       tickRefs.current.forEach((el, i) => {
         if (!el) return;
-        const { width, opacity } = tickStyle(i, a.cursor, a.hoverPos, a.hoverAmount, a.scale);
-        el.style.width = `${width}px`;
+        const { transform, opacity } = tickStyle(i, a.cursor, a.hoverPos, a.hoverAmount, a.scale);
+        el.style.transform = transform;
         el.style.opacity = `${opacity}`;
       });
     };
@@ -226,7 +230,7 @@ export function RailNav() {
               ref={(el) => {
                 tickRefs.current[i] = el;
               }}
-              className="bg-foreground block h-0.5 rounded-full"
+              className="bg-foreground block h-0.5 w-8 origin-left rounded-full"
               style={tickStyle(i, 0, 0, 0, 1)}
             />
           ))}

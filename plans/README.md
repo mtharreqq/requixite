@@ -4,7 +4,7 @@ Produced by the `improve-animations` skill (Emil Kowalski's motion bar) at commi
 
 | # | Plan | Severity | Category | Status |
 | --- | --- | --- | --- | --- |
-| 001 | [Rail ticks: transform instead of width](001-rail-ticks-transform.md) | HIGH | Performance | TODO |
+| 001 | [Rail ticks: transform instead of width](001-rail-ticks-transform.md) | HIGH | Performance | DONE |
 | 002 | [No reveal for sections visible at load](002-no-reveal-for-initially-visible-sections.md) | MEDIUM | Purpose & frequency | TODO |
 | 003 | [Gentler reduced motion](003-gentler-reduced-motion.md) | MEDIUM | Accessibility | TODO |
 | 004 | [Interruptible Proof card switch](004-proof-switch-interruptible.md) | MEDIUM | Interruptibility | TODO |
