@@ -14,9 +14,20 @@ Produced by the `improve-animations` skill (Emil Kowalski's motion bar) at commi
 | 008 | [Transform strings for Magnetic/Polaroid](008-motion-transform-strings.md) | LOW | Performance | TODO |
 | 009 | [Lighter section reveal](009-lighter-section-reveal.md) | LOW | Cohesion & tokens | TODO |
 | 010 | [Micro-delight for 3 state changes](010-micro-delight-state-changes.md) | LOW | Missed opportunities | TODO |
+| 011 | [Work card overflow](011-work-card-overflow.md) | HIGH | Break-ui | TODO |
+| 012 | [Proof pin labels never clipped](012-proof-pin-labels.md) | HIGH | Break-ui | TODO |
+| 013 | [Hide empty Work section](013-hide-empty-work.md) | MEDIUM | Break-ui | TODO |
+| 014 | [TagPill color-mix](014-tag-pill-color-mix.md) | LOW | Break-ui | TODO |
+| 015 | [Experience "@ Org" nowrap](015-experience-org-nowrap.md) | LOW | Break-ui | TODO |
+| 016 | [Touch press feedback](016-touch-press-feedback.md) | MEDIUM | Mobile-native | TODO |
+| 017 | [theme-color follows theme](017-theme-color.md) | LOW | Mobile-native | TODO |
+| 018 | [Controls: no select, no tap delay](018-controls-select-and-touch-action.md) | LOW | Mobile-native | TODO |
+
+Plans 011-018 come from `break-ui` (dev toggle at `/?data=worst|one|empty`) and `mobile-native` audits at commit `bdceefd`.
 
 ## Recommended execution order
 
+0. **011-015** first (real layout bugs), then the animation plans below, then **016-018**. 012 must land before 010 (010 animates the new pin label placement).
 1. **001**: biggest perf win, isolated to `rail-nav.tsx`.
 2. **002**: one-line fix, removes the load flicker.
 3. **007**: tokens first, because 009 references `var(--ease-out)`.

@@ -85,7 +85,7 @@ function handleCopy() {
 </AnimatePresence>
 ```
 
-2. Pin tooltip: rises from the pin, 150ms. The existing `-translate-x-1/2` uses Tailwind v4's `translate` property, which does not conflict with Framer's `transform`.
+2. Pin tooltip: grows out of the pin, 150ms. **Plan 012 changes the label placement** (`below-end` / `above-start`, no `-translate-x-1/2`); keep 012's classes and origin, and start from `translateY(-4px)` for `below-end` and `translateY(4px)` for `above-start`. The snippet below shows the pre-012 shape for reference only.
 
 ```tsx
 <AnimatePresence initial={false}>
