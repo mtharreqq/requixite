@@ -1,122 +1,92 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Copy, Check } from "lucide-react";
+import Image from "next/image";
+import { Check } from "lucide-react";
 import { GithubSvg, InstagramSvg, LinkedinSvg, XSvg } from "@/components/dock-icons";
+
+const EMAIL = "mtharreq@gmail.com";
+
+const SOCIALS = [
+  { label: "X", href: "https://x.com/tooreeq", Icon: XSvg },
+  { label: "GitHub", href: "https://github.com/mtharreqq", Icon: GithubSvg },
+  { label: "LinkedIn", href: "https://linkedin.com/in/mtharreq/", Icon: LinkedinSvg },
+  { label: "Instagram", href: "https://instagram.com/tooreeq", Icon: InstagramSvg },
+];
 
 export function ConnectSection() {
   const [copied, setCopied] = useState(false);
-  const email = "mtharreq@gmail.com";
 
   function handleCopy() {
-    navigator.clipboard.writeText(email);
+    navigator.clipboard.writeText(EMAIL);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   }
 
   return (
-    <section id="contact" className="w-full space-y-4 pb-20">
-      {/* Header */}
-      <div className="w-full space-y-1">
-        <div className="flex w-full flex-col">
-          <div className="flex h-8 w-full items-center justify-between gap-x-4">
-            <h2 className="text-foreground text-sm leading-none font-bold uppercase tracking-wider font-mono">
-              Let&apos;s Connect
-            </h2>
+    <section id="contact" className="w-full space-y-6 pb-12">
+      {/* Contact Card */}
+      <div className="bg-card rounded-[18px] border border-border/80 p-5 shadow-[0_12px_32px_-16px_rgb(0_0_0/0.22)] dark:shadow-[0_12px_32px_-16px_rgb(0_0_0/0.6)]">
+        <div className="flex items-center gap-3">
+          <div className="relative size-11 shrink-0 overflow-hidden rounded-full border border-border/80 bg-muted">
+            <Image src="/avatar.png" alt="Tharreq" width={44} height={44} className="size-full object-cover" />
+          </div>
+          <div className="space-y-0.5">
+            <p className="text-foreground text-[15px] leading-tight font-semibold">Tharreq</p>
+            <p className="text-muted-foreground text-[13px] leading-tight">Available for new projects</p>
           </div>
         </div>
-        <div className="text-muted-foreground flex flex-col gap-y-3 text-sm md:text-base leading-relaxed font-sans">
-          <p>
-            Have an app or prototype that needs human polish? I am currently available for freelance product design and frontend refinement.
-          </p>
-          <div className="flex items-center gap-2 font-mono text-xs text-emerald-600 dark:text-emerald-400">
-            <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Available for new projects</span>
+
+        <p className="text-foreground my-5 text-[17px] leading-relaxed tracking-[-0.01em]">
+          Got an app or prototype that needs a human touch? Send it over. I&apos;ll tell you honestly what I&apos;d fix first.
+        </p>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="bg-foreground text-background inline-flex h-[38px] min-w-[116px] cursor-pointer items-center justify-center gap-1.5 rounded-full px-4 text-[13px] font-medium transition-opacity hover:opacity-85 active:scale-[0.98]"
+          >
+            {copied ? (
+              <>
+                <Check className="size-3.5" />
+                Copied
+              </>
+            ) : (
+              "Copy email"
+            )}
+          </button>
+          <a
+            href={`mailto:${EMAIL}?subject=Project%20Inquiry%20%E2%80%94%20Requixite`}
+            className="bg-card text-foreground hover:bg-muted inline-flex h-[38px] items-center rounded-full border border-border/80 px-4 text-[13px] font-medium transition-colors"
+          >
+            Send email
+          </a>
+
+          <div className="ml-auto flex gap-1.5">
+            {SOCIALS.map(({ label, href, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                title={label}
+                className="text-muted-foreground hover:text-foreground hover:bg-muted grid size-[38px] place-items-center rounded-full border border-border/80 transition-colors"
+              >
+                <Icon className="size-4" />
+              </a>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Button Grid matching Salmoon */}
-      <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-6 pt-1">
-        {/* Button 1: Copy Email */}
-        <button
-          onClick={handleCopy}
-          className="group bg-muted text-muted-foreground flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-[2px] border border-border/60 transition-colors hover:bg-foreground hover:text-background font-mono text-xs font-medium"
-          aria-label="Copy Email"
-        >
-          {copied ? (
-            <>
-              <Check className="size-4 text-emerald-400" />
-              <span>Copied!</span>
-            </>
-          ) : (
-            <>
-              <Copy className="size-4" />
-              <span>Copy Email</span>
-            </>
-          )}
-        </button>
-
-        {/* Button 2: Mailto */}
-        <a
-          href={`mailto:${email}?subject=Project%20Inquiry%20%E2%80%94%20Requixite`}
-          className="group bg-muted text-muted-foreground flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-[2px] border border-border/60 transition-colors hover:bg-foreground hover:text-background font-mono text-xs font-medium"
-          aria-label="Send Mail"
-        >
-          <Mail className="size-4" />
-          <span>Email</span>
-        </a>
-
-        {/* Button 3: Instagram */}
-        <a
-          href="https://instagram.com/tooreeq"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group bg-muted text-muted-foreground flex h-12 w-full cursor-pointer items-center justify-center rounded-[2px] border border-border/60 transition-colors hover:bg-[#E1306C] hover:text-white"
-          aria-label="Instagram"
-        >
-          <InstagramSvg className="size-5 transition-transform group-hover:scale-110" />
-        </a>
-
-        {/* Button 4: X */}
-        <a
-          href="https://x.com/tooreeq"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group bg-muted text-muted-foreground flex h-12 w-full cursor-pointer items-center justify-center rounded-[2px] border border-border/60 transition-colors hover:bg-[#1DA1F2] hover:text-white"
-          aria-label="Twitter / X"
-        >
-          <XSvg />
-        </a>
-
-        {/* Button 5: GitHub */}
-        <a
-          href="https://github.com/mtharreqq"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group bg-muted text-muted-foreground flex h-12 w-full cursor-pointer items-center justify-center rounded-[2px] border border-border/60 transition-colors hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
-          aria-label="GitHub"
-        >
-          <GithubSvg />
-        </a>
-
-        {/* Button 6: LinkedIn */}
-        <a
-          href="https://linkedin.com/in/mtharreq/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group bg-muted text-muted-foreground flex h-12 w-full cursor-pointer items-center justify-center rounded-[2px] border border-border/60 transition-colors hover:bg-[#0077B5] hover:text-white"
-          aria-label="LinkedIn"
-        >
-          <LinkedinSvg />
-        </a>
-      </div>
-
-      {/* Footer tagline */}
-      <div className="pt-6 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-2 font-mono text-[11px] text-muted-foreground">
-        <span>&copy; {new Date().getFullYear()} Requixite &bull; Tharreq</span>
-        <span className="italic">&ldquo;Precise. Exquisite. Requisite.&rdquo;</span>
-      </div>
+      {/* Footer */}
+      <p className="text-muted-foreground text-center text-xs leading-[1.8]">
+        Precise. Exquisite. Requisite.
+        <br />
+        {`© ${new Date().getFullYear()} Requixite • Made in Bandung`}
+      </p>
     </section>
   );
 }

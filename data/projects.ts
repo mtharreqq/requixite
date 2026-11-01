@@ -2,6 +2,41 @@ import type { Project } from "@/types/project";
 
 export const PROJECTS: Project[] = [
   {
+    id: "rantai",
+    slug: "rantai",
+    title: "RantAI",
+    description:
+      "Website and CMS for RantAI, an AI company building agents, data platforms, and engineering teams for enterprise and government. I designed, built, and ship it end to end, from Figma to Vercel.",
+    category: {
+      slug: "client-work",
+      name: "Product Website",
+      color: "#3B82F6",
+    },
+    color: "#3B82F6",
+    art: "rule",
+    start_date: "2025-03-01",
+    status: "in_progress",
+    role: "Design, frontend & full-stack",
+    tags: ["Next.js 16", "React 19", "Tailwind CSS v4", "Neon Postgres", "Drizzle ORM", "Tiptap", "Vercel"],
+    highlights: [
+      {
+        title: "Products, Services, Academy & Insights",
+        description: "Six public pages with scroll-driven motion that stays light and stable on phones.",
+      },
+      {
+        title: "Custom CMS",
+        description: "Admin dashboard for posts with scheduled publishing, Academy books, team members, tags, and a post thumbnail designer.",
+      },
+      {
+        title: "SEO, security & accessibility",
+        description: "Generated preview images, sitemap and RSS, JSON-LD, CSP and HSTS headers, and WCAG 2.1 AA checks with axe-core.",
+      },
+    ],
+    image: "/work/rantai/home.jpg",
+    liveUrl: "https://www.rantai.dev",
+    published: true,
+  },
+  {
     id: "cashava",
     slug: "cashava",
     title: "Cashava",
@@ -32,7 +67,7 @@ export const PROJECTS: Project[] = [
       },
     ],
     liveUrl: "https://cashava.web.id",
-    published: true,
+    published: false,
   },
   {
     id: "token-tea",
@@ -60,7 +95,7 @@ export const PROJECTS: Project[] = [
         description: "Unified analytics comparing prompt and completion costs across multiple AI provider keys.",
       },
     ],
-    published: true,
+    published: false,
   },
   {
     id: "ruruuharaa",
@@ -89,7 +124,7 @@ export const PROJECTS: Project[] = [
       },
     ],
     liveUrl: "https://ruruuharaa.vercel.app",
-    published: true,
+    published: false,
   },
   {
     id: "sprout-ui",
@@ -119,6 +154,6 @@ export const PROJECTS: Project[] = [
       },
     ],
     repoUrl: "https://github.com/mtharreqq/sprout-ui",
-    published: true,
+    published: false,
   },
 ];

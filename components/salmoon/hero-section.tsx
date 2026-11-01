@@ -15,6 +15,33 @@ import {
   XSvg,
 } from "@/components/dock-icons";
 
+const POLAROIDS = [
+  {
+    src: "/work/rantai/home.jpg",
+    href: "https://www.rantai.dev",
+    label: "rantai.dev",
+    rotate: -6,
+    hoverRotate: -2,
+    position: "50% 45%",
+  },
+  {
+    src: "/work/rantai/products.jpg",
+    href: "https://www.rantai.dev/products",
+    label: "products",
+    rotate: 6,
+    hoverRotate: 0,
+    position: "85% 40%",
+  },
+  {
+    src: "/work/rantai/blog.jpg",
+    href: "https://www.rantai.dev/blog",
+    label: "insights ✨",
+    rotate: -3,
+    hoverRotate: 0,
+    position: "75% 40%",
+  },
+];
+
 export function HeroSection() {
   return (
     <section id="home" className="w-full space-y-8 pt-4">
@@ -63,17 +90,17 @@ export function HeroSection() {
                       </span>
                       <TwitterVerifiedBadgeSvg className="size-4 shrink-0" />
                     </div>
-                    <p className="text-muted-foreground text-xs font-mono truncate">
+                    <p className="text-muted-foreground text-xs truncate">
                       @tooreeq
                     </p>
                   </div>
                 </div>
 
                 <p className="mt-2.5 text-xs text-muted-foreground leading-relaxed font-sans">
-                  Product engineer &amp; designer based in Bandung. Crafting software with sub-pixel polish at Requixite.
+                  Product engineer &amp; designer based in Bandung. Frontend at Telkomsigma, building rantai.dev on the side.
                 </p>
 
-                <div className="mt-2.5 flex items-center gap-2 text-[11px] text-muted-foreground font-mono">
+                <div className="mt-2.5 flex items-center gap-2 text-[11px] text-muted-foreground">
                   <span>📍 Bandung, ID</span>
                   <span>&bull;</span>
                   <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
@@ -92,7 +119,7 @@ export function HeroSection() {
                     title="Instagram @tooreeq"
                   >
                     <InstagramSvg className="size-4 group-hover:scale-110 transition-transform" />
-                    <span className="text-[10px] font-mono font-medium">IG</span>
+                    <span className="text-[10px] font-medium">IG</span>
                   </a>
                   <a
                     href="https://x.com/tooreeq"
@@ -102,7 +129,7 @@ export function HeroSection() {
                     title="Twitter / X @tooreeq"
                   >
                     <XSvg className="size-4 group-hover:scale-110 transition-transform" />
-                    <span className="text-[10px] font-mono font-medium">X</span>
+                    <span className="text-[10px] font-medium">X</span>
                   </a>
                   <a
                     href="https://linkedin.com/in/mtharreq/"
@@ -112,7 +139,7 @@ export function HeroSection() {
                     title="LinkedIn @mtharreq"
                   >
                     <LinkedinSvg className="size-4 group-hover:scale-110 transition-transform" />
-                    <span className="text-[10px] font-mono font-medium">LinkedIn</span>
+                    <span className="text-[10px] font-medium">LinkedIn</span>
                   </a>
                   <a
                     href="https://github.com/mtharreqq"
@@ -122,14 +149,14 @@ export function HeroSection() {
                     title="GitHub @mtharreqq"
                   >
                     <GithubSvg className="size-4 group-hover:scale-110 transition-transform" />
-                    <span className="text-[10px] font-mono font-medium">GitHub</span>
+                    <span className="text-[10px] font-medium">GitHub</span>
                   </a>
                 </div>
               </HoverCardContent>
             </HoverCard>
             <TwitterVerifiedBadgeSvg className="size-4 shrink-0" />
           </div>
-          <p className="text-muted-foreground text-xs leading-none font-medium md:text-sm font-mono">
+          <p className="text-muted-foreground text-xs leading-none font-medium md:text-sm">
             Product Engineer &amp; Designer &bull; Requixite
           </p>
         </div>
@@ -139,84 +166,58 @@ export function HeroSection() {
       <div className="text-muted-foreground flex flex-col gap-y-4 text-sm md:text-base leading-relaxed font-sans">
         <p>
           I&apos;m a product engineer and designer based in{" "}
-          <span className="text-foreground font-medium">Bandung, Indonesia</span>. A sucker for meticulous craft and sub-pixel perfection.
+          <span className="text-foreground font-medium">Bandung, Indonesia</span>. I work where design meets code: I take an idea from Figma to production and care about every pixel along the way.
         </p>
         <p>
-          In an era where AI can scaffold an entire CRUD app in minutes, I obsess over the 1% that AI routinely overlooks: the harmonic spatial rhythm, concentric squircle radii, tactile micro-physics, and the intentional ergonomics that make software feel human, trustworthy, and joyful.
+          By day I build internal enterprise apps as a frontend developer at{" "}
+          <span className="text-foreground font-medium">Telkomsigma</span>. On the side I design and ship the website for{" "}
+          <a
+            href="https://www.rantai.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground font-medium underline decoration-muted-foreground/40 underline-offset-4 transition-colors hover:decoration-foreground"
+          >
+            RantAI
+          </a>
+          , an AI company.
+        </p>
+        <p>
+          AI can scaffold an app in minutes. I focus on what it usually misses: consistent spacing, clear hierarchy, considered motion, and the small details that make software feel finished and trustworthy.
         </p>
       </div>
 
       {/* Tilted Polaroid Stack */}
       <div className="relative w-full max-w-full pt-2">
         <div className="mx-auto flex w-fit flex-row items-center gap-2 -space-x-4 px-4 sm:gap-4 sm:-space-x-6">
-          {/* Card 1: Cashava */}
-          <motion.div
-            whileHover={{ y: -6, rotate: -2, zIndex: 10 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="shrink-0 overflow-hidden rounded-[2px] shadow-md border border-border/70"
-            style={{ transform: "rotate(-6deg)" }}
-          >
-            <div className="bg-card text-card-foreground flex h-fit flex-col items-center p-1.5 w-[27vw] sm:w-32">
-              <div className="aspect-square h-auto w-full rounded-[1px] bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 flex flex-col items-center justify-center p-2 text-center border border-emerald-500/20">
-                <span className="text-xl sm:text-2xl mb-1">🌱</span>
-                <span className="text-[10px] sm:text-xs font-mono font-semibold text-emerald-600 dark:text-emerald-400">
-                  Cashava
-                </span>
-                <span className="text-[9px] font-mono text-muted-foreground hidden sm:block">
-                  fin-copilot
-                </span>
-              </div>
-              <span className="text-xs sm:text-sm font-mono text-muted-foreground mt-1.5 tracking-tight">
-                finance :3
-              </span>
-            </div>
-          </motion.div>
-
-          {/* Card 2: Token Tea */}
-          <motion.div
-            whileHover={{ y: -6, rotate: 0, zIndex: 10 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="shrink-0 overflow-hidden rounded-[2px] shadow-md border border-border/70 z-1"
-            style={{ transform: "rotate(6deg)" }}
-          >
-            <div className="bg-card text-card-foreground flex h-fit flex-col items-center p-1.5 w-[27vw] sm:w-32">
-              <div className="aspect-square h-auto w-full rounded-[1px] bg-gradient-to-br from-blue-500/20 to-blue-500/5 flex flex-col items-center justify-center p-2 text-center border border-blue-500/20">
-                <span className="text-xl sm:text-2xl mb-1">🍵</span>
-                <span className="text-[10px] sm:text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">
-                  Token Tea
-                </span>
-                <span className="text-[9px] font-mono text-muted-foreground hidden sm:block">
-                  macOS HUD
+          {POLAROIDS.map((card, i) => (
+            <motion.a
+              key={card.src}
+              href={card.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ y: -6, rotate: card.hoverRotate, zIndex: 10 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className={`shrink-0 overflow-hidden rounded-[2px] shadow-md border border-border/70 ${i === 1 ? "z-1" : ""}`}
+              style={{ transform: `rotate(${card.rotate}deg)` }}
+              aria-label={`RantAI ${card.label}`}
+            >
+              <div className="bg-card text-card-foreground flex h-fit flex-col items-center p-1.5 w-[27vw] sm:w-32">
+                <div className="relative aspect-square h-auto w-full overflow-hidden rounded-[1px] border border-border/50 bg-muted">
+                  <Image
+                    src={card.src}
+                    alt={`RantAI ${card.label} page`}
+                    fill
+                    sizes="128px"
+                    className="object-cover"
+                    style={{ objectPosition: card.position }}
+                  />
+                </div>
+                <span className="text-xs sm:text-sm text-muted-foreground mt-1.5 tracking-tight">
+                  {card.label}
                 </span>
               </div>
-              <span className="text-xs sm:text-sm font-mono text-muted-foreground mt-1.5 tracking-tight">
-                mac app!!
-              </span>
-            </div>
-          </motion.div>
-
-          {/* Card 3: Ruruuharaa */}
-          <motion.div
-            whileHover={{ y: -6, rotate: 0, zIndex: 10 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="shrink-0 overflow-hidden rounded-[2px] shadow-md border border-border/70"
-            style={{ transform: "rotate(-3deg)" }}
-          >
-            <div className="bg-card text-card-foreground flex h-fit flex-col items-center p-1.5 w-[27vw] sm:w-32">
-              <div className="aspect-square h-auto w-full rounded-[1px] bg-gradient-to-br from-amber-500/20 to-amber-500/5 flex flex-col items-center justify-center p-2 text-center border border-amber-500/20">
-                <span className="text-xl sm:text-2xl mb-1">🦌</span>
-                <span className="text-[10px] sm:text-xs font-mono font-semibold text-amber-600 dark:text-amber-400">
-                  Ruru
-                </span>
-                <span className="text-[9px] font-mono text-muted-foreground hidden sm:block">
-                  canvas studio
-                </span>
-              </div>
-              <span className="text-xs sm:text-sm font-mono text-muted-foreground mt-1.5 tracking-tight">
-                beads ✨
-              </span>
-            </div>
-          </motion.div>
+            </motion.a>
+          ))}
         </div>
       </div>
     </section>

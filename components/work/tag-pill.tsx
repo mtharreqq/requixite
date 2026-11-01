@@ -34,7 +34,6 @@ export function TagPill({ name, color, size = "md" }: TagPillProps) {
         background: bg,
         color,
         border: `1px solid ${border}`,
-        fontFamily: "var(--font-geist-mono), 'Geist Mono', monospace",
         whiteSpace: "nowrap",
         lineHeight: 1.4,
       }}

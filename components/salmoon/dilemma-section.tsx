@@ -7,7 +7,7 @@ export function DilemmaSection() {
       <div className="w-full space-y-1">
         <div className="flex w-full flex-col">
           <div className="flex h-8 w-full items-center justify-between gap-x-4">
-            <h2 className="text-foreground text-sm leading-none font-bold uppercase tracking-wider font-mono">
+            <h2 className="text-foreground text-sm leading-none font-bold uppercase tracking-wider">
               The Dilemma
             </h2>
           </div>

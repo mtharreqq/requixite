@@ -30,7 +30,7 @@ export function ProcessSection() {
       <div className="w-full space-y-1">
         <div className="flex w-full flex-col">
           <div className="flex h-8 w-full items-center justify-between gap-x-4">
-            <h2 className="text-foreground text-sm leading-none font-bold uppercase tracking-wider font-mono">
+            <h2 className="text-foreground text-sm leading-none font-bold uppercase tracking-wider">
               My Process
             </h2>
           </div>
@@ -51,10 +51,10 @@ export function ProcessSection() {
           >
             {/* Number Pill */}
             <div className="flex items-start gap-x-3 col-span-2 sm:col-span-2">
-              <div className="bg-muted text-foreground flex size-6 shrink-0 items-center justify-center rounded-[2px] border border-border/80 font-mono text-xs font-semibold">
+              <div className="bg-muted text-foreground flex size-6 shrink-0 items-center justify-center rounded-[2px] border border-border/80 text-xs font-semibold">
                 {step.num}
               </div>
-              <h3 className="text-foreground text-sm font-semibold pt-0.5 font-mono">
+              <h3 className="text-foreground text-sm font-semibold pt-0.5">
                 {step.title}
               </h3>
             </div>

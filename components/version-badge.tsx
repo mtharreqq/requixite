@@ -35,8 +35,8 @@ export function VersionBadge({ versions }: Props) {
               key={v.tag}
               className="flex items-center justify-between border-b py-2 last:border-0"
             >
-              <p className="font-mono text-xs font-medium">{v.tag}</p>
-              <p className="text-muted-foreground font-mono text-xs">
+              <p className="text-xs font-medium">{v.tag}</p>
+              <p className="text-muted-foreground text-xs">
                 {dayjs(v.released_at).format("DD MMM YYYY")}
               </p>
             </div>
