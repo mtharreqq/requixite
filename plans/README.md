@@ -11,7 +11,7 @@ Produced by the `improve-animations` skill (Emil Kowalski's motion bar) at commi
 | 005 | [Grouped social tooltips](005-grouped-social-tooltips.md) | MEDIUM | Purpose & frequency | DONE |
 | 006 | [Replace transition-all](006-replace-transition-all.md) | MEDIUM | Performance | DONE |
 | 007 | [Easing tokens](007-easing-tokens.md) | LOW | Cohesion & tokens | DONE |
-| 008 | [Transform strings for Magnetic/Polaroid](008-motion-transform-strings.md) | LOW | Performance | TODO |
+| 008 | [Transform strings for Magnetic/Polaroid](008-motion-transform-strings.md) | LOW | Performance | DONE |
 | 009 | [Lighter section reveal](009-lighter-section-reveal.md) | LOW | Cohesion & tokens | DONE |
 | 010 | [Micro-delight for 3 state changes](010-micro-delight-state-changes.md) | LOW | Missed opportunities | TODO |
 | 011 | [Work card overflow](011-work-card-overflow.md) | HIGH | Break-ui | DONE |
