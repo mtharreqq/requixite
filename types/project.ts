@@ -37,6 +37,8 @@ export interface Project {
   status: ProjectStatus;
   tags: string[];
   highlights?: ProjectHighlight[];
+  image?: string;
+  role?: string;
   liveUrl?: string;
   repoUrl?: string;
   published: boolean;

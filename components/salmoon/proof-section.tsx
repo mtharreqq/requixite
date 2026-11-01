@@ -24,23 +24,23 @@ export function ProofSection() {
       <div className="w-full space-y-1">
         <div className="flex w-full flex-col">
           <div className="flex h-8 w-full items-center justify-between gap-x-4">
-            <h2 className="text-foreground text-sm leading-none font-bold uppercase tracking-wider font-mono">
+            <h2 className="text-foreground text-sm leading-none font-bold uppercase tracking-wider">
               The Proof
             </h2>
-            <span className="font-mono text-xs text-muted-foreground">
+            <span className="text-xs text-muted-foreground">
               Interactive
             </span>
           </div>
         </div>
         <div className="text-muted-foreground flex flex-col gap-y-3 text-sm md:text-base leading-relaxed font-sans">
           <p>
-            An interactive comparison of raw AI generation versus human polish on the Cashava wallet card. Toggle below to inspect the microscopic details.
+            An interactive comparison of raw AI generation versus human polish on a sample wallet card. Toggle below to inspect the microscopic details.
           </p>
         </div>
       </div>
 
       {/* Mode Switcher */}
-      <div className="p-1 rounded-lg bg-muted/60 border border-border/80 flex items-center gap-1 font-mono text-xs">
+      <div className="p-1 rounded-lg bg-muted/60 border border-border/80 flex items-center gap-1 text-xs">
         <button
           onClick={() => {
             setMode("slop");
@@ -102,12 +102,12 @@ export function ProofSection() {
                 />
 
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider">
-                    CASHAVA WALLET
+                  <span className="text-[10px] text-zinc-400 uppercase tracking-wider">
+                    MY WALLET
                   </span>
                   <span
                     style={{ borderRadius: "3px" }}
-                    className="bg-purple-600/20 text-purple-700 dark:text-purple-300 text-[10px] px-1.5 py-0.5 border border-purple-500/30 font-mono"
+                    className="bg-purple-600/20 text-purple-700 dark:text-purple-300 text-[10px] px-1.5 py-0.5 border border-purple-500/30"
                   >
                     Active
                   </span>
@@ -157,7 +157,7 @@ export function ProofSection() {
               transition={{ duration: 0.2 }}
               className="w-full max-w-sm relative"
             >
-              <div className="p-5 sm:p-6 rounded-2xl border border-border/80 bg-card shadow-sm font-mono relative">
+              <div className="p-5 sm:p-6 rounded-2xl border border-border/80 bg-card shadow-sm relative">
                 {/* Pin 1 */}
                 <Pin
                   active={activePin === "p3"}
@@ -171,7 +171,7 @@ export function ProofSection() {
                   <div className="flex items-center gap-2">
                     <div className="size-2 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-xs text-muted-foreground tracking-tight font-medium">
-                      Cashava &bull; Vault 01
+                      Main &bull; Vault 01
                     </span>
                   </div>
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
@@ -202,9 +202,9 @@ export function ProofSection() {
                   />
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground text-xs">Autonomous Agent (MCP)</span>
-                    <span className="text-foreground text-[11px] font-mono font-semibold">Active BYOK</span>
+                    <span className="text-foreground text-[11px] font-semibold">Active BYOK</span>
                   </div>
-                  <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground pt-1.5 border-t border-border/40 font-mono">
+                  <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground pt-1.5 border-t border-border/40">
                     <span>3 txns reconciled</span>
                     <span className="text-foreground">0.12s latency</span>
                   </div>
@@ -213,7 +213,7 @@ export function ProofSection() {
                 <Button
                   variant="default"
                   size="sm"
-                  className="w-full mt-4 h-8 rounded-xl font-mono text-xs font-medium gap-1.5 shadow-xs transition-transform active:scale-[0.98]"
+                  className="w-full mt-4 h-8 rounded-xl text-xs font-medium gap-1.5 shadow-xs transition-transform active:scale-[0.98]"
                 >
                   <CreditCard className="size-3.5" />
                   Manage Account &amp; Transfer
@@ -224,7 +224,7 @@ export function ProofSection() {
         </AnimatePresence>
 
         {/* Micro-Audit Points */}
-        <div className="w-full mt-5 pt-4 border-t border-border/40 font-mono text-[11px] text-muted-foreground space-y-1.5">
+        <div className="w-full mt-5 pt-4 border-t border-border/40 text-[11px] text-muted-foreground space-y-1.5">
           {mode === "slop" ? (
             <>
               <p className="text-red-500 font-medium">&bull; Asymmetric padding (13px top, 19px left, 9px bottom)</p>
@@ -263,7 +263,7 @@ function Pin({
       <button
         onClick={onClick}
         className={cn(
-          "size-5 rounded-full flex items-center justify-center font-mono text-[9px] font-bold shadow-md transition-transform hover:scale-110",
+          "size-5 rounded-full flex items-center justify-center text-[9px] font-bold shadow-md transition-transform hover:scale-110",
           isDefect
             ? "bg-red-500 text-white border border-white dark:border-zinc-900"
             : "bg-emerald-500 text-white border border-white dark:border-zinc-900"
@@ -273,7 +273,7 @@ function Pin({
       </button>
 
       {active && (
-        <div className="absolute z-30 bottom-full mb-1.5 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-1 rounded-md bg-popover border border-border text-popover-foreground text-[10px] font-mono shadow-md">
+        <div className="absolute z-30 bottom-full mb-1.5 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-1 rounded-md bg-popover border border-border text-popover-foreground text-[10px] shadow-md">
           {label}
         </div>
       )}
