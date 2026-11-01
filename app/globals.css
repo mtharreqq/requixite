@@ -27,6 +27,15 @@
   }
 }
 
+@keyframes portfolio-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .hero-identity {
   animation: portfolio-focus 700ms var(--ease-out) both;
 }
@@ -158,17 +167,20 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .portfolio-motion *,
-  .portfolio-motion *::before,
-  .portfolio-motion *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
+  /* Entrances: keep a short opacity fade, drop translate + blur. */
+  .hero-identity,
+  .hero-copy > p,
+  .hero-polaroids {
+    animation: portfolio-fade 200ms ease both;
   }
   .portfolio-motion [data-reveal] {
     opacity: 1;
     transform: none;
   }
+  .portfolio-motion [data-reveal] > section > * {
+    animation: none;
+  }
+  /* Hover/press movement off; colour, background, opacity transitions stay. */
   .portfolio-motion .project-tactile:hover {
     translate: none;
   }
@@ -176,11 +188,15 @@
   .portfolio-motion .social-tactile:hover svg {
     transform: none;
   }
-  .polaroid-link::after {
-    display: none;
+  .portfolio-motion .tactile-control:active {
+    scale: none;
   }
+  .polaroid-link::after,
   .portfolio-motion .project-tactile::after {
     display: none;
+  }
+  html {
+    scroll-behavior: auto;
   }
 }
 
