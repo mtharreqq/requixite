@@ -20,7 +20,7 @@ Produced by the `improve-animations` skill (Emil Kowalski's motion bar) at commi
 | 014 | [TagPill color-mix](014-tag-pill-color-mix.md) | LOW | Break-ui | DONE |
 | 015 | [Experience "@ Org" nowrap](015-experience-org-nowrap.md) | LOW | Break-ui | DONE |
 | 016 | [Touch press feedback](016-touch-press-feedback.md) | MEDIUM | Mobile-native | DONE |
-| 017 | [theme-color follows theme](017-theme-color.md) | LOW | Mobile-native | TODO |
+| 017 | [theme-color follows theme](017-theme-color.md) | LOW | Mobile-native | DONE |
 | 018 | [Controls: no select, no tap delay](018-controls-select-and-touch-action.md) | LOW | Mobile-native | TODO |
 
 Plans 011-018 come from `break-ui` (dev toggle at `/?data=worst|one|empty`) and `mobile-native` audits at commit `bdceefd`.
