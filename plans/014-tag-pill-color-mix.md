@@ -1,6 +1,6 @@
 # 014 — TagPill: tint with color-mix so any CSS colour works
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: bdceefd
 - **Severity**: LOW (break-ui: Ugly / Fragile)
 - **Category**: Break-ui / data
