@@ -1,6 +1,6 @@
 # 009 — Lighter, shorter section reveal
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: e1816d6
 - **Severity**: LOW
 - **Category**: Cohesion & tokens

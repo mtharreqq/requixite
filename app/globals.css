@@ -27,6 +27,17 @@
   }
 }
 
+@keyframes portfolio-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes portfolio-fade {
   from {
     opacity: 0;
@@ -58,14 +69,15 @@
 .portfolio-motion [data-reveal="pending"] {
   opacity: 0;
 }
+/* Sections: lighter than the hero (no blur, shorter) so the hero stays the main moment. */
 .portfolio-motion [data-reveal="visible"] > section > * {
-  animation: portfolio-focus 800ms var(--ease-out) both;
+  animation: portfolio-rise 500ms var(--ease-out) both;
 }
 .portfolio-motion [data-reveal="visible"] > section > :nth-child(2) {
-  animation-delay: 90ms;
+  animation-delay: 60ms;
 }
 .portfolio-motion [data-reveal="visible"] > section > :nth-child(n + 3) {
-  animation-delay: 180ms;
+  animation-delay: 120ms;
 }
 .portfolio-motion [data-reveal]:focus-within {
   opacity: 1;
