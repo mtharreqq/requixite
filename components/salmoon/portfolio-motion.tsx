@@ -48,7 +48,7 @@ export function PortfolioMotion({
       sections.forEach((section) => {
         const bounds = section.getBoundingClientRect();
         if (bounds.top < window.innerHeight && bounds.bottom > 0) {
-          section.dataset.reveal = "visible";
+          // Already painted by SSR; animating it now would blink it out and back in.
           return;
         }
         section.dataset.reveal = "pending";

@@ -1,6 +1,6 @@
 # 002 — Do not replay the reveal on sections already visible at load
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: e1816d6
 - **Severity**: MEDIUM
 - **Category**: Purpose & frequency
