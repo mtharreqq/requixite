@@ -3,8 +3,9 @@
 import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
+import { HAS_PUBLISHED_WORK } from "@/data/projects";
 
-const SECTIONS = [
+const ALL_SECTIONS = [
   { id: "home", label: "Intro" },
   { id: "dilemma", label: "Dilemma" },
   { id: "proof", label: "Proof" },
@@ -13,6 +14,8 @@ const SECTIONS = [
   { id: "experience", label: "Experience" },
   { id: "contact", label: "Contact" },
 ];
+// No published projects means no Work section, so no rail stop for it either.
+const SECTIONS = ALL_SECTIONS.filter((s) => s.id !== "work" || HAS_PUBLISHED_WORK);
 
 const MINOR_PER_SECTION = 3;
 const STEP = MINOR_PER_SECTION + 1;

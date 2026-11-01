@@ -177,6 +177,10 @@ export function WorkSection() {
   const publishedProjects = source.filter((p) => p.published);
   const featured = publishedProjects.length === 1;
 
+  // Nothing published: hide the section rather than promise an empty grid.
+  // The dev toggle still renders so the dataset can be switched back.
+  if (publishedProjects.length === 0) return <DevDataToggle current={dataset} />;
+
   return (
     <section id="work" className="w-full space-y-4">
       {/* Header */}

@@ -157,3 +157,5 @@ export const PROJECTS: Project[] = [
     published: false,
   },
 ];
+
+export const HAS_PUBLISHED_WORK = PROJECTS.some((p) => p.published);

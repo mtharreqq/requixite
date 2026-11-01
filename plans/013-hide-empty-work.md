@@ -1,6 +1,6 @@
 # 013 — Hide the Work section (and its rail stop) when nothing is published
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: bdceefd
 - **Severity**: MEDIUM (break-ui: Ugly)
 - **Category**: Break-ui / empty state
