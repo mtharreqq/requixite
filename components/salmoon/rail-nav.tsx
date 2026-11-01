@@ -284,7 +284,7 @@ export function RailNav() {
       <button
         type="button"
         onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-        className="text-muted-foreground hover:text-foreground relative -ml-2 mt-6 grid size-7 cursor-pointer place-items-center rounded-full transition-colors"
+        className="text-muted-foreground hover:text-foreground relative -ml-2 mt-6 grid size-7 cursor-pointer place-items-center rounded-full transition-[color,scale] duration-150 ease-out active:scale-90"
         aria-label="Toggle theme"
       >
         {/* Mount the presence only after hydration so the correct icon

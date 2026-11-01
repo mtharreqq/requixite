@@ -1,6 +1,6 @@
 # 016 — Press feedback for touch on every control
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: bdceefd
 - **Severity**: MEDIUM
 - **Category**: Mobile-native

@@ -100,7 +100,7 @@ function ProjectCard({
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground inline-flex min-w-0 items-center gap-0.5 text-[11px] transition-colors"
+              className="text-muted-foreground hover:text-foreground inline-flex min-w-0 items-center gap-0.5 text-[11px] transition-[color,opacity] active:opacity-60"
               aria-label={`Visit ${project.title}`}
               title={displayHost(project.liveUrl)}
             >
@@ -113,7 +113,7 @@ function ProjectCard({
               href={project.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground shrink-0 transition-colors"
+              className="text-muted-foreground hover:text-foreground shrink-0 transition-[color,opacity] active:opacity-60"
               aria-label={`${project.title} source code`}
             >
               <Github className="size-3.5" />
