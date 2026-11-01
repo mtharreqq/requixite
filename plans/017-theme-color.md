@@ -1,6 +1,6 @@
 # 017 — theme-color that follows the active theme
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: bdceefd
 - **Severity**: LOW
 - **Category**: Mobile-native
