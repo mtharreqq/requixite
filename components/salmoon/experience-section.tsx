@@ -51,9 +51,9 @@ export function ExperienceSection() {
         {EXPERIENCE.map((item) => (
           <li key={`${item.org}-${item.role}`} className="space-y-1">
             <div className="flex items-baseline justify-between gap-x-4">
-              <h3 className="text-foreground text-sm font-semibold">
+              <h3 className="text-foreground min-w-0 text-sm font-semibold">
                 {item.role}{" "}
-                <span className="text-muted-foreground font-normal">@ {item.org}</span>
+                <span className="text-muted-foreground font-normal whitespace-nowrap">@ {item.org}</span>
               </h3>
               <span className="text-muted-foreground shrink-0 text-[11px]">
                 {item.period}

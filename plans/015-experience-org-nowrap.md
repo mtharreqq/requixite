@@ -1,6 +1,6 @@
 # 015 — Experience: keep "@ Org" together
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: bdceefd
 - **Severity**: LOW (break-ui: Ugly)
 - **Category**: Break-ui / text
