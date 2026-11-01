@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.7.0](https://github.com/mtharreqq/requixite/compare/requixite-v0.6.1...requixite-v0.7.0) (2026-11-01)
+
+
+### Features
+
+* add personal avatar, favicons and social profile hover card ([ee071bf](https://github.com/mtharreqq/requixite/commit/ee071bf0648a3d1b44c543658f0682dc5749360e))
+* refactor portfolio layout to salmoon intimate style ([7e2e7b6](https://github.com/mtharreqq/requixite/commit/7e2e7b643a19175f647ae2d7832b19eff0a9a4b2))
+* showcase RantAI and add scroll rail navigation ([3a0f701](https://github.com/mtharreqq/requixite/commit/3a0f7019ffb411cdee5d499d804ff2a7bd8a7b0d))
+* simplify portfolio to zero-database static landing page ([186c544](https://github.com/mtharreqq/requixite/commit/186c5442bf71267beaa1b7bfa1651fdc8da8974d))
+
 ## [0.6.1](https://github.com/mtharreqq/requixite/compare/requixite-v0.6.0...requixite-v0.6.1) (2026-05-14)
 
 
