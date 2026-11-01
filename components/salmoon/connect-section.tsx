@@ -10,9 +10,10 @@ import {
   XSvg,
 } from "@/components/dock-icons";
 import { Magnetic } from "@/components/salmoon/portfolio-motion";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import {
-  Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
@@ -97,29 +98,33 @@ export function ConnectSection() {
             </a>
           </Magnetic>
 
-          <div className="ml-auto flex gap-1.5">
-            {SOCIALS.map(({ label, href, Icon }) => (
-              <Tooltip key={label} delayDuration={250}>
-                <TooltipTrigger asChild>
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    className="social-tactile text-muted-foreground hover:text-foreground hover:bg-muted border-border/80 grid size-[38px] place-items-center rounded-full border transition-colors"
+          {/* One provider for the group: after the first tooltip, the next
+              ones open instantly (skip delay) and without the entrance. */}
+          <TooltipProvider delayDuration={250} skipDelayDuration={300}>
+            <div className="ml-auto flex gap-1.5">
+              {SOCIALS.map(({ label, href, Icon }) => (
+                <TooltipPrimitive.Root key={label}>
+                  <TooltipTrigger asChild>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      className="social-tactile text-muted-foreground hover:text-foreground hover:bg-muted border-border/80 grid size-[38px] place-items-center rounded-full border transition-colors"
+                    >
+                      <Icon className="size-4" />
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    sideOffset={8}
+                    className="motion-reduce:animate-none! data-[state=instant-open]:animate-none!"
                   >
-                    <Icon className="size-4" />
-                  </a>
-                </TooltipTrigger>
-                <TooltipContent
-                  sideOffset={8}
-                  className="motion-reduce:animate-none!"
-                >
-                  {label}
-                </TooltipContent>
-              </Tooltip>
-            ))}
-          </div>
+                    {label}
+                  </TooltipContent>
+                </TooltipPrimitive.Root>
+              ))}
+            </div>
+          </TooltipProvider>
         </div>
       </div>
 
