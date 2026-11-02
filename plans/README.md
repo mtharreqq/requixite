@@ -45,7 +45,8 @@ Plans 011-018 come from `break-ui` (dev toggle at `/?data=worst|one|empty`) and 
 - 001, 003 and 010 all edit `rail-nav.tsx` in different places; apply in that order.
 - 005 and 010 both edit `connect-section.tsx` in different places.
 
-## Out of scope (for the dependency cleanup step)
+## Dependency and dead code cleanup (DONE)
 
-- `gsap`, `components/text-type.tsx`, `components/rotating-text.tsx`, `components/squares.tsx` are unused.
-- `framer-motion` and `motion` are both installed (same library). Consolidation is a separate task, not part of these plans.
+- Purged unused packages: `gsap`, `dayjs`, `motion`, `radix-ui`, and unused `@radix-ui/*` primitives.
+- Purged dead components: `text-type.tsx`, `rotating-text.tsx`, `squares.tsx`, `version-*`, `brand-hover-card`, `project-cover`, unused `components/ui/*` primitives.
+- Consolidated motion library strictly onto `framer-motion`.

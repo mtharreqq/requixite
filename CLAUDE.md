@@ -39,7 +39,6 @@ All portfolio content is maintained directly in static TypeScript data files:
 - **Projects**: `data/projects.ts` (`PROJECTS` array typed by `types/project.ts`).
   - Add, reorder, or edit projects by modifying the array.
   - Supports `title`, `slug`, `description`, `category`, `color`, `art`, `tags`, `highlights`, `liveUrl`, `repoUrl`, `status`, and `published`.
-- **Releases**: `data/releases.ts` (`RELEASES` array typed by `types/release.ts`).
 
 ### Brand Alignment (from Mori)
 
