@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.8.0](https://github.com/mtharreqq/requixite/compare/requixite-v0.7.0...requixite-v0.8.0) (2026-11-02)
+
+
+### Features
+
+* add tactile portfolio interactions and section reveals ([fba216c](https://github.com/mtharreqq/requixite/commit/fba216cba3fb9bd3b3c2e70ec1894dd27ee4d765))
+* **contact:** group social tooltips so only the first one waits ([9d21e2d](https://github.com/mtharreqq/requixite/commit/9d21e2dded7607ed553217962e0061ad19d7580c))
+* **mobile:** no text selection or tap delay on controls ([acfcbd5](https://github.com/mtharreqq/requixite/commit/acfcbd58634d5f0a6eeec10759c94f19815c57d9))
+* **mobile:** press feedback on every control for touch ([79633d3](https://github.com/mtharreqq/requixite/commit/79633d37c764abb64973b32ef228be6d54c29259))
+* **mobile:** theme-color that follows the active theme ([30f6d91](https://github.com/mtharreqq/requixite/commit/30f6d914abaf7645352e1df06afa791ae6fcc7e4))
+* **motion:** animate copy-email, pin labels and theme icon swaps ([aa8a27c](https://github.com/mtharreqq/requixite/commit/aa8a27c7f72e5a8dbf88c67807877215b702785b))
+* **motion:** lighter, shorter section reveal ([a46d149](https://github.com/mtharreqq/requixite/commit/a46d14999ab3527d85366c2aba5240a19a4e5575))
+* **proof:** interruptible crossfade with animated height ([a6cb423](https://github.com/mtharreqq/requixite/commit/a6cb4237fd19c8f200c81abdee61e6a73c0e7194))
+* **work:** hide work section and rail stop when nothing is published ([339f5ce](https://github.com/mtharreqq/requixite/commit/339f5ce50626ddf561327ad1e1a13582c49fe20a))
+
+
+### Bug Fixes
+
+* **a11y:** reduced motion keeps fades, drops movement ([be11d6d](https://github.com/mtharreqq/requixite/commit/be11d6d3e13efa29e153c3ca8b7a1218d59e7146))
+* **experience:** keep @ org on one line ([466baa4](https://github.com/mtharreqq/requixite/commit/466baa442cbc19d6fdae5d3f4e97e15d8dc2dec4))
+* **motion:** do not replay reveal on sections visible at load ([9588e25](https://github.com/mtharreqq/requixite/commit/9588e25ded9ecaffe107d4275b4c5faafab1f080))
+* **proof:** open pin labels into the card so they are never clipped ([cf1c901](https://github.com/mtharreqq/requixite/commit/cf1c90152c2852d6a74557fe1d86e3701ecaf0c8))
+* **tag-pill:** tint with color-mix so any css colour works ([3269d0a](https://github.com/mtharreqq/requixite/commit/3269d0ad6f9967eab3292fa3496591a059ebdfb8))
+* **work:** keep long hosts and titles inside project cards ([844fdde](https://github.com/mtharreqq/requixite/commit/844fdde981bced3dc19d9340d138a031ab830b82))
+
+
+### Performance Improvements
+
+* **motion:** drive magnetic and polaroid with transform strings ([94e9cd6](https://github.com/mtharreqq/requixite/commit/94e9cd6476e692bd0a0c47a7a40fe7beaf4b6330))
+* **motion:** replace transition-all with explicit properties ([82dec04](https://github.com/mtharreqq/requixite/commit/82dec0417ef475d9a2ce7318a90ac598289bef37))
+* **rail:** scale ticks with transform instead of animating width ([928e360](https://github.com/mtharreqq/requixite/commit/928e36035333cef5596adb84098a25e12e88a3d4))
+
 ## [0.7.0](https://github.com/mtharreqq/requixite/compare/requixite-v0.6.1...requixite-v0.7.0) (2026-11-01)
 
 
