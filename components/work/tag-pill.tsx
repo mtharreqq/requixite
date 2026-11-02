@@ -1,5 +1,3 @@
-"use client";
-
 interface TagPillProps {
   name: string;
   color: string;

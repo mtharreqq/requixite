@@ -1,5 +1,3 @@
-"use client";
-
 export function DilemmaSection() {
   return (
     <section id="dilemma" className="w-full space-y-4">

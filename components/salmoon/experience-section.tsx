@@ -1,5 +1,3 @@
-"use client";
-
 const EXPERIENCE = [
   {
     role: "Frontend Developer",

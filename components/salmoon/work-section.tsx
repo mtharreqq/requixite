@@ -5,8 +5,6 @@ import { ArrowUpRight, Github } from "lucide-react";
 import { PROJECTS } from "@/data/projects";
 import { TagPill } from "@/components/work/tag-pill";
 import type { Project } from "@/types/project";
-import { WORST_EMPTY, WORST_ONE, WORST_PROJECTS } from "@/data/projects.worst";
-import { DevDataToggle, useDevDataset } from "@/components/dev/data-toggle";
 
 function displayHost(url: string) {
   try {
@@ -165,21 +163,11 @@ function ProjectCard({
 }
 
 export function WorkSection() {
-  const dataset = useDevDataset();
-  const source =
-    dataset === "worst"
-      ? WORST_PROJECTS
-      : dataset === "one"
-        ? WORST_ONE
-        : dataset === "empty"
-          ? WORST_EMPTY
-          : PROJECTS;
-  const publishedProjects = source.filter((p) => p.published);
+  const publishedProjects = PROJECTS.filter((p) => p.published);
   const featured = publishedProjects.length === 1;
 
   // Nothing published: hide the section rather than promise an empty grid.
-  // The dev toggle still renders so the dataset can be switched back.
-  if (publishedProjects.length === 0) return <DevDataToggle current={dataset} />;
+  if (publishedProjects.length === 0) return null;
 
   return (
     <section id="work" className="w-full space-y-4">
@@ -208,7 +196,6 @@ export function WorkSection() {
           <ProjectCard key={project.id} project={project} featured={featured} />
         ))}
       </div>
-      <DevDataToggle current={dataset} />
     </section>
   );
 }
