@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/mtharreqq/requixite/compare/requixite-v0.8.0...requixite-v0.8.1) (2026-11-05)
+
+
+### Performance Improvements
+
+* stop the 1.1MB favicon from delaying mobile LCP ([5392c5d](https://github.com/mtharreqq/requixite/commit/5392c5de9f00ddc9c2882f1e4c25911fb8cba00e))
+
 ## [0.8.0](https://github.com/mtharreqq/requixite/compare/requixite-v0.7.0...requixite-v0.8.0) (2026-11-02)
 
 
