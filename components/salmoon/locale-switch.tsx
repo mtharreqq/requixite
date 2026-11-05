@@ -27,10 +27,7 @@ export function LocaleSwitch() {
   }, [pathname]);
 
   return (
-    <nav
-      aria-label="Language"
-      className="absolute top-4 right-0 z-50 flex items-center gap-2 text-xs"
-    >
+    <nav aria-label="Language" className="grid w-[4.75rem] grid-cols-2 text-xs">
       {locales.map((code) => {
         const current = isCurrent(pathname, code);
         return (
@@ -42,8 +39,8 @@ export function LocaleSwitch() {
             aria-current={current ? "page" : undefined}
             className={
               current
-                ? "text-foreground inline-flex h-6 min-w-6 items-center justify-center font-medium"
-                : "text-muted-foreground hover:text-foreground inline-flex h-6 min-w-6 items-center justify-center transition-[color]"
+                ? "text-foreground inline-flex h-6 w-full items-center justify-center font-medium"
+                : "text-muted-foreground hover:text-foreground inline-flex h-6 w-full items-center justify-center transition-[color]"
             }
           >
             {code.toUpperCase()}

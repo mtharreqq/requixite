@@ -9,7 +9,7 @@ import { ThemeColorSync } from "@/providers/theme-color-sync";
 import {
   isLocale,
   locales,
-  personJsonLd,
+  structuredData,
   SITE_URL,
   type Locale,
 } from "@/lib/i18n";
@@ -65,7 +65,7 @@ export default async function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(personJsonLd(locale)).replace(
+            __html: JSON.stringify(structuredData(locale)).replace(
               /</g,
               "\\u003c",
             ),

@@ -4,8 +4,17 @@
       "startServerCommand": "npm run start -- -p 3000",
       "startServerReadyPattern": "Ready",
       "startServerReadyTimeout": 60000,
-      "url": ["http://127.0.0.1:3000/en", "http://127.0.0.1:3000/id"],
-      "numberOfRuns": 3,
+      "url": [
+        "http://127.0.0.1:3000/en",
+        "http://127.0.0.1:3000/id",
+        "http://127.0.0.1:3000/en/work/rantai",
+        "http://127.0.0.1:3000/id/work/rantai",
+        "http://127.0.0.1:3000/en/work/cashava",
+        "http://127.0.0.1:3000/id/work/cashava",
+        "http://127.0.0.1:3000/en/work/perangko",
+        "http://127.0.0.1:3000/id/work/perangko"
+      ],
+      "numberOfRuns": 1,
       "settings": {
         "onlyCategories": ["performance", "accessibility", "seo"],
         "formFactor": "mobile",

@@ -377,10 +377,86 @@
   }
 }
 
-::view-transition-old(root),
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: 180ms ease both locale-out;
+}
 ::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
+  animation: 180ms ease both locale-in;
+}
+
+@keyframes locale-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes locale-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.lift {
+  transition: transform 180ms ease;
+}
+.lift:active {
+  transform: scale(0.98);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lift:hover {
+    transform: translateY(-2px);
+  }
+  .lift:hover:active {
+    transform: translateY(-2px) scale(0.98);
+  }
+}
+
+[data-reveal="pending"] {
+  opacity: 0;
+}
+[data-reveal="visible"] {
+  animation: section-rise 180ms ease both;
+}
+@keyframes section-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lift,
+  .lift:hover,
+  .lift:active,
+  .lift:hover:active {
+    transition: none;
+    transform: none;
+  }
+  [data-reveal="pending"],
+  [data-reveal="visible"] {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
 }
 ::selection {
   background: theme("colors.black");

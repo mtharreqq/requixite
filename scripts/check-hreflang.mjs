@@ -194,19 +194,31 @@ for (const page of pages) {
     fail(`${page.pathname} is missing JSON-LD`);
   } else {
     const data = JSON.parse(jsonLd[1]);
-    if (data["@type"] !== "Person")
-      fail(`${page.pathname} JSON-LD @type is ${data["@type"]}`);
-    if (data.url !== page.loc && data.url !== `${SITE}${page.pathname}`) {
-      fail(`${page.pathname} JSON-LD url is ${data.url}`);
+    const nodes = data["@graph"] ?? [data];
+    const person = nodes.find((node) => node["@type"] === "Person");
+    const service = nodes.find((node) => node["@type"] === "ProfessionalService");
+    if (!person) fail(`${page.pathname} JSON-LD is missing Person`);
+    const homePath = `/${page.lang}`;
+    if (person && new URL(person.url).pathname !== homePath) {
+      fail(`${page.pathname} Person url is ${person.url}`);
     }
-    if (page.html.includes("ProfessionalService")) {
-      fail(
-        `${page.pathname} includes ProfessionalService before services are decided`,
-      );
+    if (!service) fail(`${page.pathname} JSON-LD is missing ProfessionalService`);
+    const offers = service?.hasOfferCatalog?.itemListElement ?? [];
+    if (offers.length !== 3) {
+      fail(`${page.pathname} ProfessionalService lists ${offers.length} services`);
     }
-    for (const same of data.sameAs ?? []) {
-      if (!page.html.includes(`href="${same}"`)) {
-        fail(`${page.pathname} sameAs ${same} is not a link on the page`);
+    const isHome = page.pathname === homePath;
+    if (isHome) {
+      for (const offer of offers) {
+        const name = offer.itemOffered?.name;
+        if (!name || !page.html.includes(name)) {
+          fail(`${page.pathname} service name is not visible: ${name}`);
+        }
+      }
+      for (const same of person?.sameAs ?? []) {
+        if (!page.html.includes(`href="${same}"`)) {
+          fail(`${page.pathname} sameAs ${same} is not a link on the page`);
+        }
       }
     }
   }

@@ -1,3 +1,5 @@
+import { caseCopy, homeCopy, type WorkSlug } from "@/lib/copy";
+
 export const SITE_URL = "https://requixite.my.id";
 
 export const locales = ["en", "id"] as const;
@@ -10,7 +12,12 @@ export const defaultLocale: Locale = "en";
  * Paths under a locale prefix. "" is the locale home.
  * Add a path when a new page is created under `app/[locale]`.
  */
-export const LOCALIZED_PATHS = [""] as const;
+export const LOCALIZED_PATHS = [
+  "",
+  "work/rantai",
+  "work/cashava",
+  "work/perangko",
+] as const;
 export type LocalizedPath = (typeof LOCALIZED_PATHS)[number];
 
 /**
@@ -23,12 +30,6 @@ export const PROFILE_SAME_AS = [
   "https://linkedin.com/in/mtharreq/",
   "https://github.com/mtharreqq",
 ] as const;
-
-const englishSeo = {
-  title: "Requixite — Precise. Exquisite. Requisite.",
-  description:
-    "Independent product and web studio by Tharreq. Crafting refined, purpose-driven digital experiences.",
-};
 
 export function isLocale(value: string): value is Locale {
   return (locales as readonly string[]).includes(value);
@@ -57,33 +58,50 @@ export function hreflangLanguages(path: LocalizedPath = "") {
   } as const;
 }
 
-/**
- * Document title and meta description, also used for Open Graph.
- * TODO(copy): Indonesian <title>. Do not machine-translate.
- * TODO(copy): Indonesian meta description. Do not machine-translate.
- * TODO(copy): Indonesian body copy. /id still renders the existing English page.
- */
-export function seoCopy(locale: Locale): {
-  title: string;
-  description: string;
-} {
-  if (locale === "en") return englishSeo;
-  return {
-    title: "TODO(copy): Indonesian title",
-    description: "TODO(copy): Indonesian meta description",
-  };
+export function seoCopy(
+  locale: Locale,
+  path: LocalizedPath = "",
+): { title: string; description: string } {
+  if (path === "") {
+    const home = homeCopy(locale);
+    return { title: home.title, description: home.description };
+  }
+  const slug = path.slice("work/".length) as WorkSlug;
+  const page = caseCopy(locale, slug);
+  return { title: page.title, description: page.description };
 }
 
-/**
- * TODO(copy): Add schema.org ProfessionalService once services are decided.
- * Do not invent serviceType, areaServed, or offers before that copy exists.
- */
-export function personJsonLd(locale: Locale) {
+export function structuredData(locale: Locale) {
+  const home = homeCopy(locale);
+  const personId = `${absoluteUrl(localePath(locale))}#person`;
   return {
     "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Tharreq",
-    url: absoluteUrl(localePath(locale)),
-    sameAs: [...PROFILE_SAME_AS],
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": personId,
+        name: "Tharreq",
+        url: absoluteUrl(localePath(locale)),
+        sameAs: [...PROFILE_SAME_AS],
+      },
+      {
+        "@type": "ProfessionalService",
+        name: "Requixite",
+        url: absoluteUrl(localePath(locale)),
+        founder: { "@id": personId },
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          itemListElement: home.services.map((service, index) => ({
+            "@type": "Offer",
+            position: index + 1,
+            itemOffered: {
+              "@type": "Service",
+              name: service.title,
+              description: service.body,
+            },
+          })),
+        },
+      },
+    ],
   };
 }
