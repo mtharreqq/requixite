@@ -33,10 +33,14 @@ jobs:
       # Three runs, median aggregation: the first /en hit is a cold server.
       - name: Lighthouse
         run: npx --yes @lhci/cli@0.15.1 autorun
+      - name: Summarize Lighthouse
+        if: always()
+        run: node scripts/summarize-lighthouse.mjs .lighthouseci
       - name: Upload Lighthouse reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: lighthouse-ci
           path: .lighthouseci
-          if-no-files-found: ignore
+          include-hidden-files: true
+          if-no-files-found: error
