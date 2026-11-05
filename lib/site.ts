@@ -20,15 +20,23 @@ export const measuredLighthouse = {
 /** The "Lighthouse 95+" chip stays off until this is set true on purpose. */
 export const showLighthouseChip = false;
 
-/**
- * Before/after slider. The real image pair is not confirmed.
- * Placeholder assets and empty captions are used only when this is true.
- */
-export const showProofSlider = false;
+/** Real RantAI pair. Captions stay empty until Elsa writes them. */
+export const showProofSlider = true;
 
-export const PROOF_PLACEHOLDER = {
-  beforeSrc: "/proof/before.svg",
-  afterSrc: "/proof/after.svg",
+export const PROOF_SLIDER = {
+  width: 960,
+  height: 600,
+  before: {
+    avif: "/proof/rantai-before.avif",
+    webp: "/proof/rantai-before.webp",
+  },
+  after: {
+    avif: "/proof/rantai-after.avif",
+    webp: "/proof/rantai-after.webp",
+  },
+  /** PLACEHOLDER. Elsa is writing these. */
   beforeCaption: "",
+  /** PLACEHOLDER. Elsa is writing these. */
   afterCaption: "",
+  beforeSource: "rantai.dev, Feb 2025 (Internet Archive)",
 };

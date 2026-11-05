@@ -6,7 +6,7 @@ import { PROFILE_SAME_AS, localePath, type Locale } from "@/lib/i18n";
 import {
   EMAIL,
   measuredLighthouse,
-  PROOF_PLACEHOLDER,
+  PROOF_SLIDER,
   showLighthouseChip,
   showProofSlider,
   WHATSAPP_URL,
@@ -106,10 +106,13 @@ export function HomePage({ locale }: { locale: Locale }) {
             </h2>
             {showProofSlider ? (
               <ProofSlider
-                beforeSrc={PROOF_PLACEHOLDER.beforeSrc}
-                afterSrc={PROOF_PLACEHOLDER.afterSrc}
-                beforeCaption={PROOF_PLACEHOLDER.beforeCaption}
-                afterCaption={PROOF_PLACEHOLDER.afterCaption}
+                before={PROOF_SLIDER.before}
+                after={PROOF_SLIDER.after}
+                width={PROOF_SLIDER.width}
+                height={PROOF_SLIDER.height}
+                beforeCaption={PROOF_SLIDER.beforeCaption}
+                afterCaption={PROOF_SLIDER.afterCaption}
+                beforeSource={PROOF_SLIDER.beforeSource}
               />
             ) : null}
             <ul className="grid gap-3">

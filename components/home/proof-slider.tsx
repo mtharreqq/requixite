@@ -2,21 +2,31 @@
 
 import { useId, useState } from "react";
 
+type Shot = {
+  avif: string;
+  webp: string;
+};
+
 /**
- * Native range input drives a clip-path. Captions stay empty until a real
- * before/after pair is confirmed. Not mounted while `showProofSlider` is false.
+ * Native range input drives a clip-path. Captions stay empty until written.
  */
 export function ProofSlider({
-  beforeSrc,
-  afterSrc,
+  before,
+  after,
+  width,
+  height,
   beforeCaption = "",
   afterCaption = "",
+  beforeSource,
   label = "Before and after",
 }: {
-  beforeSrc: string;
-  afterSrc: string;
+  before: Shot;
+  after: Shot;
+  width: number;
+  height: number;
   beforeCaption?: string;
   afterCaption?: string;
+  beforeSource: string;
   label?: string;
 }) {
   const [value, setValue] = useState(50);
@@ -24,20 +34,22 @@ export function ProofSlider({
 
   return (
     <figure className="w-full">
-      <div className="border-border relative aspect-video overflow-hidden rounded-xl border">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={afterSrc}
+      <div
+        className="border-border relative overflow-hidden rounded-xl border"
+        style={{ aspectRatio: `${width} / ${height}` }}
+      >
+        <ShotImage
+          shot={after}
+          width={width}
+          height={height}
           alt={afterCaption}
-          className="absolute inset-0 size-full object-cover"
         />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={beforeSrc}
+        <ShotImage
+          shot={before}
+          width={width}
+          height={height}
           alt={beforeCaption}
-          aria-hidden={beforeCaption ? undefined : true}
-          className="absolute inset-0 size-full object-cover"
-          style={{ clipPath: `inset(0 ${100 - value}% 0 0)` }}
+          clipPath={`inset(0 ${100 - value}% 0 0)`}
         />
         <label htmlFor={inputId} className="sr-only">
           {label}
@@ -53,10 +65,48 @@ export function ProofSlider({
           className="absolute inset-x-4 bottom-3 w-[calc(100%-2rem)]"
         />
       </div>
-      <figcaption className="text-muted-foreground mt-2 flex justify-between text-xs">
-        <span>{beforeCaption}</span>
-        <span>{afterCaption}</span>
-      </figcaption>
+      {beforeCaption || afterCaption ? (
+        <figcaption className="text-muted-foreground mt-2 flex justify-between text-xs">
+          <span>{beforeCaption}</span>
+          <span>{afterCaption}</span>
+        </figcaption>
+      ) : null}
+      <p className="text-muted-foreground mt-2 text-xs">{beforeSource}</p>
     </figure>
+  );
+}
+
+function ShotImage({
+  shot,
+  width,
+  height,
+  alt,
+  clipPath,
+}: {
+  shot: Shot;
+  width: number;
+  height: number;
+  alt: string;
+  clipPath?: string;
+}) {
+  return (
+    <picture
+      className="absolute inset-0"
+      style={clipPath ? { clipPath } : undefined}
+    >
+      <source srcSet={shot.avif} type="image/avif" />
+      <source srcSet={shot.webp} type="image/webp" />
+      {/* Static AVIF/WebP pair. next/image would re-encode these. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={shot.webp}
+        alt={alt}
+        width={width}
+        height={height}
+        loading="lazy"
+        decoding="async"
+        className="size-full object-cover"
+      />
+    </picture>
   );
 }
