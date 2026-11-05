@@ -30,5 +30,13 @@ jobs:
           kill "$(cat /tmp/next-hreflang.pid)"
           wait "$(cat /tmp/next-hreflang.pid)" || true
       # Accessibility is axe-core via Lighthouse. SEO must be 100 on /en and /id.
+      # Three runs, median aggregation: the first /en hit is a cold server.
       - name: Lighthouse
         run: npx --yes @lhci/cli@0.15.1 autorun
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-ci
+          path: .lighthouseci
+          if-no-files-found: ignore
