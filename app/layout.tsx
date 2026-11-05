@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -12,20 +12,12 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
   title: "Requixite — Precise. Exquisite. Requisite.",
   description:
     "Independent product and web studio by Tharreq. Crafting refined, purpose-driven digital experiences.",
   icons: {
-    icon: [
-      { url: "/icon.png", sizes: "128x128", type: "image/png" },
-      { url: "/avatar.png", type: "image/png" },
-    ],
+    icon: [{ url: "/icon.png", sizes: "128x128", type: "image/png" }],
     apple: "/apple-icon.png",
     shortcut: "/icon.png",
   },
@@ -46,9 +38,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
-      >
+      <body className={`${geistSans.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

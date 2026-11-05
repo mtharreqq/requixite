@@ -22,7 +22,7 @@ function ProjectPreview({ project }: { project: Project }) {
           src={project.image}
           alt={`${project.title} website`}
           fill
-          sizes="(min-width: 768px) 576px, 100vw"
+          sizes="(min-width: 768px) 520px, calc(100vw - 5.25rem)"
           className="object-cover object-top transition-transform duration-300 group-hover/card:scale-[1.02]"
         />
       </div>
