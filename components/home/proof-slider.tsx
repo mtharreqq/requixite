@@ -8,7 +8,7 @@ type Shot = {
 };
 
 /**
- * Native range input drives a clip-path. Captions stay empty until written.
+ * Native range input drives a clip-path. Caption strings live in lib/copy.ts.
  */
 export function ProofSlider({
   before,

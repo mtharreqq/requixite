@@ -20,7 +20,6 @@ export const measuredLighthouse = {
 /** The "Lighthouse 95+" chip stays off until this is set true on purpose. */
 export const showLighthouseChip = false;
 
-/** Real RantAI pair. Captions stay empty until Elsa writes them. */
 export const showProofSlider = true;
 
 export const PROOF_SLIDER = {
@@ -34,9 +33,5 @@ export const PROOF_SLIDER = {
     avif: "/proof/rantai-after.avif",
     webp: "/proof/rantai-after.webp",
   },
-  /** PLACEHOLDER. Elsa is writing these. */
-  beforeCaption: "",
-  /** PLACEHOLDER. Elsa is writing these. */
-  afterCaption: "",
   beforeSource: "rantai.dev, Feb 2025 (Internet Archive)",
 };

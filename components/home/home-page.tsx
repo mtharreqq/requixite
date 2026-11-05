@@ -110,8 +110,8 @@ export function HomePage({ locale }: { locale: Locale }) {
                 after={PROOF_SLIDER.after}
                 width={PROOF_SLIDER.width}
                 height={PROOF_SLIDER.height}
-                beforeCaption={PROOF_SLIDER.beforeCaption}
-                afterCaption={PROOF_SLIDER.afterCaption}
+                beforeCaption={copy.proofBefore}
+                afterCaption={copy.proofAfter}
                 beforeSource={PROOF_SLIDER.beforeSource}
               />
             ) : null}
