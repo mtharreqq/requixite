@@ -51,7 +51,6 @@ export function HeroSection() {
             width={40}
             height={40}
             className="size-full object-cover"
-            priority
           />
         </div>
         <div className="space-y-1">

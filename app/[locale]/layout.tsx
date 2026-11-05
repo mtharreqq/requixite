@@ -18,6 +18,11 @@ import "../globals.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  // Headline text is the LCP. Optional keeps a late font from moving it
+  // on a slow first run, and still uses Geist when the preload is in time.
+  display: "optional",
+  adjustFontFallback: true,
+  preload: true,
 });
 
 export const metadata: Metadata = {
