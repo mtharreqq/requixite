@@ -319,7 +319,14 @@ function WorkCard({
           <ul className="flex items-center gap-1.5">
             {icons.slice(0, 3).map((icon) => (
               <li key={icon.src}>
-                <img src={icon.src} alt={icon.name} width={16} height={16} />
+                <img
+                  src={icon.src}
+                  alt={icon.name}
+                  width={16}
+                  height={16}
+                  loading="lazy"
+                  decoding="async"
+                />
               </li>
             ))}
           </ul>
