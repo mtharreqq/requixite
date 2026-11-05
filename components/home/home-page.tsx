@@ -1,5 +1,3 @@
-import { preload } from "react-dom";
-import Image from "next/image";
 import { homeCopy } from "@/lib/copy";
 import { ABOUT, AWARDS, EXPERIENCE, TECH_ICONS } from "@/lib/profile";
 import { PROFILE_SAME_AS, localePath, type Locale } from "@/lib/i18n";
@@ -20,11 +18,6 @@ import { ThemeToggle } from "@/components/home/theme-toggle";
 const PROFILE_LABELS = ["Instagram", "X", "LinkedIn", "GitHub"] as const;
 
 export function HomePage({ locale }: { locale: Locale }) {
-  preload("/avatar.avif", {
-    as: "image",
-    type: "image/avif",
-    fetchPriority: "high",
-  });
   const copy = homeCopy(locale);
   const chips = showLighthouseChip
     ? [...copy.chips, copy.lighthouseChip]
@@ -47,7 +40,6 @@ export function HomePage({ locale }: { locale: Locale }) {
               alt="Tharreq"
               width={256}
               height={256}
-              fetchPriority="high"
               decoding="async"
               className="border-border size-36 rounded-full border object-cover"
             />
@@ -218,7 +210,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                 <li key={href}>
                   <a
                     href={href}
-                    className="text-sm underline-offset-4 hover:underline"
+                    className="inline-flex h-6 min-w-6 items-center text-sm underline-offset-4 hover:underline"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -282,13 +274,20 @@ function WorkCard({
       <a href={caseHref} className="block">
         {project.slug === "rantai" ? (
           <div className="bg-muted relative aspect-video">
-            <Image
-              src="/work/rantai/home.jpg"
-              alt=""
-              fill
-              sizes="(min-width: 768px) 576px, 100vw"
-              className="object-cover object-top"
-            />
+            <picture>
+              <source srcSet="/work/rantai/home.avif" type="image/avif" />
+              <source srcSet="/work/rantai/home.webp" type="image/webp" />
+              <img
+                src="/work/rantai/home.webp"
+                alt=""
+                width={828}
+                height={466}
+                loading="lazy"
+                decoding="async"
+                fetchPriority="low"
+                className="absolute inset-0 size-full object-cover object-top"
+              />
+            </picture>
           </div>
         ) : (
           <div className="bg-muted text-foreground grid aspect-video place-items-center text-sm font-medium">
@@ -320,7 +319,7 @@ function WorkCard({
           <ul className="flex items-center gap-1.5">
             {icons.slice(0, 3).map((icon) => (
               <li key={icon.src}>
-                <Image src={icon.src} alt={icon.name} width={16} height={16} />
+                <img src={icon.src} alt={icon.name} width={16} height={16} />
               </li>
             ))}
           </ul>

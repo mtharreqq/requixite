@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { preload } from "react-dom";
 import { notFound } from "next/navigation";
 import { PROJECTS } from "@/data/projects";
 import { workItem, type WorkSlug } from "@/lib/copy";
@@ -68,6 +68,13 @@ export default async function CasePage({
   const locale: Locale = requested;
   const item = workItem(locale, slug);
   const existing = PROJECTS.find((project) => project.slug === slug);
+  if (slug === "rantai") {
+    preload("/work/rantai/home.avif", {
+      as: "image",
+      type: "image/avif",
+      fetchPriority: "high",
+    });
+  }
 
   return (
     <div className="bg-background text-foreground flex min-h-screen justify-center">
@@ -87,16 +94,21 @@ export default async function CasePage({
             {item.line}
           </p>
         </header>
-        {existing?.image ? (
+        {slug === "rantai" ? (
           <div className="bg-muted border-border relative aspect-video overflow-hidden rounded-xl border">
-            <Image
-              src={existing.image}
-              alt=""
-              fill
-              priority
-              sizes="(min-width: 768px) 576px, 100vw"
-              className="object-cover object-top"
-            />
+            <picture>
+              <source srcSet="/work/rantai/home.avif" type="image/avif" />
+              <source srcSet="/work/rantai/home.webp" type="image/webp" />
+              <img
+                src="/work/rantai/home.webp"
+                alt=""
+                width={828}
+                height={466}
+                fetchPriority="high"
+                decoding="async"
+                className="absolute inset-0 size-full object-cover object-top"
+              />
+            </picture>
           </div>
         ) : (
           <div className="bg-muted text-foreground border-border grid aspect-video place-items-center rounded-xl border text-sm font-medium">
