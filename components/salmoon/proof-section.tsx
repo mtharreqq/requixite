@@ -153,9 +153,9 @@ export function ProofSection() {
 
                     <div className="mt-2">
                       <p className="text-[11px] text-zinc-500 font-sans">Total Net Balance</p>
-                      <h4 className="text-2xl font-bold tracking-normal text-zinc-800 dark:text-zinc-200 mt-0.5">
+                      <p className="text-2xl font-bold tracking-normal text-zinc-800 dark:text-zinc-200 mt-0.5">
                         $42,850.20
-                      </h4>
+                      </p>
                     </div>
 
                     <div
@@ -219,9 +219,9 @@ export function ProofSection() {
                     <div className="mt-3.5">
                       <span className="text-xs text-muted-foreground font-sans">Total Net Balance</span>
                       <div className="flex items-baseline gap-2 mt-0.5">
-                        <h4 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
+                        <p className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
                           $42,850.20
-                        </h4>
+                        </p>
                         <span className="text-xs text-emerald-600 dark:text-emerald-400 flex items-center font-medium">
                           +14.2%
                           <ArrowUpRight className="size-3.5 ml-0.5" />

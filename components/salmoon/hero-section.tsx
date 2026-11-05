@@ -210,7 +210,7 @@ export function HeroSection() {
                     src={card.src}
                     alt={`RantAI ${card.label} page`}
                     fill
-                    sizes="128px"
+                    sizes="(min-width: 640px) 128px, 27vw"
                     className="object-cover"
                     style={{ objectPosition: card.position }}
                   />
