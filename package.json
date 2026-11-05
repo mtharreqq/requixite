@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check:hreflang": "node scripts/check-hreflang.mjs"
   },
   "dependencies": {
     "@radix-ui/react-hover-card": "^1.1.15",

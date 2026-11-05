@@ -18,7 +18,17 @@ jobs:
       - run: npm run build
       - name: Chrome
         run: google-chrome --version
-      # Accessibility category is axe-core via Lighthouse, so there is no second scanner.
-      # The site is a single English page at /. /en and /id are not routes.
+      - name: Hreflang
+        run: |
+          npm run start -- -p 3000 &
+          echo $! > /tmp/next-hreflang.pid
+          for i in $(seq 1 40); do
+            curl -sf -o /dev/null http://127.0.0.1:3000/en && break
+            sleep 0.5
+          done
+          node scripts/check-hreflang.mjs http://127.0.0.1:3000
+          kill "$(cat /tmp/next-hreflang.pid)"
+          wait "$(cat /tmp/next-hreflang.pid)" || true
+      # Accessibility is axe-core via Lighthouse. SEO must be 100 on /en and /id.
       - name: Lighthouse
         run: npx --yes @lhci/cli@0.15.1 autorun

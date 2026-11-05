@@ -1,11 +1,19 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
+import { notFound } from "next/navigation";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { ThemeProvider } from "@/providers/theme-provider";
 import { ThemeColorSync } from "@/providers/theme-color-sync";
-import "./globals.css";
+import {
+  isLocale,
+  locales,
+  personJsonLd,
+  SITE_URL,
+  type Locale,
+} from "@/lib/i18n";
+import "../globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,9 +21,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Requixite — Precise. Exquisite. Requisite.",
-  description:
-    "Independent product and web studio by Tharreq. Crafting refined, purpose-driven digital experiences.",
+  metadataBase: new URL(SITE_URL),
   icons: {
     icon: [{ url: "/icon.png", sizes: "128x128", type: "image/png" }],
     apple: "/apple-icon.png",
@@ -31,14 +37,35 @@ export const viewport: Viewport = {
   colorScheme: "light dark",
 };
 
-export default function RootLayout({
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
+export const dynamicParams = false;
+
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }>) {
+  const { locale: requested } = await params;
+  if (!isLocale(requested)) notFound();
+  const locale: Locale = requested;
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body className={`${geistSans.variable} font-sans antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(personJsonLd(locale)).replace(
+              /</g,
+              "\\u003c",
+            ),
+          }}
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

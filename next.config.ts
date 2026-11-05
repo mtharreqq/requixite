@@ -1,6 +1,17 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    // `/` is not a document. It always points at English, including when the
+    // browser asks for Indonesian. Locale is chosen only from the URL.
+    return [
+      {
+        source: "/",
+        destination: "/en",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     // The column never exceeds ~576px, so skip the 1920–3840 candidates.
     // Those were the `src` fallback on `fill` images and inflated the markup.
