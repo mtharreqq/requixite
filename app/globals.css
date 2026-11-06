@@ -47,23 +47,59 @@
   }
 }
 
+/* Run on the first CSS paint, without waiting for hydration or an observer. */
+@keyframes hero-line-enter {
+  from {
+    opacity: 0;
+    transform: translateY(110%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes hero-showcase-enter {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.975);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 .hero-identity {
-  animation: portfolio-focus 700ms var(--ease-out) both;
+  animation: portfolio-arrive 480ms var(--ease-out) both;
 }
-.hero-copy > p {
-  animation: portfolio-focus 800ms var(--ease-out) both;
+.hero-line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
 }
-.hero-copy > p:nth-child(1) {
-  animation-delay: 80ms;
+.hero-line {
+  display: block;
+  animation: hero-line-enter 720ms 60ms var(--ease-out) both;
 }
-.hero-copy > p:nth-child(2) {
-  animation-delay: 150ms;
+.hero-line-mask:nth-child(2) .hero-line {
+  animation-delay: 140ms;
 }
-.hero-copy > p:nth-child(3) {
-  animation-delay: 220ms;
+.hero-copy > :nth-child(2) {
+  animation: portfolio-arrive 550ms 280ms var(--ease-out) both;
 }
-.hero-polaroids {
-  animation: portfolio-arrive 800ms 280ms var(--ease-out) both;
+.hero-copy > :nth-child(3) {
+  animation: portfolio-arrive 550ms 350ms var(--ease-out) both;
+}
+.hero-showcase {
+  transform-origin: center top;
+  animation: hero-showcase-enter 760ms 420ms var(--ease-out) both;
+}
+/* A fast Tab press must never leave focused controls hidden or in motion. */
+#home:focus-within .hero-identity,
+#home:focus-within .hero-line,
+#home:focus-within .hero-copy > *,
+#home:focus-within .hero-showcase {
+  animation: none;
 }
 
 .portfolio-motion [data-reveal="pending"] {
@@ -109,34 +145,6 @@
   transition: transform 650ms var(--ease-out);
 }
 
-.project-tactile {
-  position: relative;
-  isolation: isolate;
-  transition:
-    border-color 220ms ease,
-    background-color 220ms ease,
-    box-shadow 300ms var(--ease-out),
-    translate 300ms var(--ease-out);
-}
-.project-tactile::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0;
-  background: radial-gradient(
-    320px circle at var(--spotlight-x, 50%) var(--spotlight-y, 30%),
-    color-mix(in srgb, var(--foreground) 9%, transparent),
-    transparent 75%
-  );
-  box-shadow: inset 0 1px 0
-    color-mix(in srgb, var(--foreground) 12%, transparent);
-  transition: opacity 300ms ease;
-}
-.project-tactile:focus-within::after {
-  opacity: 0.65;
-}
 .tactile-control {
   transition:
     opacity 180ms ease,
@@ -167,14 +175,6 @@
   .polaroid-link:hover::after {
     transform: translateX(120%);
   }
-  .project-tactile:hover {
-    translate: 0 -3px;
-    box-shadow: 0 12px 24px -16px
-      color-mix(in srgb, var(--foreground) 30%, transparent);
-  }
-  .project-tactile:hover::after {
-    opacity: 1;
-  }
   .social-tactile:hover {
     transform: translateY(-3px);
   }
@@ -186,9 +186,14 @@
 @media (prefers-reduced-motion: reduce) {
   /* Entrances: keep a short opacity fade, drop translate + blur. */
   .hero-identity,
-  .hero-copy > p,
-  .hero-polaroids {
+  .hero-copy > *,
+  .hero-showcase {
     animation: portfolio-fade 200ms ease both;
+  }
+  .hero-line-mask .hero-line {
+    animation: none;
+    transform: none;
+    opacity: 1;
   }
   .portfolio-motion [data-reveal] {
     opacity: 1;
@@ -198,9 +203,6 @@
     animation: none;
   }
   /* Hover/press movement off; colour, background, opacity transitions stay. */
-  .portfolio-motion .project-tactile:hover {
-    translate: none;
-  }
   .portfolio-motion .social-tactile:hover,
   .portfolio-motion .social-tactile:hover svg {
     transform: none;
@@ -209,8 +211,7 @@
   .portfolio-motion .social-tactile:active {
     scale: none;
   }
-  .polaroid-link::after,
-  .portfolio-motion .project-tactile::after {
+  .polaroid-link::after {
     display: none;
   }
   html {
@@ -233,7 +234,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -394,4 +395,709 @@
 .dark ::selection {
   background: theme("colors.white");
   color: theme("colors.black");
+}
+
+/* Static blueprint illustrations explain the work; hover lets people explore
+   them without hiding content or requiring a precise pointer. */
+.showcase-frame {
+  transition: transform 300ms var(--ease-out);
+}
+.detail-drawing > span,
+.detail-drawing-1 > div > span,
+.interaction-target,
+.interaction-pointer,
+.study-scan,
+.study-tile,
+.study-button,
+.study-pointer,
+.study-ship {
+  transition:
+    transform 250ms var(--ease-out),
+    opacity 200ms ease;
+}
+.study-tile:nth-child(2),
+.study-tile:nth-child(5) {
+  opacity: 0.5;
+}
+.detail-drawing-0 > span:nth-child(2) {
+  transform-origin: left;
+}
+@media (hover: hover) and (pointer: fine) {
+  .detail-study:hover .detail-drawing-0 > span:nth-child(2) {
+    transform: scaleX(0.8);
+  }
+  .detail-study:hover .detail-drawing-1 > div > span:nth-child(even) {
+    transform: translateY(-3px);
+  }
+  .detail-study:hover .interaction-pointer {
+    transform: translate(-3px, -4px);
+  }
+  .detail-study:hover .interaction-target {
+    transform: scale(0.96);
+  }
+  .process-cell:hover .study-scan {
+    transform: translate(-20px, -12px);
+  }
+  .process-cell:hover .study-tile {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+  .process-cell:hover .study-pointer {
+    transform: translate(-5px, -6px);
+  }
+  .process-cell:hover .study-button {
+    transform: scale(0.97);
+  }
+  .process-cell:hover .study-ship {
+    transform: translate(4px, -4px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .showcase-frame,
+  .detail-drawing > span,
+  .detail-drawing-1 > div > span,
+  .interaction-target,
+  .interaction-pointer,
+  .study-scan,
+  .study-tile,
+  .study-button,
+  .study-pointer,
+  .study-ship {
+    transform: none !important;
+    transition: opacity 150ms ease;
+  }
+}
+
+/* Layered product screens: a static composition first, enhanced by scroll
+   where CSS view timelines are available. No scroll interception. */
+.showcase-ghost-left {
+  transform: rotate(-7deg) translateY(8px);
+}
+.showcase-ghost-right {
+  transform: rotate(7deg) translateY(8px);
+}
+@keyframes showcase-spread-left {
+  from {
+    transform: rotate(-2deg) translate(14px, 14px);
+  }
+  to {
+    transform: rotate(-8deg) translate(-3px, -3px);
+  }
+}
+@keyframes showcase-spread-right {
+  from {
+    transform: rotate(2deg) translate(-14px, 14px);
+  }
+  to {
+    transform: rotate(8deg) translate(3px, -3px);
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (min-width: 768px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .showcase-ghost-left {
+      animation: showcase-spread-left linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 55%;
+    }
+    .showcase-ghost-right {
+      animation: showcase-spread-right linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 55%;
+    }
+  }
+}
+.scene-interface,
+.scene-tile,
+.scene-heading,
+.scene-action,
+.scene-cursor,
+.scene-audit,
+.scene-ready,
+.scene-guides,
+.scene-action-check {
+  transition:
+    transform 250ms var(--ease-out),
+    opacity 200ms ease,
+    border-radius 200ms ease,
+    background-color 200ms ease;
+}
+.scene-cursor,
+.scene-ready,
+.scene-guides,
+.scene-action-check {
+  opacity: 0;
+}
+.scene-audit {
+  opacity: 0;
+}
+.process-scene[data-step="0"] .scene-interface {
+  transform: rotate(-3deg);
+}
+.process-scene[data-step="0"] .scene-tile-0 {
+  transform: translateY(3px);
+  border-radius: 2px;
+}
+.process-scene[data-step="0"] .scene-tile-1 {
+  transform: translateY(-3px);
+  border-radius: 9px;
+}
+.process-scene[data-step="0"] .scene-tile-2 {
+  transform: translateY(5px);
+}
+.process-scene[data-step="0"] .scene-heading {
+  transform: translateX(3px);
+}
+.process-scene[data-step="0"] .scene-audit {
+  opacity: 1;
+}
+.process-scene[data-step="1"] .scene-guides {
+  opacity: 1;
+}
+.process-scene[data-step="2"] .scene-cursor {
+  opacity: 1;
+  transform: translate(-8px, -1px);
+}
+.process-scene[data-step="2"] .scene-action {
+  transform: scale(0.95);
+  background-color: var(--primary);
+}
+.process-scene[data-step="2"] .scene-action-check {
+  opacity: 1;
+}
+.process-scene[data-step="3"] .scene-ready {
+  opacity: 1;
+}
+.process-scene[data-step="3"] .scene-action-check {
+  opacity: 1;
+}
+.process-scene[data-step="3"] .scene-interface {
+  transform: translateY(-4px);
+}
+.process-scene[data-instant="true"] * {
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .process-scene *,
+  .showcase-ghost,
+  .showcase-frame {
+    animation: none !important;
+    transform: none !important;
+    transition: opacity 150ms ease;
+  }
+}
+@media print {
+  .showcase-ghost {
+    display: none;
+  }
+  .process-explainer {
+    break-inside: avoid;
+  }
+}
+
+/* Scroll-scrubbed refinement of ONE card, one fix at a time. Dials 0 to 1 set
+   from JS: --m measure guides, --p spacing & corners, --c colour, --f type.
+   The "before" colours are tinted from the theme, so text stays readable in
+   both light and dark mode at every point of the blend. */
+.proof-story {
+  position: relative;
+  height: 320svh;
+}
+.proof-sticky {
+  position: sticky;
+  top: max(24px, calc((100svh - 600px) / 2));
+}
+.proof-stage {
+  margin-top: 28px;
+  padding: 32px 0;
+}
+.proof-wallet {
+  --m: 0;
+  --p: 0;
+  --c: 0;
+  --f: 0;
+  --t: 0;
+  --mix: calc(var(--c) * 100%);
+  --pt: calc(13px + 11px * var(--p));
+  --pr: calc(11px + 13px * var(--p));
+  --pb: calc(12px + 12px * var(--p));
+  --pl: calc(19px + 5px * var(--p));
+  --violet: color-mix(in oklab, #8b5cf6 32%, var(--card));
+  --ink: color-mix(in oklab, #7c3aed 45%, var(--card-foreground));
+  position: relative;
+  max-width: 340px;
+  margin: auto;
+  padding: var(--pt) var(--pr) var(--pb) var(--pl);
+  border: 1px solid color-mix(in oklab, #a78bfa, var(--border) var(--mix));
+  border-radius: calc(26px - 6px * var(--p));
+  background: linear-gradient(
+    150deg,
+    color-mix(in oklab, var(--violet), var(--card) var(--mix)),
+    color-mix(
+        in oklab,
+        color-mix(in oklab, #d946ef 22%, var(--card)),
+        var(--card) var(--mix)
+      )
+      100%
+  );
+  color: color-mix(in oklab, var(--ink), var(--card-foreground) var(--mix));
+  box-shadow:
+    0 0 48px -8px color-mix(in srgb, #8b5cf699, transparent var(--mix)),
+    0 12px 32px -20px #0000002e;
+}
+.proof-wallet-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: calc(10px + 1px * var(--f));
+  font-weight: calc(650 - 250 * var(--f));
+  letter-spacing: calc(0.1em * (1 - var(--f)));
+  color: color-mix(in oklab, var(--ink), var(--muted-foreground) var(--mix));
+}
+.proof-wallet-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: calc(3px * (1 - var(--p))) calc(9px * (1 - var(--p)));
+  border-radius: 999px;
+  background: color-mix(in srgb, #8b5cf640, transparent var(--mix));
+  /* Redundant status: fades out with the colour pass. */
+  opacity: calc(1 - var(--c));
+}
+.proof-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #38a17c;
+}
+.proof-balance {
+  padding: calc(12px + 20px * var(--p)) 0 calc(8px + 16px * var(--p));
+}
+.proof-balance > p {
+  font-size: calc(10px + 1px * var(--f));
+  font-weight: calc(650 - 250 * var(--f));
+  letter-spacing: calc(0.1em * (1 - var(--f)));
+  color: color-mix(in oklab, var(--ink), var(--muted-foreground) var(--mix));
+}
+.proof-amount {
+  margin-top: 4px;
+  font-size: calc(40px - 6px * var(--f));
+  font-weight: calc(800 - 250 * var(--f));
+  line-height: 1.2;
+  letter-spacing: calc(-0.01em - 0.03em * var(--f));
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(
+    90deg,
+    color-mix(
+      in oklab,
+      color-mix(in oklab, #9333ea 70%, var(--card-foreground)),
+      var(--card-foreground) var(--mix)
+    ),
+    color-mix(
+      in oklab,
+      color-mix(in oklab, #db2777 70%, var(--card-foreground)),
+      var(--card-foreground) var(--mix)
+    )
+  );
+  background-clip: text;
+  color: transparent;
+}
+.proof-growth {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: calc(12px - 1px * var(--f));
+  font-weight: calc(700 - 200 * var(--f));
+  color: color-mix(in oklab, #16a34a, #38a17c var(--mix));
+}
+.proof-growth > span {
+  margin-left: 4px;
+  font-weight: calc(600 - 200 * var(--f));
+  color: color-mix(in oklab, var(--ink), var(--muted-foreground) var(--mix));
+}
+.proof-activity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: calc(4px * (1 - var(--p))) 0 calc(9px * (1 - var(--p)));
+  padding: calc(10px + 6px * var(--p)) calc(8px * (1 - var(--p)));
+  border: 1px solid
+    color-mix(
+      in oklab,
+      color-mix(in oklab, #a78bfa, var(--border) var(--mix)),
+      transparent calc(var(--p) * 100%)
+    );
+  border-top-color: color-mix(in oklab, #a78bfa, var(--border) var(--mix));
+  border-radius: calc(7px * (1 - var(--p)));
+  background: color-mix(
+    in srgb,
+    color-mix(in srgb, #8b5cf626, transparent var(--mix)),
+    transparent calc(var(--p) * 100%)
+  );
+  font-size: 11px;
+  font-weight: calc(550 - 150 * var(--f));
+  color: color-mix(in oklab, var(--ink), var(--muted-foreground) var(--mix));
+}
+.proof-activity-line {
+  width: 12px;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.5;
+}
+.proof-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: calc(38px + 6px * var(--p));
+  padding: 0 calc(12px + 4px * var(--p));
+  /* 22px = half the 44px height: a full pill once spacing settles. */
+  border-radius: calc(3px + 19px * var(--p));
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, #8b5cf6, var(--foreground) var(--mix)),
+    color-mix(in oklab, #d946ef, var(--foreground) var(--mix))
+  );
+  color: color-mix(in oklab, #fff, var(--background) calc(var(--t) * 100%));
+  box-shadow: 0 0 20px color-mix(in srgb, #d946ef80, transparent var(--mix));
+  font-size: 12px;
+  font-weight: calc(700 - 200 * var(--f));
+  letter-spacing: calc(0.03em * (1 - var(--f)));
+}
+.proof-guides {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--m);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.proof-guide-box {
+  position: absolute;
+  inset: var(--pt) var(--pr) var(--pb) var(--pl);
+  outline: 1px dashed #f472b6;
+}
+.proof-guide {
+  position: absolute;
+  background: #f472b6;
+}
+.proof-guide > span {
+  position: absolute;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: #f472b6;
+  color: #fff;
+  white-space: nowrap;
+}
+.proof-guide-top {
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: var(--pt);
+}
+.proof-guide-top > span {
+  left: 6px;
+  top: -2px;
+}
+.proof-guide-left {
+  top: 50%;
+  left: 0;
+  width: var(--pl);
+  height: 1px;
+}
+.proof-guide-left > span {
+  left: -8px;
+  top: -20px;
+}
+.proof-guide-right {
+  top: 30%;
+  right: 0;
+  width: var(--pr);
+  height: 1px;
+}
+.proof-guide-right > span {
+  right: -6px;
+  top: -20px;
+}
+.proof-phases {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+.proof-phases li {
+  display: flex;
+  gap: 6px;
+  transition: color 200ms ease;
+}
+.proof-story .stack-progress {
+  margin-top: 12px;
+}
+.proof-story[data-reduced="true"] {
+  height: auto;
+}
+.proof-story[data-reduced="true"] .proof-sticky {
+  position: relative;
+  top: auto;
+}
+@media (max-width: 480px) {
+  .proof-phases {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-height: 680px), print {
+  .proof-story {
+    height: auto;
+  }
+  .proof-sticky {
+    position: relative;
+    top: auto;
+  }
+}
+/* Scroll story: fixed composition, no wheel interception or layout animation. */
+.stack-story {
+  position: relative;
+  height: 190svh;
+}
+.stack-sticky {
+  position: sticky;
+  top: max(24px, calc((100svh - var(--stack-content-height, 560px)) / 2));
+  min-height: 0;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0 0 24px;
+}
+.stack-sentence {
+  margin-top: 36px;
+  font-size: clamp(27px, 5.6vw, 43px);
+  font-weight: 500;
+  line-height: 1.52;
+  letter-spacing: -0.045em;
+}
+.stack-inline {
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center;
+  gap: 3px;
+  height: 1.25em;
+  margin: 0 0.12em 0 0.05em;
+}
+.stack-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+  aspect-ratio: 1;
+  flex: 0 0 1em;
+  border-radius: 8px;
+  background: var(--card);
+  box-shadow:
+    0 0 0 1px #0000000c,
+    0 3px 4px #0000000a,
+    0 7px 16px #0000000a;
+}
+.stack-tile {
+  background: #fff;
+}
+.stack-logo {
+  width: 65%;
+  height: 65%;
+  object-fit: contain;
+}
+.stack-footer {
+  margin-top: 32px;
+}
+.stack-progress {
+  margin-top: 24px;
+  height: 1px;
+  background: var(--border);
+}
+.stack-progress > span {
+  display: block;
+  height: 100%;
+  background: var(--foreground);
+  transform-origin: left;
+}
+@media (max-width: 480px) {
+  .stack-story {
+    height: 180svh;
+  }
+  .stack-sticky {
+    min-height: 0;
+  }
+  .stack-sentence {
+    margin-top: 28px;
+  }
+  .stack-footer {
+    margin-top: 24px;
+  }
+  .stack-logo {
+    max-width: 65%;
+    max-height: 65%;
+  }
+}
+@media (max-height: 680px), (prefers-reduced-motion: reduce) {
+  .stack-story {
+    height: auto;
+  }
+  .stack-sticky {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: 0;
+    padding: 24px 0;
+  }
+  .stack-sentence span {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .stack-progress {
+    display: none;
+  }
+}
+.stack-story[data-reduced="true"] {
+  height: auto;
+}
+.stack-story[data-reduced="true"] .stack-sticky {
+  position: relative;
+  top: auto;
+  height: auto;
+  min-height: 0;
+  padding: 24px 0;
+}
+.stack-story[data-reduced="true"] .stack-sentence span {
+  opacity: 1 !important;
+  transform: none !important;
+}
+@media print {
+  .stack-story {
+    height: auto;
+  }
+  .stack-sticky {
+    position: static;
+    height: auto;
+    min-height: 0;
+  }
+  .stack-sentence span {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .stack-progress {
+    display: none;
+  }
+}
+
+/* Motion measures sticky targets relative to the document root. */
+html {
+  position: relative;
+}
+
+/* Radix measures the actual content: opening and closing both preserve layout. */
+@keyframes disclosure-open {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+}
+@keyframes disclosure-close {
+  from {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
+.disclosure-content[data-state="open"] {
+  animation: disclosure-open 220ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.disclosure-content[data-state="closed"] {
+  animation: disclosure-close 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.disclosure-indicator {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  align-self: center;
+  color: var(--muted-foreground);
+}
+.disclosure-indicator > span {
+  position: absolute;
+  top: 5px;
+  left: 1px;
+  width: 10px;
+  height: 1px;
+  background: currentColor;
+}
+.disclosure-indicator > span:last-child {
+  transform: rotate(90deg);
+  transition:
+    transform 180ms cubic-bezier(0.23, 1, 0.32, 1),
+    opacity 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+[data-slot="accordion-trigger"][data-state="open"]
+  .disclosure-indicator
+  > span:last-child {
+  transform: rotate(0deg);
+  opacity: 0;
+}
+[data-slot="accordion-item"][data-instant="true"] .disclosure-content {
+  animation: none;
+}
+[data-slot="accordion-item"][data-instant="true"] .disclosure-indicator > span {
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .disclosure-content[data-state] {
+    animation: none;
+  }
+  .disclosure-indicator > span {
+    transition: none;
+  }
+}
+
+/* Pin the canvas at the viewport's vertical centre (canvas is ~344px tall). */
+@media (min-width: 768px) {
+  .process-pin {
+    top: max(24px, calc(50svh - 172px));
+  }
+}
+/* Longer reading space per process stage, only for scroll-driven desktops. */
+@media (min-width: 768px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .process-steps {
+    gap: 0;
+  }
+  .process-steps > li {
+    min-height: clamp(240px, 42svh, 440px);
+  }
+  .process-steps > li:last-child {
+    min-height: clamp(180px, 28svh, 300px);
+  }
+}
+/* Tall content stays readable in flow rather than pinning below the fold. */
+.stack-story[data-overflow="true"] {
+  height: auto;
+}
+.stack-story[data-overflow="true"] .stack-sticky {
+  position: relative;
+  top: auto;
+}
+.stack-story[data-overflow="true"] .stack-sentence span {
+  opacity: 1 !important;
+  transform: none !important;
+}
+.stack-story[data-overflow="true"] .stack-progress {
+  display: none;
 }

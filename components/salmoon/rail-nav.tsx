@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState, type PointerEvent } from "react";
+import type { PortfolioCopy } from "@/lib/portfolio-copy";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent,
+  type ReactNode,
+} from "react";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -10,13 +17,16 @@ const ALL_SECTIONS = [
   { id: "home", label: "Intro" },
   { id: "dilemma", label: "Dilemma" },
   { id: "proof", label: "Proof" },
+  { id: "stack", label: "Toolkit" },
   { id: "process", label: "Process" },
   { id: "work", label: "Work" },
   { id: "experience", label: "Experience" },
   { id: "contact", label: "Contact" },
 ];
 // No published projects means no Work section, so no rail stop for it either.
-const SECTIONS = ALL_SECTIONS.filter((s) => s.id !== "work" || HAS_PUBLISHED_WORK);
+const SECTIONS = ALL_SECTIONS.filter(
+  (s) => s.id !== "work" || HAS_PUBLISHED_WORK,
+);
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const; // matches --ease-out token
 
@@ -69,10 +79,17 @@ function readProgress(): number {
   return 1;
 }
 
-function tickStyle(i: number, cursor: number, hoverPos: number, hoverAmount: number, scale: number) {
+function tickStyle(
+  i: number,
+  cursor: number,
+  hoverPos: number,
+  hoverAmount: number,
+  scale: number,
+) {
   const major = i % STEP === 0;
   const scrollPull = Math.max(0, 1 - Math.abs(i - cursor) / REACH);
-  const hoverPull = hoverAmount * Math.max(0, 1 - Math.abs(i - hoverPos) / HOVER_REACH);
+  const hoverPull =
+    hoverAmount * Math.max(0, 1 - Math.abs(i - hoverPos) / HOVER_REACH);
   const pull = Math.max(scrollPull, hoverPull);
   const width = ((major ? 14 : 9) + pull * 18) * scale;
   return {
@@ -81,7 +98,13 @@ function tickStyle(i: number, cursor: number, hoverPos: number, hoverAmount: num
   };
 }
 
-export function RailNav() {
+export function RailNav({
+  copy,
+  languageControl,
+}: {
+  copy: PortfolioCopy["rail"];
+  languageControl: ReactNode;
+}) {
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [active, setActive] = useState(0);
@@ -114,7 +137,13 @@ export function RailNav() {
     const paint = () => {
       tickRefs.current.forEach((el, i) => {
         if (!el) return;
-        const { transform, opacity } = tickStyle(i, a.cursor, a.hoverPos, a.hoverAmount, a.scale);
+        const { transform, opacity } = tickStyle(
+          i,
+          a.cursor,
+          a.hoverPos,
+          a.hoverAmount,
+          a.scale,
+        );
         el.style.transform = transform;
         el.style.opacity = `${opacity}`;
       });
@@ -144,7 +173,12 @@ export function RailNav() {
       const p = readProgress();
       a.cursorTarget = p * (TICKS - 1);
       // The section the reader is inside, not the nearest tick.
-      setActive(Math.min(Math.floor(p * (SECTIONS.length - 1) + 1e-6), SECTIONS.length - 1));
+      setActive(
+        Math.min(
+          Math.floor(p * (SECTIONS.length - 1) + 1e-6),
+          SECTIONS.length - 1,
+        ),
+      );
       kick();
     };
     const onResize = () => {
@@ -203,7 +237,9 @@ export function RailNav() {
   function onPointerUp(e: PointerEvent<HTMLDivElement>) {
     if (!scrubbing) return;
     const target = document.getElementById(SECTIONS[sectionAt(e.clientY)].id);
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     target?.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
     setScrubbing(false);
     hover(null);
@@ -211,7 +247,7 @@ export function RailNav() {
 
   return (
     <nav
-      aria-label="Section navigation"
+      aria-label={copy.navigation}
       onPointerLeave={() => hover(null)}
       className="group/rail fixed top-1/2 left-3 z-50 flex -translate-y-1/2 flex-col items-start md:left-8"
     >
@@ -255,7 +291,7 @@ export function RailNav() {
               onPointerEnter={(e) => e.pointerType === "mouse" && hover(index)}
               onFocus={() => hover(index)}
               onBlur={() => hover(null)}
-              className={`absolute -left-3 flex items-center outline-none group-hover/rail:w-44 group-focus-within/rail:w-44 ${
+              className={`absolute -left-3 flex items-center outline-none group-focus-within/rail:w-44 group-hover/rail:w-44 ${
                 scrubbing ? "w-44" : "w-10 md:w-14"
               }`}
               style={{ top: center - BAND / 2, height: BAND }}
@@ -269,12 +305,19 @@ export function RailNav() {
                           ? "opacity-100"
                           : isActive
                             ? // Wide screens have room beside the content, so the current section stays labelled.
-                              "opacity-0 group-hover/rail:opacity-100 group-focus-within/rail:opacity-100 lg:bg-transparent lg:shadow-none lg:opacity-100"
-                            : "opacity-0 group-hover/rail:opacity-100 group-focus-within/rail:opacity-100"
+                              "opacity-0 group-focus-within/rail:opacity-100 group-hover/rail:opacity-100 lg:bg-transparent lg:opacity-100 lg:shadow-none"
+                            : "opacity-0 group-focus-within/rail:opacity-100 group-hover/rail:opacity-100"
                       } ${isActive ? "text-foreground" : "text-muted-foreground"}`
                 }`}
               >
-                {section.label}
+                {
+                  copy[
+                    section.id as keyof Omit<
+                      PortfolioCopy["rail"],
+                      "navigation" | "theme"
+                    >
+                  ]
+                }
               </span>
             </a>
           );
@@ -284,8 +327,8 @@ export function RailNav() {
       <button
         type="button"
         onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-        className="text-muted-foreground hover:text-foreground relative -ml-2 mt-6 grid size-7 cursor-pointer place-items-center rounded-full transition-[color,scale] duration-150 ease-out active:scale-90"
-        aria-label="Toggle theme"
+        className="text-muted-foreground hover:text-foreground relative mt-6 -ml-2 grid size-7 cursor-pointer place-items-center rounded-full transition-[color,scale] duration-150 ease-out active:scale-90"
+        aria-label={copy.theme}
       >
         {/* Mount the presence only after hydration so the correct icon
             appears without a moon-to-sun animation on load. */}
@@ -301,11 +344,16 @@ export function RailNav() {
               exit={{ opacity: 0, transform: "rotate(45deg) scale(0.9)" }}
               transition={{ duration: 0.2, ease: EASE_OUT }}
             >
-              {resolvedTheme === "dark" ? <Sun className="size-3.5" /> : <Moon className="size-3.5" />}
+              {resolvedTheme === "dark" ? (
+                <Sun className="size-3.5" />
+              ) : (
+                <Moon className="size-3.5" />
+              )}
             </motion.span>
           </AnimatePresence>
         )}
       </button>
+      {languageControl}
     </nav>
   );
 }

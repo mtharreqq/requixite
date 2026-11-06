@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
+import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
@@ -36,13 +43,21 @@ const SOCIALS = [
   },
 ];
 
-export function ConnectSection() {
+export function ConnectSection({ copy }: { copy: PortfolioCopy["contact"] }) {
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => () => clearTimeout(timer.current), []);
 
-  function handleCopy() {
-    navigator.clipboard.writeText(EMAIL);
+  const [copyError, setCopyError] = useState(false);
+
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+    } catch {
+      setCopyError(true);
+      return;
+    }
+    setCopyError(false);
     setCopied(true);
     // Repeated clicks restart the 2.5s window instead of stacking timers.
     clearTimeout(timer.current);
@@ -68,14 +83,13 @@ export function ConnectSection() {
               Tharreq
             </p>
             <p className="text-muted-foreground text-[13px] leading-tight">
-              Available for new projects
+              {copy.available}
             </p>
           </div>
         </div>
 
         <p className="text-foreground my-5 text-[17px] leading-relaxed tracking-[-0.01em]">
-          Got an app or prototype that needs a human touch? Send it over.
-          I&apos;ll tell you honestly what I&apos;d fix first.
+          {copy.invitation}
         </p>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -89,18 +103,30 @@ export function ConnectSection() {
                 <motion.span
                   key={copied ? "copied" : "idle"}
                   className="inline-flex items-center gap-1.5"
-                  initial={{ opacity: 0, transform: "scale(0.9)", filter: "blur(2px)" }}
-                  animate={{ opacity: 1, transform: "scale(1)", filter: "blur(0px)" }}
-                  exit={{ opacity: 0, transform: "scale(0.9)", filter: "blur(2px)" }}
+                  initial={{
+                    opacity: 0,
+                    transform: "scale(0.9)",
+                    filter: "blur(2px)",
+                  }}
+                  animate={{
+                    opacity: 1,
+                    transform: "scale(1)",
+                    filter: "blur(0px)",
+                  }}
+                  exit={{
+                    opacity: 0,
+                    transform: "scale(0.9)",
+                    filter: "blur(2px)",
+                  }}
                   transition={{ duration: 0.16, ease: EASE_OUT }}
                 >
                   {copied ? (
                     <>
                       <Check className="size-3.5" />
-                      Copied
+                      {copy.copied}
                     </>
                   ) : (
-                    "Copy email"
+                    copy.copy
                   )}
                 </motion.span>
               </AnimatePresence>
@@ -108,10 +134,10 @@ export function ConnectSection() {
           </Magnetic>
           <Magnetic>
             <a
-              href={`mailto:${EMAIL}?subject=Project%20Inquiry%20%E2%80%94%20Requixite`}
+              href={`mailto:${EMAIL}?subject=${encodeURIComponent(copy.subject)}`}
               className="tactile-control bg-card text-foreground hover:bg-muted border-border/80 inline-flex h-[38px] items-center rounded-full border px-4 text-[13px] font-medium transition-colors active:scale-[0.98]"
             >
-              Send email
+              {copy.send}
             </a>
           </Magnetic>
 
@@ -134,7 +160,7 @@ export function ConnectSection() {
                   </TooltipTrigger>
                   <TooltipContent
                     sideOffset={8}
-                    className="motion-reduce:animate-none! data-[state=instant-open]:animate-none!"
+                    className="data-[state=instant-open]:animate-none! motion-reduce:animate-none!"
                   >
                     {label}
                   </TooltipContent>
@@ -145,12 +171,30 @@ export function ConnectSection() {
         </div>
       </div>
 
-      {/* Footer */}
-      <p className="text-muted-foreground text-center text-xs leading-[1.8]">
-        Precise. Exquisite. Requisite.
-        <br />
-        {`© ${new Date().getFullYear()} Requixite • Made in Bandung`}
+      <p
+        role="status"
+        className={copyError ? "text-destructive text-xs" : "sr-only"}
+      >
+        {copyError ? copy.copyFailed : copied ? copy.copied : ""}
       </p>
+
+      {/* Quiet, optional brand context; shared Accordion works on touch and keyboard. */}
+      <footer className="text-muted-foreground text-center text-xs leading-[1.8]">
+        <p>Precise. Exquisite. Requisite.</p>
+        <Accordion type="single" collapsible className="mx-auto mt-1 max-w-xs">
+          <AccordionItem value="brand">
+            <AccordionTrigger variant="quiet">
+              {copy.aboutName}
+            </AccordionTrigger>
+            <AccordionContent>
+              <p className="px-3 pt-2 pb-3 text-xs leading-relaxed">
+                {copy.nameMeaning}
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+        <p className="mt-2 text-[10px]">{`© ${new Date().getFullYear()} Requixite • ${copy.made}`}</p>
+      </footer>
     </section>
   );
 }

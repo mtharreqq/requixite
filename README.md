@@ -23,15 +23,15 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-## Portfolio Motion
+## Languages and visual portfolio
 
-The landing page keeps a compact hero with tactile interactions, using the existing Framer Motion dependency and CSS without requiring another animation package.
-
-- Blur-and-rise reveals run throughout the page, including sections already visible on first load. Each section's content blocks enter in sequence once.
-- Polaroids tilt on mouse movement; contact buttons have a small magnetic response.
-- Project cards have pointer-following spotlights; social links use the existing Radix tooltips.
-- Reduced-motion preferences disable decorative animation. Touch devices keep normal links and buttons without pointer-following effects.
-- Content remains visible without JavaScript or IntersectionObserver support.
+- English lives at `/`; Bahasa Indonesia lives at `/id`. The ID / EN selector uses real links, so a selected language survives refresh and can be shared.
+- Both routes render their own document language, description, canonical URL, language alternates, and Open Graph locale on the server. Separate root layouts keep the document language correct when switching languages.
+- Editorial copy lives in `lib/portfolio-copy.ts`. Write for each language naturally while keeping the same facts. Project names, links, and technologies stay shared; Indonesian project descriptions live alongside the source data in `data/projects.ts`.
+- A sticky toolkit story reveals natural-language phrases and inline Figma/React/Next.js/TypeScript/Tailwind/PostgreSQL tiles as the visitor scrolls. Reduced motion, short viewports, and print show the full story in normal flow. "See the difference" pins one wallet card and refines it as the visitor scrolls, one fix at a time: spacing (padding settles to 24px with measurement guides, corners align), then color (purple glow gives way to the theme), then type (calmer weights and sizes). Content never swaps; only CSS variables driven by scroll progress change. Reduced motion shows the refined card.
+- The opening showcase layers three RantAI screenshots, with pointer tilt and progressive CSS scroll depth where supported. The four-step design study updates as its steps pass through the viewport on pointer-based desktops; selecting a step takes over from scrolling. Touch and reduced-motion visitors choose steps directly. Experience and project details expand on demand.
+- Existing section reveals, contact magnetic controls, and social tooltips remain. Project cards are unboxed: screenshot, title, meta line, and a plain technology list. New motion uses transform and opacity for movement, with hover effects limited to fine pointers and reduced-motion fallbacks. Images and essential content remain available without JavaScript.
+- Language selection changes the entire document. The portfolio keeps English as the default rather than guessing from browser settings.
 
 ## Managing Projects & Content
 
@@ -68,3 +68,15 @@ Once modified, simply commit and push to Git.
 - `npm run build` — Prerender static production build
 - `npm run start` — Serve the production build
 - `npm run lint` — ESLint
+
+## Visual reference
+
+The November 2026 visual pass takes its cues from RantAI landing page v2.4.0 (`ae92ade`): layered product scenes, alternating contrast, and realistic interface studies that explain a process. Requixite keeps its compact personal-portfolio layout and native scrolling, with no new dependencies.
+
+### Toolkit logos and disclosures
+
+Toolkit tiles use square 1:1 containers and local original brand SVG assets; source revisions and licensing are in `public/brand-logos/SOURCES.md` and `LICENSE.txt`. The sticky story enters directly after the preceding section, then pins its measured content at the vertical center of the viewport. It does not add a full-viewport wrapper or leading blank space. Oversized content stays in normal flow.
+
+Experience, project details, and the optional footer explanation share the shadcn/Radix Accordion in `components/ui/accordion.tsx`, with 220ms open / 180ms close transitions and a plus-to-minus indicator. Keyboard activation and reduced motion switch instantly. The repo already includes both shadcn and emil-design-eng skills under `.agents/skills/`.
+
+The primary sans-serif font is used throughout the portfolio; monospace is reserved for actual terminal/console surfaces as recorded in AGENTS.md. Desktop process stages have a longer scroll distance and a 24px boundary dead band to avoid rapid stage switching.
