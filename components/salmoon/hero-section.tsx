@@ -4,7 +4,8 @@ import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import Image from "next/image";
 import { ProjectShowcase } from "@/components/salmoon/project-showcase";
 import { SplitReveal } from "@/components/salmoon/split-reveal";
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { ChatDialog } from "@/components/salmoon/chat-dialog";
+import { smoothScrollTo } from "@/components/smooth-scroll";
 import {
   HoverCard,
   HoverCardContent,
@@ -18,7 +19,21 @@ import {
   XSvg,
 } from "@/components/dock-icons";
 
-export function HeroSection({ copy }: { copy: PortfolioCopy["hero"] }) {
+const SHORTCUTS = [
+  "work",
+  "offer",
+  "process",
+  "experience",
+  "contact",
+] as const;
+
+export function HeroSection({
+  copy,
+  rail,
+}: {
+  copy: PortfolioCopy["hero"];
+  rail: PortfolioCopy["rail"];
+}) {
   return (
     <section id="home" className="flex w-full flex-col gap-8 pt-4">
       {/* Title & Identity */}
@@ -136,6 +151,7 @@ export function HeroSection({ copy }: { copy: PortfolioCopy["hero"] }) {
             {copy.role}
           </p>
         </div>
+        <ChatDialog copy={copy.chat} />
       </div>
 
       <div className="hero-copy space-y-5">
@@ -157,22 +173,29 @@ export function HeroSection({ copy }: { copy: PortfolioCopy["hero"] }) {
         <p className="text-muted-foreground max-w-md text-sm leading-relaxed md:text-base">
           {copy.summary}
         </p>
-        <div className="flex flex-wrap gap-x-5 gap-y-3 text-xs">
-          <a
-            href="#work"
-            className="text-foreground inline-flex items-center gap-1.5 rounded-sm font-medium underline-offset-4 hover:underline"
-          >
-            {copy.explore}
-            <ArrowDownRight className="size-3.5" />
-          </a>
-          <a
-            href="#contact"
-            className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 rounded-sm transition-colors"
-          >
-            {copy.contact}
-            <ArrowUpRight className="size-3.5" />
-          </a>
-        </div>
+        <nav aria-label={copy.shortcuts}>
+          <ul className="bg-muted/70 border-border/60 inline-flex flex-wrap gap-0.5 rounded-[18px] border p-1 text-xs">
+            {SHORTCUTS.map((id) => (
+              <li key={id}>
+                <a
+                  href={`#${id}`}
+                  onClick={(e) => {
+                    const target = document.getElementById(id);
+                    if (!target) return;
+                    e.preventDefault();
+                    smoothScrollTo(
+                      target.getBoundingClientRect().top + window.scrollY,
+                    );
+                    history.replaceState(null, "", `#${id}`);
+                  }}
+                  className="text-muted-foreground hover:bg-background hover:text-foreground block rounded-full px-3 py-1.5 font-medium transition-colors"
+                >
+                  {rail[id]}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
       <ProjectShowcase copy={copy} />
     </section>
