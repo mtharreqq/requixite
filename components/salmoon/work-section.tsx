@@ -12,7 +12,6 @@ import { ArrowUpRight, Github } from "lucide-react";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import type { Project } from "@/types/project";
 import { SplitReveal } from "@/components/salmoon/split-reveal";
-import { ExpandingPanel } from "@/components/salmoon/expanding-panel";
 import { useRef } from "react";
 import {
   motion,
@@ -232,20 +231,14 @@ export function WorkSection({
       <div
         className={`grid w-full grid-cols-1 gap-4 pt-2 ${featured ? "" : "sm:grid-cols-2"}`}
       >
-        {publishedProjects.map((project) =>
-          featured ? (
-            <ExpandingPanel key={project.id}>
-              <ProjectCard project={project} featured copy={copy} />
-            </ExpandingPanel>
-          ) : (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              featured={false}
-              copy={copy}
-            />
-          ),
-        )}
+        {publishedProjects.map((project) => (
+          <ProjectCard
+            key={project.id}
+            project={project}
+            featured={featured}
+            copy={copy}
+          />
+        ))}
       </div>
     </section>
   );
