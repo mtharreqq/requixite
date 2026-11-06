@@ -44,6 +44,10 @@ export const PROJECTS: Project[] = [
       },
     ],
     image: "/work/rantai/home.jpg",
+    compare: [
+      ["/work/rantai/before.jpg", "/work/rantai/home.jpg"],
+      ["/work/rantai/products-before.jpg", "/work/rantai/products.jpg"],
+    ],
     liveUrl: "https://www.rantai.dev",
     published: true,
   },

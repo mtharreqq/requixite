@@ -75,7 +75,7 @@ The November 2026 visual pass takes its cues from RantAI landing page v2.4.0 (`a
 
 ### Toolkit logos and disclosures
 
-Toolkit tiles use square 1:1 containers and local original brand SVG assets; source revisions and licensing are in `public/brand-logos/SOURCES.md` and `LICENSE.txt`. The sticky story enters directly after the preceding section, then pins its measured content at the vertical center of the viewport. It does not add a full-viewport wrapper or leading blank space. Oversized content stays in normal flow.
+AI tool tiles use square 1:1 containers and local brand SVG assets; sources and licensing are in `public/ai-logos/SOURCES.md`. The sticky story enters directly after the preceding section, then pins its measured content at the vertical center of the viewport. It does not add a full-viewport wrapper or leading blank space. Oversized content stays in normal flow.
 
 Experience, project details, and the optional footer explanation share the shadcn/Radix Accordion in `components/ui/accordion.tsx`, with 220ms open / 180ms close transitions and a plus-to-minus indicator. Keyboard activation and reduced motion switch instantly. The repo already includes both shadcn and emil-design-eng skills under `.agents/skills/`.
 

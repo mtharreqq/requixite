@@ -12,7 +12,7 @@ import { ArrowUpRight, Github } from "lucide-react";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import type { Project } from "@/types/project";
 import { SplitReveal } from "@/components/salmoon/split-reveal";
-import { useRef } from "react";
+import { useRef, useState, type CSSProperties, type PointerEvent } from "react";
 import {
   motion,
   useReducedMotion,
@@ -26,6 +26,92 @@ function displayHost(url: string) {
   } catch {
     return url.replace(/^https?:\/\/(www\.)?/, "");
   }
+}
+
+/**
+ * Before/after slider. Mouse follows the pointer, touch drags horizontally
+ * (vertical swipes still scroll), keyboard uses the native range input.
+ */
+function Compare({
+  pairs,
+  title,
+  copy,
+}: {
+  pairs: [string, string][];
+  title: string;
+  copy: PortfolioCopy["work"];
+}) {
+  const [screen, setScreen] = useState(0);
+  const [x, setX] = useState(50);
+  const frame = useRef<HTMLDivElement>(null);
+  const track = (e: PointerEvent) => {
+    if (e.pointerType !== "mouse" && e.buttons === 0) return;
+    const r = frame.current!.getBoundingClientRect();
+    setX(Math.min(100, Math.max(0, ((e.clientX - r.left) / r.width) * 100)));
+  };
+  const [before, after] = pairs[screen];
+  return (
+    <div className="flex flex-col gap-3">
+      <div
+        ref={frame}
+        onPointerMove={track}
+        onPointerDown={track}
+        className="bg-muted has-[:focus-visible]:ring-ring relative aspect-[8/5] w-full touch-pan-y overflow-hidden rounded-xl select-none has-[:focus-visible]:ring-2"
+        style={{ "--x": `${x}%` } as CSSProperties}
+      >
+        <Image
+          src={after}
+          alt={`${copy.after}: ${title} ${copy.screens[screen]}`}
+          fill
+          sizes="(min-width: 768px) 520px, calc(100vw - 5.25rem)"
+          className="object-cover object-top"
+        />
+        <Image
+          src={before}
+          alt={`${copy.before}: ${title} ${copy.screens[screen]}`}
+          fill
+          sizes="(min-width: 768px) 520px, calc(100vw - 5.25rem)"
+          className="object-cover object-top [clip-path:inset(0_calc(100%-var(--x))_0_0)]"
+        />
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 left-[var(--x)] w-px -translate-x-1/2 bg-white shadow-[0_0_0_1px_rgb(0_0_0/0.15)]"
+        >
+          <span className="absolute top-1/2 left-1/2 size-7 -translate-1/2 rounded-full border border-black/10 bg-white shadow-md" />
+        </span>
+        <span className="pointer-events-none absolute top-2 left-2 rounded-full bg-black/60 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur-sm">
+          {copy.before}
+        </span>
+        <span className="pointer-events-none absolute top-2 right-2 rounded-full bg-white/85 px-2 py-0.5 text-[11px] font-medium text-black backdrop-blur-sm">
+          {copy.after}
+        </span>
+        <input
+          type="range"
+          min={0}
+          max={100}
+          value={Math.round(x)}
+          onChange={(e) => setX(Number(e.target.value))}
+          aria-label={copy.compare}
+          className="sr-only"
+        />
+      </div>
+      {pairs.length > 1 && (
+        <div className="flex gap-1.5 text-xs">
+          {copy.screens.slice(0, pairs.length).map((label, i) => (
+            <button
+              key={label}
+              type="button"
+              aria-pressed={i === screen}
+              onClick={() => setScreen(i)}
+              className="aria-pressed:bg-foreground aria-pressed:text-background text-muted-foreground hover:text-foreground border-border rounded-full border px-3 py-1 transition-colors aria-pressed:border-transparent"
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 function ProjectPreview({
@@ -105,7 +191,9 @@ function ProjectCard({
 }) {
   return (
     <article className="group/card flex w-full min-w-0 flex-col gap-4">
-      {project.liveUrl ? (
+      {project.compare ? (
+        <Compare pairs={project.compare} title={project.title} copy={copy} />
+      ) : project.liveUrl ? (
         <a
           href={project.liveUrl}
           target="_blank"

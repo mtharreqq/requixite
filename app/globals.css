@@ -331,10 +331,6 @@
 .showcase-frame {
   transition: transform 300ms var(--ease-out);
 }
-.detail-drawing > span,
-.detail-drawing-1 > div > span,
-.interaction-target,
-.interaction-pointer,
 .study-scan,
 .study-tile,
 .study-button,
@@ -348,22 +344,7 @@
 .study-tile:nth-child(5) {
   opacity: 0.5;
 }
-.detail-drawing-0 > span:nth-child(2) {
-  transform-origin: left;
-}
 @media (hover: hover) and (pointer: fine) {
-  .detail-study:hover .detail-drawing-0 > span:nth-child(2) {
-    transform: scaleX(0.8);
-  }
-  .detail-study:hover .detail-drawing-1 > div > span:nth-child(even) {
-    transform: translateY(-3px);
-  }
-  .detail-study:hover .interaction-pointer {
-    transform: translate(-3px, -4px);
-  }
-  .detail-study:hover .interaction-target {
-    transform: scale(0.96);
-  }
   .process-cell:hover .study-scan {
     transform: translate(-20px, -12px);
   }
@@ -383,10 +364,6 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .showcase-frame,
-  .detail-drawing > span,
-  .detail-drawing-1 > div > span,
-  .interaction-target,
-  .interaction-pointer,
   .study-scan,
   .study-tile,
   .study-button,

@@ -1,6 +1,6 @@
 import { StackStory } from "@/components/salmoon/stack-story";
 import { HeroSection } from "@/components/salmoon/hero-section";
-import { DilemmaSection } from "@/components/salmoon/dilemma-section";
+import { OfferSection } from "@/components/salmoon/offer-section";
 import { ProofSection } from "@/components/salmoon/proof-section";
 import { ProcessSection } from "@/components/salmoon/process-section";
 import { WorkSection } from "@/components/salmoon/work-section";
@@ -40,19 +40,19 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
         className="flex w-full max-w-lg flex-col items-center gap-y-14 pt-8 pr-4 pl-10 outline-none md:max-w-xl md:gap-y-16 md:px-4 md:pt-12"
       >
         <HeroSection copy={copy.hero} />
-        <SectionReveal>
-          <DilemmaSection copy={copy.dilemma} />
-        </SectionReveal>
-        <ProofSection copy={copy.proof} />
         <StackStory copy={copy.stack} />
-        <SectionReveal>
-          <ProcessSection copy={copy.process} />
-        </SectionReveal>
+        <ProofSection copy={copy.proof} />
         {hasWork && (
           <SectionReveal>
             <WorkSection projects={projects} copy={copy.work} />
           </SectionReveal>
         )}
+        <SectionReveal>
+          <OfferSection copy={copy.offer} locale={locale} />
+        </SectionReveal>
+        <SectionReveal>
+          <ProcessSection copy={copy.process} />
+        </SectionReveal>
         <SectionReveal>
           <ExperienceSection copy={copy.experience} />
         </SectionReveal>
