@@ -49,10 +49,12 @@ const BAND = STEP * TICK_PITCH;
 // Share of the remaining distance covered each frame. High enough to track a
 // scroll in real time, low enough to take the edge off wheel steps.
 const EASE = 0.3;
+// How long the new section's label stays up after the reader enters it.
+const FLASH_MS = 1200;
 
 /**
  * Maps scroll position onto the rail: each section sits on a major tick, and
- * the cursor moves linearly between them as the reader scrolls through.
+ * progress moves linearly between them as the reader scrolls through.
  * The top of the page is always 0 and the bottom is always 1.
  */
 function readProgress(): number {
@@ -109,6 +111,7 @@ export function RailNav({
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [active, setActive] = useState(0);
+  const [flash, setFlash] = useState(false);
   const [hovered, setHovered] = useState<number | null>(null);
   // Touch: press and slide along the rail to pick a section, release to go.
   const [scrubbing, setScrubbing] = useState(false);
@@ -126,6 +129,8 @@ export function RailNav({
     hoverAmountTarget: 0,
     scale: 1,
     frame: 0,
+    active: -1,
+    flashTimer: undefined as ReturnType<typeof setTimeout> | undefined,
   });
   // Starts the animation loop; set once the effect has mounted.
   const kickRef = useRef<() => void>(() => {});
@@ -172,14 +177,23 @@ export function RailNav({
 
     const onScroll = () => {
       const p = readProgress();
-      a.cursorTarget = p * (TICKS - 1);
       // The section the reader is inside, not the nearest tick.
-      setActive(
-        Math.min(
-          Math.floor(p * (SECTIONS.length - 1) + 1e-6),
-          SECTIONS.length - 1,
-        ),
+      const index = Math.min(
+        Math.floor(p * (SECTIONS.length - 1) + 1e-6),
+        SECTIONS.length - 1,
       );
+      a.cursorTarget = p * (TICKS - 1);
+      if (index !== a.active) {
+        // Name the new section for a moment, while the wave sits on its tick.
+        // Not on load: only when the reader actually moves to another one.
+        if (a.active !== -1) {
+          setFlash(true);
+          clearTimeout(a.flashTimer);
+          a.flashTimer = setTimeout(() => setFlash(false), FLASH_MS);
+        }
+        a.active = index;
+        setActive(index);
+      }
       kick();
     };
     const onResize = () => {
@@ -198,6 +212,7 @@ export function RailNav({
     window.addEventListener("resize", onResize);
     return () => {
       cancelAnimationFrame(a.frame);
+      clearTimeout(a.flashTimer);
       a.frame = 0;
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
@@ -302,9 +317,8 @@ export function RailNav({
                     : `bg-background/95 shadow-xs ${
                         scrubbing
                           ? "opacity-100"
-                          : isActive
-                            ? // Wide screens have room beside the content, so the current section stays labelled.
-                              "opacity-0 group-focus-within/rail:opacity-100 group-hover/rail:opacity-100 lg:bg-transparent lg:opacity-100 lg:shadow-none"
+                          : isActive && flash
+                            ? "opacity-100"
                             : "opacity-0 group-focus-within/rail:opacity-100 group-hover/rail:opacity-100"
                       } ${isActive ? "text-foreground" : "text-muted-foreground"}`
                 }`}
