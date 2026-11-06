@@ -123,7 +123,7 @@ function StoryWord({
   at: number;
   progress: MotionValue<number>;
 }) {
-  const opacity = useTransform(progress, [at, at + 0.07], [0.2, 1]);
+  const opacity = useTransform(progress, [at, at + 0.07], [0.5, 1]);
   return (
     <>
       <motion.span aria-hidden="true" style={{ opacity }}>
@@ -183,7 +183,8 @@ export function StackStory({ copy }: { copy: PortfolioCopy["stack"] }) {
         >
           {copy.title}
         </h2>
-        <p className="stack-sentence" aria-label={copy.phrases.join(" ")}>
+        <p className="stack-sentence">
+          <span className="sr-only">{copy.phrases.join(" ")}</span>
           {copy.phrases.map((text, i) => (
             <Phrase key={text} text={text} index={i} progress={progress} />
           ))}

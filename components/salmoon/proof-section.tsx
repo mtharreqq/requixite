@@ -130,7 +130,7 @@ export function ProofSection({ copy }: { copy: PortfolioCopy["proof"] }) {
               className={cn(i === phase && "text-foreground")}
               aria-current={i === phase ? "step" : undefined}
             >
-              <span className="opacity-45">0{i + 1}</span>
+              <span>0{i + 1}</span>
               {label}
             </li>
           ))}
