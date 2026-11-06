@@ -43,11 +43,19 @@
 .hero-identity {
   animation: portfolio-arrive 480ms var(--ease-out) both;
 }
+/* RantAI home-hero timing: summary 0.6s at 0.35s, CTAs 0.8s at 0.5s.
+   From 1% opacity, not 0, so the summary still counts for LCP. */
+@keyframes hero-rise {
+  from {
+    opacity: 0.01;
+    transform: translateY(12px);
+  }
+}
 .hero-copy > :nth-child(2) {
-  animation: portfolio-arrive 550ms 280ms var(--ease-out) both;
+  animation: hero-rise 600ms 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .hero-copy > :nth-child(3) {
-  animation: portfolio-arrive 550ms 350ms var(--ease-out) both;
+  animation: hero-rise 800ms 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .hero-showcase {
   transform-origin: center top;

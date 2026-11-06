@@ -10,8 +10,19 @@ export const english = {
     summary:
       "I’m Tharreq, a product engineer and designer in Bandung. You built the app with AI. I fix the spacing, type, and interactions so it feels made with care.",
     featured: "Selected project · RantAI",
-    explore: "See a before & after",
-    contact: "Send me your app",
+    shortcuts: "Jump to",
+    chat: {
+      open: "Message",
+      status: "Usually replies within a day",
+      typing: "Tharreq is typing",
+      greeting: [
+        "Hi! 👋",
+        "Got an app that needs polish? Tell me where you'd like to chat.",
+      ],
+      via: "Chat via",
+      message: "Hi Tharreq, I'd like you to polish my app",
+      close: "Close",
+    },
     view: "Visit website",
     screens: "Project screenshots",
     contribution: "Design & code",
@@ -194,8 +205,19 @@ export const indonesian: PortfolioCopy = {
     summary:
       "Saya Tharreq, product engineer dan designer dari Bandung. Aplikasimu dibangun dengan AI, saya rapikan jarak, huruf, dan interaksinya supaya terasa dibuat dengan serius.",
     featured: "Proyek pilihan · RantAI",
-    explore: "Lihat sebelum & sesudah",
-    contact: "Kirim aplikasimu",
+    shortcuts: "Langsung ke",
+    chat: {
+      open: "Chat",
+      status: "Biasanya balas dalam sehari",
+      typing: "Tharreq sedang mengetik",
+      greeting: [
+        "Halo! 👋",
+        "Ada aplikasi yang mau dirapikan? Pilih mau ngobrol lewat mana.",
+      ],
+      via: "Chat lewat",
+      message: "Halo Tharreq, saya mau aplikasi saya dirapikan",
+      close: "Tutup",
+    },
     view: "Buka website",
     screens: "Cuplikan proyek",
     contribution: "Desain & kode",
