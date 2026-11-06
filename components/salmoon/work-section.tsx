@@ -11,6 +11,7 @@ import {
 import { ArrowUpRight, Github } from "lucide-react";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import type { Project } from "@/types/project";
+import { SplitReveal } from "@/components/salmoon/split-reveal";
 
 function displayHost(url: string) {
   try {
@@ -176,9 +177,10 @@ export function WorkSection({
       <div className="w-full space-y-1">
         <div className="flex w-full flex-col">
           <div className="flex h-8 w-full items-center justify-between gap-x-4">
-            <h2 className="text-foreground text-sm leading-none font-bold tracking-wider uppercase">
-              {copy.title}
-            </h2>
+            <SplitReveal
+              text={copy.title}
+              className="text-foreground text-sm leading-none font-bold tracking-wider uppercase"
+            />
           </div>
         </div>
         <div className="text-muted-foreground flex flex-col gap-y-4 font-sans text-sm leading-relaxed md:text-base">

@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Dev only: botserver over LAN and Tailscale.
+  allowedDevOrigins: ["192.168.4.162", "100.124.78.55"],
   images: {
     // The column never exceeds ~576px, so skip the 1920–3840 candidates.
     // Those were the `src` fallback on `fill` images and inflated the markup.

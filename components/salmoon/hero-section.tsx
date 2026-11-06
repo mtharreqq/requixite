@@ -3,6 +3,7 @@
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import Image from "next/image";
 import { ProjectShowcase } from "@/components/salmoon/project-showcase";
+import { SplitReveal } from "@/components/salmoon/split-reveal";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import {
   HoverCard,
@@ -138,18 +139,19 @@ export function HeroSection({ copy }: { copy: PortfolioCopy["hero"] }) {
       </div>
 
       <div className="hero-copy space-y-5">
-        <h1
-          aria-label={copy.headline.join(" ")}
-          className="text-foreground text-[clamp(1.9rem,5.4vw,3rem)] leading-[1.12] font-medium tracking-[-0.055em]"
-        >
+        <h1 className="text-foreground text-[clamp(1.9rem,5.4vw,3rem)] leading-[1.12] font-medium tracking-[-0.055em]">
           {copy.headline.map((line, index) => (
-            <span key={line} aria-hidden="true" className="hero-line-mask">
-              <span
-                className={`hero-line ${index === 1 ? "text-muted-foreground" : ""}`}
-              >
-                {line}
-              </span>
-            </span>
+            <SplitReveal
+              key={line}
+              as="span"
+              text={line}
+              trigger="mount"
+              // From 1%, not 0: browsers skip fully transparent text, which
+              // would delay LCP until the fade ends.
+              from={0.01}
+              delay={0.15 + index * copy.headline[0].split(" ").length * 0.06}
+              className={`block ${index === 1 ? "text-muted-foreground" : ""}`}
+            />
           ))}
         </h1>
         <p className="text-muted-foreground max-w-md text-sm leading-relaxed md:text-base">

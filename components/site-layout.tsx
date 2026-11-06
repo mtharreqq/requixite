@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { ThemeProvider } from "@/providers/theme-provider";
 import { ThemeColorSync } from "@/providers/theme-color-sync";
+import { SmoothScroll } from "@/components/smooth-scroll";
 import "@/app/globals.css";
 import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
 
@@ -67,6 +68,7 @@ export function SiteLayout({
           disableTransitionOnChange
         >
           <ThemeColorSync />
+          <SmoothScroll />
           {children}
         </ThemeProvider>
         <SpeedInsights />

@@ -23,17 +23,6 @@
   }
 }
 
-@keyframes portfolio-rise {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @keyframes portfolio-fade {
   from {
     opacity: 0;
@@ -43,15 +32,6 @@
   }
 }
 
-/* Run on the first CSS paint, without waiting for hydration or an observer. */
-@keyframes hero-line-enter {
-  from {
-    transform: translateY(110%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
 @keyframes hero-showcase-enter {
   from {
     transform: translateY(30px) scale(0.975);
@@ -62,19 +42,6 @@
 }
 .hero-identity {
   animation: portfolio-arrive 480ms var(--ease-out) both;
-}
-.hero-line-mask {
-  display: block;
-  overflow: hidden;
-  padding-bottom: 0.14em;
-  margin-bottom: -0.14em;
-}
-.hero-line {
-  display: block;
-  animation: hero-line-enter 720ms 60ms var(--ease-out) both;
-}
-.hero-line-mask:nth-child(2) .hero-line {
-  animation-delay: 140ms;
 }
 .hero-copy > :nth-child(2) {
   animation: portfolio-arrive 550ms 280ms var(--ease-out) both;
@@ -88,30 +55,8 @@
 }
 /* A fast Tab press must never leave focused controls hidden or in motion. */
 #home:focus-within .hero-identity,
-#home:focus-within .hero-line,
 #home:focus-within .hero-copy > *,
 #home:focus-within .hero-showcase {
-  animation: none;
-}
-
-.portfolio-motion [data-reveal="pending"] {
-  opacity: 0;
-}
-/* Sections: lighter than the hero (no blur, shorter) so the hero stays the main moment. */
-.portfolio-motion [data-reveal="visible"] > section > * {
-  animation: portfolio-rise 500ms var(--ease-out) both;
-}
-.portfolio-motion [data-reveal="visible"] > section > :nth-child(2) {
-  animation-delay: 60ms;
-}
-.portfolio-motion [data-reveal="visible"] > section > :nth-child(n + 3) {
-  animation-delay: 120ms;
-}
-.portfolio-motion [data-reveal]:focus-within {
-  opacity: 1;
-  transform: none;
-}
-.portfolio-motion [data-reveal]:focus-within > section > * {
   animation: none;
 }
 
@@ -182,18 +127,6 @@
   .hero-showcase {
     animation: portfolio-fade 200ms ease both;
   }
-  .hero-line-mask .hero-line {
-    animation: none;
-    transform: none;
-    opacity: 1;
-  }
-  .portfolio-motion [data-reveal] {
-    opacity: 1;
-    transform: none;
-  }
-  .portfolio-motion [data-reveal] > section > * {
-    animation: none;
-  }
   /* Hover/press movement off; colour, background, opacity transitions stay. */
   .portfolio-motion .social-tactile:hover,
   .portfolio-motion .social-tactile:hover svg {
@@ -212,8 +145,12 @@
 }
 
 @media print {
-  .portfolio-motion [data-reveal] {
-    opacity: 1;
+  /* Scroll reveals that never ran (framer inline styles) must still print. */
+  .portfolio-motion [data-reveal],
+  .portfolio-motion [data-reveal] * {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
   }
   .portfolio-motion *,
   .portfolio-motion *::before,
@@ -577,7 +514,38 @@
     transition: opacity 150ms ease;
   }
 }
+/* Viewport edge fades. Eased alpha stops: a plain linear ramp shows a hard
+   band where it ends. Rotated copy at the bottom. */
+.edge-fade {
+  position: fixed;
+  left: 0;
+  z-index: 40;
+  width: 100%;
+  height: 2.5rem;
+  pointer-events: none;
+  background: var(--background);
+  mask-image: linear-gradient(
+    #000,
+    rgb(0 0 0 / 0.74) 19%,
+    rgb(0 0 0 / 0.54) 34%,
+    rgb(0 0 0 / 0.38) 47%,
+    rgb(0 0 0 / 0.28) 56.5%,
+    rgb(0 0 0 / 0.19) 65%,
+    rgb(0 0 0 / 0.13) 73%,
+    rgb(0 0 0 / 0.08) 80%,
+    rgb(0 0 0 / 0.04) 86%,
+    rgb(0 0 0 / 0.02) 91%,
+    transparent
+  );
+}
+@media (min-width: 768px) {
+  .edge-fade {
+    height: 4rem;
+  }
+}
+
 @media print {
+  .edge-fade,
   .showcase-ghost {
     display: none;
   }
@@ -870,31 +838,36 @@
   line-height: 1.52;
   letter-spacing: -0.045em;
 }
+/* --w grows from 0 on a spring (JS). Phones keep the full gap from the start:
+   a growing gap there would rewrap the sentence again and again. */
 .stack-inline {
   display: inline-flex;
-  vertical-align: middle;
-  align-items: center;
-  gap: 3px;
-  height: 1.25em;
-  margin: 0 0.12em 0 0.05em;
+  justify-content: flex-end;
+  vertical-align: 0.1em;
+  width: var(--w, var(--full));
+}
+@media (max-width: 767px) {
+  .stack-inline {
+    width: var(--full);
+  }
 }
 .stack-tile {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1em;
-  height: 1em;
-  aspect-ratio: 1;
-  flex: 0 0 1em;
-  border-radius: 8px;
-  background: var(--card);
-  box-shadow:
-    0 0 0 1px #0000000c,
-    0 3px 4px #0000000a,
-    0 7px 16px #0000000a;
-}
-.stack-tile {
+  width: 0.92em;
+  height: 0.92em;
+  flex: 0 0 0.92em;
+  border-radius: 0.24em;
   background: #fff;
+  box-shadow:
+    0 0 0 0.04em #fff,
+    0 0 0 calc(0.04em + 1px) #0000001a,
+    0 0.08em 0.2em #0000002e;
+}
+.stack-tile + .stack-tile {
+  margin-left: -0.3em;
 }
 .stack-logo {
   width: 65%;
@@ -1092,4 +1065,14 @@ html {
 }
 .stack-story[data-overflow="true"] .stack-progress {
   display: none;
+}
+/* Static fallbacks show the finished sentence, gaps open. */
+.stack-story[data-overflow="true"] .stack-inline,
+.stack-story[data-reduced="true"] .stack-inline {
+  width: var(--full);
+}
+@media (max-height: 680px), (prefers-reduced-motion: reduce), print {
+  .stack-inline {
+    width: var(--full) !important;
+  }
 }
