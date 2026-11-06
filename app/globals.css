@@ -502,9 +502,6 @@
 .process-scene[data-step="3"] .scene-interface {
   transform: translateY(-4px);
 }
-.process-scene[data-instant="true"] * {
-  transition: none;
-}
 @media (prefers-reduced-motion: reduce) {
   .process-scene *,
   .showcase-ghost,
@@ -780,21 +777,6 @@
   right: -6px;
   top: -20px;
 }
-.proof-phases {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  font-size: 11px;
-  color: var(--muted-foreground);
-}
-.proof-phases li {
-  display: flex;
-  gap: 6px;
-  transition: color 200ms ease;
-}
-.proof-story .stack-progress {
-  margin-top: 12px;
-}
 .proof-story[data-reduced="true"] {
   height: auto;
 }
@@ -802,18 +784,35 @@
   position: relative;
   top: auto;
 }
-@media (max-width: 480px) {
-  .proof-phases {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* Process: same pin as RantAI's home-problem (h-[320svh], sticky 100svh stage). */
+.process-story {
+  position: relative;
+  height: 320svh;
+}
+.process-stage {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  height: 100svh;
+}
+.process-story[data-reduced="true"] {
+  height: auto;
+}
+.process-story[data-reduced="true"] .process-stage {
+  position: relative;
+  height: auto;
 }
 @media (max-height: 680px), print {
-  .proof-story {
+  .proof-story,
+  .process-story {
     height: auto;
   }
-  .proof-sticky {
+  .proof-sticky,
+  .process-stage {
     position: relative;
     top: auto;
+    height: auto;
   }
 }
 /* Scroll story: fixed composition, no wheel interception or layout animation. */
@@ -1033,24 +1032,6 @@ html {
   }
 }
 
-/* Pin the canvas at the viewport's vertical centre (canvas is ~344px tall). */
-@media (min-width: 768px) {
-  .process-pin {
-    top: max(24px, calc(50svh - 172px));
-  }
-}
-/* Longer reading space per process stage, only for scroll-driven desktops. */
-@media (min-width: 768px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .process-steps {
-    gap: 0;
-  }
-  .process-steps > li {
-    min-height: clamp(240px, 42svh, 440px);
-  }
-  .process-steps > li:last-child {
-    min-height: clamp(180px, 28svh, 300px);
-  }
-}
 /* Tall content stays readable in flow rather than pinning below the fold. */
 .stack-story[data-overflow="true"] {
   height: auto;

@@ -1,31 +1,28 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { Check, MousePointer2 } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import { cn } from "@/lib/utils";
 import { SplitReveal } from "@/components/salmoon/split-reveal";
+import { StepRail, StepText, useSteps } from "@/components/salmoon/step-story";
 
 /** An illustrative interface, not a customer result or a working dashboard. */
 function ProcessCanvas({
   step,
-  instant,
   copy,
 }: {
   step: number;
-  instant: boolean;
   copy: PortfolioCopy["process"];
 }) {
   return (
     <div
       className="process-scene bg-muted/50 relative overflow-hidden rounded-2xl p-5 sm:p-6"
       data-step={step}
-      data-instant={instant}
     >
       <div className="text-muted-foreground mb-8 flex items-center justify-between gap-2 font-sans text-[9px] tracking-wider uppercase">
         <span>{copy.study}</span>
-        <span>0{step + 1} / 04</span>
       </div>
       <div
         aria-hidden="true"
@@ -88,75 +85,16 @@ function ProcessCanvas({
         />
         {copy.stages[step]}
       </div>
-      <div aria-hidden="true" className="mt-3 grid grid-cols-4 gap-1.5">
-        {[0, 1, 2, 3].map((i) => (
-          <span
-            key={i}
-            className={cn(
-              "bg-primary h-0.5 rounded-full transition-opacity duration-200",
-              i <= step ? "opacity-75" : "opacity-15",
-            )}
-          />
-        ))}
-      </div>
     </div>
   );
 }
 
 export function ProcessSection({ copy }: { copy: PortfolioCopy["process"] }) {
-  const [step, setStep] = useState(0);
-  const [instant, setInstant] = useState(false);
-  const rows = useRef<(HTMLLIElement | null)[]>([]);
-  const taken = useRef(false);
-  const reduce = useReducedMotion();
-
-  useEffect(() => {
-    const media = window.matchMedia(
-      "(min-width: 768px) and (hover: hover) and (pointer: fine)",
-    );
-    let frame = 0;
-    let current = 0;
-    const update = () => {
-      frame = 0;
-      if (!media.matches || reduce || taken.current) return;
-      const readingLine = window.innerHeight * 0.46;
-      let next = 0;
-      rows.current.forEach((row, index) => {
-        if (row && row.getBoundingClientRect().top <= readingLine) next = index;
-      });
-      // A small dead band prevents a trackpad from flickering between stages
-      // around a boundary. Scroll position selects one deterministic stage.
-      if (
-        next > current &&
-        (rows.current[next]?.getBoundingClientRect().top ?? Infinity) >
-          readingLine - 24
-      )
-        return;
-      if (
-        next < current &&
-        (rows.current[current]?.getBoundingClientRect().top ?? -Infinity) <
-          readingLine + 24
-      )
-        return;
-      if (next === current) return;
-      current = next;
-      setInstant(false);
-      setStep(next);
-    };
-    const schedule = () => {
-      if (!frame) frame = window.requestAnimationFrame(update);
-    };
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
-    media.addEventListener("change", schedule);
-    schedule();
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
-      media.removeEventListener("change", schedule);
-    };
-  }, [reduce]);
+  const ref = useRef<HTMLDivElement>(null);
+  const reduce = Boolean(useReducedMotion());
+  const count = copy.steps.length;
+  const { index, overall } = useSteps(ref, count, reduce);
+  const steps = copy.steps.map((s) => ({ title: s.title, body: s.desc }));
 
   return (
     <section id="process" className="flex w-full flex-col gap-5">
@@ -167,54 +105,27 @@ export function ProcessSection({ copy }: { copy: PortfolioCopy["process"] }) {
         />
         <p className="text-muted-foreground text-xs">{copy.intro}</p>
       </div>
-      <div className="process-explainer text-foreground grid items-start gap-6 md:grid-cols-[1.05fr_1fr] md:gap-8">
-        <div className="process-pin md:sticky">
-          <ProcessCanvas step={step} instant={instant} copy={copy} />
+      {/* Pinned: scroll plays the four steps one by one. */}
+      <div ref={ref} className="process-story" data-reduced={reduce}>
+        <div className="process-stage">
+          <div className="process-explainer text-foreground grid w-full items-center gap-6 md:grid-cols-[1.05fr_1fr] md:gap-8">
+            <ProcessCanvas step={index} copy={copy} />
+            <div>
+              <StepText
+                items={steps}
+                index={index}
+                reduce={reduce}
+                titleClassName="text-foreground text-lg font-medium tracking-tight"
+                bodyClassName="text-muted-foreground mt-1.5 text-xs leading-relaxed"
+              />
+              {!reduce && (
+                <div className="mt-5">
+                  <StepRail overall={overall} index={index} count={count} />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-        <ol className="process-steps grid grid-cols-2 gap-x-4 gap-y-6 md:flex md:flex-col md:gap-14 md:py-5">
-          {copy.steps.map((item, index) => (
-            <li
-              key={item.title}
-              data-step={index}
-              ref={(node) => {
-                rows.current[index] = node;
-              }}
-              className="relative"
-            >
-              <button
-                type="button"
-                aria-pressed={step === index}
-                onClick={(event) => {
-                  taken.current = true;
-                  setInstant(event.detail === 0);
-                  setStep(index);
-                }}
-                className={cn(
-                  "group/step focus-visible:outline-ring w-full cursor-pointer rounded-md text-left transition-colors duration-150",
-                  step === index
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                <span className="mb-2 flex items-center gap-2 font-sans text-[10px]">
-                  <span
-                    className={cn(
-                      "size-1.5 rounded-full",
-                      step === index ? "bg-primary" : "bg-foreground/20",
-                    )}
-                  />
-                  0{index + 1}
-                </span>
-                <span className="block text-sm font-medium tracking-tight">
-                  {item.title}
-                </span>
-              </button>
-              <p className="text-muted-foreground mt-2 text-xs leading-relaxed">
-                {item.desc}
-              </p>
-            </li>
-          ))}
-        </ol>
       </div>
     </section>
   );

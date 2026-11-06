@@ -16,6 +16,12 @@ const unitVariants: Variants = {
     filter: "blur(0px)",
     transition: { duration: 0.7, ease },
   },
+  exit: {
+    opacity: 0,
+    y: "-0.3em",
+    filter: "blur(10px)",
+    transition: { duration: 0.35, ease },
+  },
 };
 
 export function SplitReveal({
@@ -43,6 +49,7 @@ export function SplitReveal({
   const containerVariants: Variants = {
     hidden: {},
     shown: { transition: { staggerChildren: stagger, delayChildren: delay } },
+    exit: { transition: { staggerChildren: stagger / 2 } },
   };
   const variants: Variants = from
     ? { ...unitVariants, hidden: { ...unitVariants.hidden, opacity: from } }
@@ -58,6 +65,7 @@ export function SplitReveal({
       className={className}
       variants={containerVariants}
       initial={reduce ? false : "hidden"}
+      exit={reduce ? undefined : "exit"}
       {...(trigger === "mount"
         ? { animate: "shown" }
         : { whileInView: "shown", viewport: { once: true, amount: 0.4 } })}

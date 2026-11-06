@@ -12,6 +12,14 @@ import { ArrowUpRight, Github } from "lucide-react";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import type { Project } from "@/types/project";
 import { SplitReveal } from "@/components/salmoon/split-reveal";
+import { ExpandingPanel } from "@/components/salmoon/expanding-panel";
+import { useRef } from "react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 
 function displayHost(url: string) {
   try {
@@ -55,6 +63,38 @@ function ProjectPreview({
   );
 }
 
+/**
+ * RantAI's FocusName (platform-reel.tsx): the name comes into focus from a
+ * 14px blur with loose letter-spacing. One-sided here: it sharpens on the way
+ * in and stays sharp, and settles at normal tracking (RantAI's -0.06em is for
+ * display sizes, too tight at text-sm).
+ */
+function FocusName({ name }: { name: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "start center"],
+  });
+  const blur = useTransform(scrollYProgress, [0.2, 0.75], [14, 0]);
+  const filter = useTransform(blur, (b) => `blur(${b}px)`);
+  const letterSpacing = useTransform(
+    scrollYProgress,
+    [0.2, 0.75],
+    ["0.1em", "0em"],
+  );
+  const opacity = useTransform(scrollYProgress, [0.2, 0.75], [0, 1]);
+  const reduce = useReducedMotion();
+  return (
+    <motion.span
+      ref={ref}
+      className="inline-block"
+      style={reduce ? undefined : { filter, letterSpacing, opacity }}
+    >
+      {name}
+    </motion.span>
+  );
+}
+
 function ProjectCard({
   project,
   featured,
@@ -83,7 +123,7 @@ function ProjectCard({
       <div className="flex items-baseline justify-between gap-3">
         <div className="min-w-0">
           <h3 className="text-foreground text-sm font-semibold [overflow-wrap:anywhere]">
-            {project.title}
+            <FocusName name={project.title} />
           </h3>
           <p className="text-muted-foreground text-xs">
             {[project.category.name, project.role].filter(Boolean).join(" · ")}
@@ -192,14 +232,20 @@ export function WorkSection({
       <div
         className={`grid w-full grid-cols-1 gap-4 pt-2 ${featured ? "" : "sm:grid-cols-2"}`}
       >
-        {publishedProjects.map((project) => (
-          <ProjectCard
-            key={project.id}
-            project={project}
-            featured={featured}
-            copy={copy}
-          />
-        ))}
+        {publishedProjects.map((project) =>
+          featured ? (
+            <ExpandingPanel key={project.id}>
+              <ProjectCard project={project} featured copy={copy} />
+            </ExpandingPanel>
+          ) : (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              featured={false}
+              copy={copy}
+            />
+          ),
+        )}
       </div>
     </section>
   );

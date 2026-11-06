@@ -20,12 +20,25 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
   const projects = getProjects(locale).filter((project) => project.published);
   const hasWork = projects.some((project) => project.published);
   return (
-    <PortfolioMotion className="portfolio-motion bg-background text-foreground selection:bg-foreground selection:text-background relative flex min-h-screen w-full flex-col items-center justify-start">
+    // overflow-x: clip, not hidden: hidden would make this a scroll container
+    // and stop the pinned sections from sticking.
+    <PortfolioMotion className="portfolio-motion bg-background text-foreground selection:bg-foreground selection:text-background relative flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip">
+      {/* Keyboard and screen-reader users can jump past the rail */}
+      <a
+        href="#main"
+        className="focus:bg-foreground focus:text-background sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[200] focus:rounded-full focus:px-4 focus:py-2 focus:text-sm focus:font-medium"
+      >
+        {copy.skip}
+      </a>
       <div aria-hidden className="edge-fade top-0" />
       <div aria-hidden className="edge-fade bottom-0 rotate-180" />
 
       {/* Main Intimate Centered Column */}
-      <main className="flex w-full max-w-lg flex-col items-center gap-y-14 py-8 pr-4 pl-10 md:max-w-xl md:gap-y-16 md:px-4 md:py-12">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="flex w-full max-w-lg flex-col items-center gap-y-14 pt-8 pr-4 pl-10 outline-none md:max-w-xl md:gap-y-16 md:px-4 md:pt-12"
+      >
         <HeroSection copy={copy.hero} />
         <SectionReveal>
           <DilemmaSection copy={copy.dilemma} />

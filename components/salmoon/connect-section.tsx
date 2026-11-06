@@ -18,6 +18,7 @@ import {
   XSvg,
 } from "@/components/dock-icons";
 import { Magnetic } from "@/components/salmoon/portfolio-motion";
+import { FooterWordmark } from "@/components/salmoon/footer-wordmark";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import {
   TooltipContent,
@@ -27,6 +28,9 @@ import {
 
 const EMAIL = "mtharreq@gmail.com";
 const EASE_OUT = [0.23, 1, 0.32, 1] as const; // matches --ease-out token
+// RantAI's buttonSheen (home-hero.tsx): a streak of light sweeps across on hover.
+const sheen =
+  "relative overflow-hidden before:pointer-events-none before:absolute before:inset-y-0 before:-left-1/2 before:w-1/2 before:-skew-x-12 before:bg-linear-to-r before:from-transparent before:to-transparent before:transition-transform before:duration-700 before:ease-out hover:before:translate-x-[300%] motion-reduce:before:hidden";
 
 const SOCIALS = [
   { label: "X", href: "https://x.com/tooreeq", Icon: XSvg },
@@ -65,7 +69,7 @@ export function ConnectSection({ copy }: { copy: PortfolioCopy["contact"] }) {
   }
 
   return (
-    <section id="contact" className="w-full space-y-6 pb-12">
+    <section id="contact" className="w-full space-y-6">
       {/* Contact Card */}
       <div className="bg-card border-border/80 rounded-[18px] border p-5 shadow-[0_12px_32px_-16px_rgb(0_0_0/0.22)] dark:shadow-[0_12px_32px_-16px_rgb(0_0_0/0.6)]">
         <div className="flex items-center gap-3">
@@ -97,7 +101,7 @@ export function ConnectSection({ copy }: { copy: PortfolioCopy["contact"] }) {
             <button
               type="button"
               onClick={handleCopy}
-              className="tactile-control bg-foreground text-background relative inline-flex h-[38px] min-w-[116px] cursor-pointer items-center justify-center gap-1.5 rounded-full px-4 text-[13px] font-medium transition-opacity hover:opacity-85 active:scale-[0.98]"
+              className={`${sheen} before:via-background/25 tactile-control bg-foreground text-background inline-flex h-[38px] min-w-[116px] cursor-pointer items-center justify-center gap-1.5 rounded-full px-4 text-[13px] font-medium transition-opacity hover:opacity-85 active:scale-[0.98]`}
             >
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.span
@@ -135,7 +139,7 @@ export function ConnectSection({ copy }: { copy: PortfolioCopy["contact"] }) {
           <Magnetic>
             <a
               href={`mailto:${EMAIL}?subject=${encodeURIComponent(copy.subject)}`}
-              className="tactile-control bg-card text-foreground hover:bg-muted border-border/80 inline-flex h-[38px] items-center rounded-full border px-4 text-[13px] font-medium transition-colors active:scale-[0.98]"
+              className={`${sheen} before:via-foreground/10 tactile-control bg-card text-foreground hover:bg-muted border-border/80 inline-flex h-[38px] items-center rounded-full border px-4 text-[13px] font-medium transition-colors active:scale-[0.98]`}
             >
               {copy.send}
             </a>
@@ -194,6 +198,12 @@ export function ConnectSection({ copy }: { copy: PortfolioCopy["contact"] }) {
           </AccordionItem>
         </Accordion>
         <p className="mt-2 text-[10px]">{`© ${new Date().getFullYear()} Requixite • ${copy.made}`}</p>
+        <div className="relative mt-6 overflow-hidden">
+          <FooterWordmark
+            text="Requixite"
+            className="mb-[-0.2em] text-[clamp(3.5rem,15vw,7.5rem)] leading-[0.85] font-semibold tracking-[-0.06em]"
+          />
+        </div>
       </footer>
     </section>
   );
