@@ -46,21 +46,17 @@
 /* Run on the first CSS paint, without waiting for hydration or an observer. */
 @keyframes hero-line-enter {
   from {
-    opacity: 0;
     transform: translateY(110%);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }
 @keyframes hero-showcase-enter {
   from {
-    opacity: 0;
     transform: translateY(30px) scale(0.975);
   }
   to {
-    opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
