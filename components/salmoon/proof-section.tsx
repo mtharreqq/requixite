@@ -12,6 +12,7 @@ import {
 } from "framer-motion";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import { cn } from "@/lib/utils";
+import { SplitReveal } from "@/components/salmoon/split-reveal";
 
 const clamp = (v: number, a: number, b: number) =>
   Math.min(1, Math.max(0, (v - a) / (b - a)));
@@ -71,12 +72,11 @@ export function ProofSection({ copy }: { copy: PortfolioCopy["proof"] }) {
       data-reduced={Boolean(reduced)}
     >
       <div className="proof-sticky">
-        <h2
+        <SplitReveal
+          text={copy.title}
           id="proof-title"
           className="text-sm font-bold tracking-wider uppercase"
-        >
-          {copy.title}
-        </h2>
+        />
         <p className="text-muted-foreground mt-3 max-w-[46ch] text-sm leading-relaxed">
           {copy.intro}
         </p>

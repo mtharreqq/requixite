@@ -12,6 +12,7 @@ import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { HAS_PUBLISHED_WORK } from "@/data/projects";
+import { smoothScrollTo } from "@/components/smooth-scroll";
 
 const ALL_SECTIONS = [
   { id: "home", label: "Intro" },
@@ -237,10 +238,8 @@ export function RailNav({
   function onPointerUp(e: PointerEvent<HTMLDivElement>) {
     if (!scrubbing) return;
     const target = document.getElementById(SECTIONS[sectionAt(e.clientY)].id);
-    const reduce = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    target?.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
+    if (target)
+      smoothScrollTo(target.getBoundingClientRect().top + window.scrollY);
     setScrubbing(false);
     hover(null);
   }

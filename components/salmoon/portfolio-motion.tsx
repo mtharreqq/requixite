@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import {
   MotionConfig,
   motion,
@@ -18,69 +18,27 @@ export function PortfolioMotion({
   children: ReactNode;
   className?: string;
 }) {
-  const rootRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root || !("IntersectionObserver" in window)) return;
-
-    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sections = root.querySelectorAll<HTMLElement>("[data-reveal]");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          (entry.target as HTMLElement).dataset.reveal = "visible";
-          observer.unobserve(entry.target);
-        });
-      },
-      { rootMargin: "0px 0px -24px 0px", threshold: 0 },
-    );
-
-    const revealAll = () => {
-      if (!preference.matches) return;
-      observer.disconnect();
-      sections.forEach((section) => {
-        section.dataset.reveal = "";
-      });
-    };
-
-    if (!preference.matches) {
-      sections.forEach((section) => {
-        const bounds = section.getBoundingClientRect();
-        if (bounds.top < window.innerHeight && bounds.bottom > 0) {
-          // Already painted by SSR; animating it now would blink it out and back in.
-          return;
-        }
-        section.dataset.reveal = "pending";
-        observer.observe(section);
-      });
-    }
-
-    preference.addEventListener("change", revealAll);
-    return () => {
-      observer.disconnect();
-      preference.removeEventListener("change", revealAll);
-      sections.forEach((section) => {
-        section.dataset.reveal = "";
-      });
-    };
-  }, []);
-
   return (
     <MotionConfig reducedMotion="user">
-      <div ref={rootRef} className={className}>
-        {children}
-      </div>
+      <div className={className}>{children}</div>
     </MotionConfig>
   );
 }
 
+/** RantAI's MotionInView: the section fades up once; its title words reveal on their own. */
 export function SectionReveal({ children }: { children: ReactNode }) {
+  const reduce = useReducedMotion();
   return (
-    <div data-reveal="" className="w-full">
+    <motion.div
+      data-reveal
+      className="w-full"
+      initial={reduce ? false : { opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "0px 0px -80px 0px" }}
+      transition={reduce ? { duration: 0 } : { duration: 0.6, ease: "easeOut" }}
+    >
       {children}
-    </div>
+    </motion.div>
   );
 }
 

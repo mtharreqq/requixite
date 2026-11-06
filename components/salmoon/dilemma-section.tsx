@@ -1,12 +1,14 @@
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
+import { SplitReveal } from "@/components/salmoon/split-reveal";
 
 export function DilemmaSection({ copy }: { copy: PortfolioCopy["dilemma"] }) {
   return (
     <section id="dilemma" className="w-full space-y-5">
       <div className="space-y-2">
-        <h2 className="text-foreground text-lg font-medium tracking-tight">
-          {copy.title}
-        </h2>
+        <SplitReveal
+          text={copy.title}
+          className="text-foreground text-lg font-medium tracking-tight"
+        />
         <p className="text-muted-foreground max-w-md text-sm leading-relaxed">
           {copy.summary}
         </p>

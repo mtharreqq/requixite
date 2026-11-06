@@ -5,6 +5,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
+import { SplitReveal } from "@/components/salmoon/split-reveal";
 
 export function ExperienceSection({
   copy,
@@ -14,9 +15,10 @@ export function ExperienceSection({
   return (
     <section id="experience" className="flex w-full flex-col gap-4">
       <div className="flex flex-col gap-2">
-        <h2 className="text-foreground text-sm font-bold tracking-wider uppercase">
-          {copy.title}
-        </h2>
+        <SplitReveal
+          text={copy.title}
+          className="text-foreground text-sm font-bold tracking-wider uppercase"
+        />
         <p className="text-muted-foreground text-sm leading-relaxed md:text-base">
           {copy.intro}
         </p>

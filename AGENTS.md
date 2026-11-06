@@ -5,6 +5,10 @@ Before server/project work on this host, read `/home/serveradmin/server-ops/READ
 <!-- END SERVER OPS -->
 
 
+## Motion standard
+
+Motion and scroll interactions follow `/Users/mtharreq/Code/rant-ai-landing-page` (GitHub repo of the RantAI landing page). Before building or changing an animation, find the closest pattern there and copy its structure, timing and spring values instead of inventing new ones. Key references: `src/app/[locale]/_components/home/home-solution.tsx` (inline logos in a sentence), `home-problem.tsx` and `home-process.tsx` (pinned step stories), `src/components/shared/split-reveal.tsx` (word reveal), `src/components/platform/expanding-panel.tsx`, `src/components/layout/smooth-scroll.tsx`. Conventions: copy `scrollYProgress` into a `useMotionValue` (sticky-safe), pinned sections as `h-[N svh]` plus sticky `100svh` stage, ease `[0.22, 1, 0.36, 1]`, springs only for discrete changes, phones get their own simpler path, reduced motion shows the finished state. Its monospace usage does not apply here.
+
 ## Owner typography preference
 
 Do not use monospace fonts in the interface. Monospace is allowed only inside an actual terminal or console surface. Use the primary sans-serif font for labels, dates, URLs, technology names, counters, language controls, and other UI text. Do not use monospace merely to make the site look technical. Preserve this preference in future UI changes.

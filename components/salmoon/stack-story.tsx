@@ -8,10 +8,12 @@ import {
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
+  useSpring,
   useTransform,
   type MotionValue,
 } from "framer-motion";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
+import { SplitReveal } from "@/components/salmoon/split-reveal";
 
 type TileName =
   | "Figma"
@@ -47,90 +49,141 @@ function Glyph({ name }: { name: TileName }) {
   );
 }
 
+// Same choreography as the RantAI landing page (home-solution.tsx): words
+// light one by one, then the gap after a phrase grows open on a spring and
+// the logos pop into it.
+const SPAN = 0.9;
+const TILE = 0.92;
+const OVERLAP = 0.3;
+const GAP = 0.2;
+const pop = { stiffness: 380, damping: 20 };
+
 function Tile({
   name,
   index,
-  at,
+  from,
+  unit,
   progress,
 }: {
   name: TileName;
   index: number;
-  at: number;
+  from: number;
+  unit: number;
   progress: MotionValue<number>;
 }) {
-  const opacity = useTransform(progress, [at, at + 0.07], [0, 1]);
-  const transform = useTransform(
-    progress,
-    [at, at + 0.11],
-    [
-      `translate(${index * -17}px, 14px) rotate(-12deg) scale(0.82)`,
-      `translate(0px, 0px) rotate(${index % 2 === 0 ? -7 : 6}deg) scale(1)`,
-    ],
-  );
+  const target = useTransform(progress, [from, from + unit * 0.35], [0, 1]);
+  const scale = useSpring(target, pop);
+  const angle = index % 2 === 0 ? -6 : 4;
+  const rotate = useTransform(scale, [0, 1], [angle - 30, angle]);
   return (
     <motion.span
       className="stack-tile"
       data-tool={name}
       title={name}
-      style={{ opacity, transform }}
+      style={{ scale, opacity: scale, rotate, zIndex: index + 1 }}
     >
       <Glyph name={name} />
     </motion.span>
   );
 }
 
-function Phrase({
-  text,
-  index,
+function InlineGroup({
+  names,
+  at,
+  unit,
   progress,
 }: {
-  text: string;
-  index: number;
+  names: TileName[];
+  at: number;
+  unit: number;
   progress: MotionValue<number>;
 }) {
-  const words = text.split(" ");
+  const full = GAP + TILE * names.length - OVERLAP * (names.length - 1);
+  const target = useTransform(
+    progress,
+    [at - unit * 0.1, at + unit * 0.25],
+    [0, 1],
+  );
+  const grow = useSpring(target, { stiffness: 260, damping: 30 });
+  const width = useTransform(grow, (v) => `${Math.max(0, v) * full}em`);
   return (
-    <>
-      {words.map((word, i) => (
-        <StoryWord
-          key={`${word}-${i}`}
-          text={word}
-          at={0.04 + index * 0.26 + (i / words.length) * 0.14}
+    <motion.span
+      className="stack-inline"
+      aria-hidden="true"
+      style={{ "--w": width, "--full": `${full}em` } as never}
+    >
+      {names.map((name, i) => (
+        <Tile
+          key={name}
+          name={name}
+          index={i}
+          from={at + unit * 0.25 + i * unit * 0.45}
+          unit={unit}
           progress={progress}
         />
       ))}
-      <span className="stack-inline" aria-hidden="true">
-        {groups[index].map((name, i) => (
-          <Tile
-            key={name}
-            name={name}
-            index={i}
-            at={0.19 + index * 0.26 + i * 0.025}
-            progress={progress}
-          />
-        ))}
-      </span>{" "}
-    </>
+    </motion.span>
   );
 }
 
 function StoryWord({
   text,
-  at,
+  start,
+  unit,
+  group,
   progress,
 }: {
   text: string;
-  at: number;
+  start: number;
+  unit: number;
+  group?: TileName[];
   progress: MotionValue<number>;
 }) {
-  const opacity = useTransform(progress, [at, at + 0.07], [0.5, 1]);
+  const opacity = useTransform(progress, [start, start + unit], [0.5, 1]);
+  // Word and its logos never wrap apart.
   return (
-    <>
+    <span className="inline-block whitespace-nowrap">
       <motion.span aria-hidden="true" style={{ opacity }}>
         {text}
-      </motion.span>{" "}
-    </>
+      </motion.span>
+      {group && (
+        <InlineGroup
+          names={group}
+          at={start + unit}
+          unit={unit}
+          progress={progress}
+        />
+      )}
+    </span>
   );
+}
+
+function Sentence({
+  phrases,
+  progress,
+}: {
+  phrases: string[];
+  progress: MotionValue<number>;
+}) {
+  const words = phrases.flatMap((text, p) =>
+    text.split(" ").map((word, i, all) => ({
+      word,
+      group: i === all.length - 1 ? groups[p] : undefined,
+    })),
+  );
+  const unit = SPAN / words.length;
+  return words.map(({ word, group }, i) => (
+    <span key={`${word}-${i}`}>
+      <StoryWord
+        text={word}
+        start={i * unit}
+        unit={unit}
+        group={group}
+        progress={progress}
+      />
+      {i < words.length - 1 && " "}
+    </span>
+  ));
 }
 
 export function StackStory({ copy }: { copy: PortfolioCopy["stack"] }) {
@@ -177,17 +230,14 @@ export function StackStory({ copy }: { copy: PortfolioCopy["stack"] }) {
       data-reduced={Boolean(reduced)}
     >
       <div ref={stickyRef} className="stack-sticky">
-        <h2
+        <SplitReveal
+          text={copy.title}
           id="stack-heading"
           className="text-sm font-bold tracking-wider uppercase"
-        >
-          {copy.title}
-        </h2>
+        />
         <p className="stack-sentence">
           <span className="sr-only">{copy.phrases.join(" ")}</span>
-          {copy.phrases.map((text, i) => (
-            <Phrase key={text} text={text} index={i} progress={progress} />
-          ))}
+          <Sentence phrases={copy.phrases} progress={progress} />
         </p>
         <div className="stack-footer">
           <p className="text-muted-foreground max-w-[40ch] text-xs leading-relaxed">

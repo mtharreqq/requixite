@@ -5,6 +5,7 @@ import { Check, MousePointer2 } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import { cn } from "@/lib/utils";
+import { SplitReveal } from "@/components/salmoon/split-reveal";
 
 /** An illustrative interface, not a customer result or a working dashboard. */
 function ProcessCanvas({
@@ -160,9 +161,10 @@ export function ProcessSection({ copy }: { copy: PortfolioCopy["process"] }) {
   return (
     <section id="process" className="flex w-full flex-col gap-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="text-foreground text-sm font-bold tracking-wider uppercase">
-          {copy.title}
-        </h2>
+        <SplitReveal
+          text={copy.title}
+          className="text-foreground text-sm font-bold tracking-wider uppercase"
+        />
         <p className="text-muted-foreground text-xs">{copy.intro}</p>
       </div>
       <div className="process-explainer text-foreground grid items-start gap-6 md:grid-cols-[1.05fr_1fr] md:gap-8">
