@@ -3,26 +3,22 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Hero entrance stays on the compositor and fully opaque, so the hero
+   text can paint on the first frame instead of waiting out a fade and blur. */
 @keyframes portfolio-arrive {
   from {
-    opacity: 0;
     transform: translateY(14px);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }
 
 @keyframes portfolio-focus {
   from {
-    opacity: 0;
-    filter: blur(5px);
     transform: translateY(6px);
   }
   to {
-    opacity: 1;
-    filter: blur(0);
     transform: translateY(0);
   }
 }
@@ -184,7 +180,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* Entrances: keep a short opacity fade, drop translate + blur. */
+  /* Hero: short opacity fade, no translate. Sections stay put. */
   .hero-identity,
   .hero-copy > *,
   .hero-showcase {

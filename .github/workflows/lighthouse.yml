@@ -1,0 +1,24 @@
+name: lighthouse
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Chrome
+        run: google-chrome --version
+      # Accessibility category is axe-core via Lighthouse, so there is no second scanner.
+      # The site is a single English page at /. /en and /id are not routes.
+      - name: Lighthouse
+        run: npx --yes @lhci/cli@0.15.1 autorun
