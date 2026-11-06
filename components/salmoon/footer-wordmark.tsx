@@ -12,7 +12,7 @@ const letterClass = "inline-block bg-linear-to-b bg-clip-text text-transparent";
 /**
  * Letters rise in; near the cursor they lift and darken, so moving across
  * the word sends a soft wave through it. Its parent must crop it
- * (overflow-hidden) and sit inside a <footer>.
+ * (overflow-hidden) and sit inside <main>.
  */
 export function FooterWordmark({
   text,
@@ -79,14 +79,17 @@ export function FooterWordmark({
 
   // Overscroll reveal: the wordmark is cropped by its parent's bottom edge.
   // Scrolling on past the end of the page stretches the parent (with growing
-  // resistance) to show the whole word, and the footer lifts by the same
-  // amount so the new space stays in view. On release it settles back.
+  // resistance) to show the whole word, and the page content lifts by the
+  // same amount so the new space stays in view. On release it settles back.
+  // RantAI lifts its <footer>, which fills the screen there; here the footer
+  // is a few lines under the contact card, so lifting only it slid it over
+  // the card. Lifting all of <main> moves everything together.
   useEffect(() => {
     const root = ref.current;
     const panel = root?.parentElement;
-    const footer = root?.closest("footer");
+    const page = root?.closest("main");
     // Never intercept touch scrolling: Safari must keep its own rubber band.
-    if (!root || !panel || !footer || !desktopMotion) return;
+    if (!root || !panel || !page || !desktopMotion) return;
 
     let pull = 0; // raw input since the pull started
     let shown = 0; // pixels currently revealed
@@ -111,7 +114,7 @@ export function FooterWordmark({
       const progress = room ? shown / room : 0;
       const solid = Math.min(1, Math.max(0, (progress - 0.1) / 0.65));
       root.style.setProperty("--pull", String(solid));
-      footer.style.transform = shown ? `translateY(${-shown}px)` : "";
+      page.style.transform = shown ? `translateY(${-shown}px)` : "";
     };
 
     const tick = () => {
@@ -160,7 +163,7 @@ export function FooterWordmark({
       window.removeEventListener("wheel", onWheel, { capture: true });
       root.style.marginBottom = "";
       root.style.removeProperty("--pull");
-      footer.style.transform = "";
+      page.style.transform = "";
     };
   }, [desktopMotion]);
 
