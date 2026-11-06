@@ -1,9 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
+
 import { ArrowUpRight, Github } from "lucide-react";
-import { PROJECTS } from "@/data/projects";
-import { TagPill } from "@/components/work/tag-pill";
+import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import type { Project } from "@/types/project";
 
 function displayHost(url: string) {
@@ -14,13 +20,19 @@ function displayHost(url: string) {
   }
 }
 
-function ProjectPreview({ project }: { project: Project }) {
+function ProjectPreview({
+  project,
+  copy,
+}: {
+  project: Project;
+  copy: PortfolioCopy["work"];
+}) {
   if (project.image) {
     return (
-      <div className="bg-muted border-border/50 relative aspect-video w-full overflow-hidden rounded-[2px] border">
+      <div className="bg-muted relative aspect-video w-full overflow-hidden rounded-xl">
         <Image
           src={project.image}
-          alt={`${project.title} website`}
+          alt={`${copy.preview} ${project.title}`}
           fill
           sizes="(min-width: 768px) 520px, calc(100vw - 5.25rem)"
           className="object-cover object-top transition-transform duration-300 group-hover/card:scale-[1.02]"
@@ -30,7 +42,7 @@ function ProjectPreview({ project }: { project: Project }) {
   }
 
   return (
-    <div className="bg-muted border-border/50 relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-[2px] border">
+    <div className="bg-muted relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-xl">
       <div
         className="absolute inset-0 opacity-15 transition-transform duration-300 group-hover/card:scale-105"
         style={{ backgroundColor: project.color }}
@@ -45,30 +57,14 @@ function ProjectPreview({ project }: { project: Project }) {
 function ProjectCard({
   project,
   featured,
+  copy,
 }: {
   project: Project;
   featured: boolean;
+  copy: PortfolioCopy["work"];
 }) {
   return (
-    <div
-      className="project-tactile group/card border-border/70 bg-card/40 hover:border-border hover:bg-card/70 flex w-full min-w-0 flex-col space-y-2 rounded-[4px] border p-3 transition-colors"
-      onPointerMove={(event) => {
-        if (
-          event.pointerType !== "mouse" ||
-          window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        )
-          return;
-        const bounds = event.currentTarget.getBoundingClientRect();
-        event.currentTarget.style.setProperty(
-          "--spotlight-x",
-          `${event.clientX - bounds.left}px`,
-        );
-        event.currentTarget.style.setProperty(
-          "--spotlight-y",
-          `${event.clientY - bounds.top}px`,
-        );
-      }}
-    >
+    <article className="group/card flex w-full min-w-0 flex-col gap-4">
       {project.liveUrl ? (
         <a
           href={project.liveUrl}
@@ -77,33 +73,32 @@ function ProjectCard({
           tabIndex={-1}
           aria-hidden
         >
-          <ProjectPreview project={project} />
+          <ProjectPreview project={project} copy={copy} />
         </a>
       ) : (
-        <ProjectPreview project={project} />
+        <ProjectPreview project={project} copy={copy} />
       )}
 
-      {/* Meta & Title */}
-      <div className="flex items-center justify-between gap-3 pt-1">
-        <span className="shrink-0">
-          <TagPill
-            name={project.category.name}
-            color={project.category.color}
-            size="sm"
-          />
-        </span>
-        <div className="flex min-w-0 items-center gap-2">
+      <div className="flex items-baseline justify-between gap-3">
+        <div className="min-w-0">
+          <h3 className="text-foreground text-sm font-semibold [overflow-wrap:anywhere]">
+            {project.title}
+          </h3>
+          <p className="text-muted-foreground text-xs">
+            {[project.category.name, project.role].filter(Boolean).join(" · ")}
+          </p>
+        </div>
+        <div className="flex shrink-0 items-center gap-3">
           {project.liveUrl && (
             <a
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground inline-flex min-w-0 items-center gap-0.5 text-[11px] transition-[color,opacity] active:opacity-60"
-              aria-label={`Visit ${project.title}`}
-              title={displayHost(project.liveUrl)}
+              className="text-muted-foreground hover:text-foreground inline-flex items-center gap-0.5 text-xs transition-colors"
+              aria-label={`${copy.visit} ${project.title}`}
             >
-              <span className="truncate">{displayHost(project.liveUrl)}</span>
-              <ArrowUpRight className="size-3.5 shrink-0" />
+              {displayHost(project.liveUrl)}
+              <ArrowUpRight className="size-3.5" />
             </a>
           )}
           {project.repoUrl && (
@@ -111,22 +106,13 @@ function ProjectCard({
               href={project.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground shrink-0 transition-[color,opacity] active:opacity-60"
-              aria-label={`${project.title} source code`}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+              aria-label={`${copy.source} ${project.title}`}
             >
               <Github className="size-3.5" />
             </a>
           )}
         </div>
-      </div>
-
-      <div className="space-y-0.5">
-        <h3 className="text-foreground text-sm font-semibold [overflow-wrap:anywhere]">
-          {project.title}
-        </h3>
-        {project.role && (
-          <p className="text-muted-foreground text-[11px]">{project.role}</p>
-        )}
       </div>
 
       <p
@@ -136,34 +122,49 @@ function ProjectCard({
       </p>
 
       {featured && project.highlights && (
-        <ul className="flex flex-col gap-2 pt-1">
-          {project.highlights.map((h) => (
-            <li key={h.title} className="font-sans text-xs leading-relaxed">
-              <span className="text-foreground font-medium">{h.title}.</span>{" "}
-              <span className="text-muted-foreground">{h.description}</span>
-            </li>
-          ))}
-        </ul>
+        <Accordion type="single" collapsible className="border-border border-y">
+          <AccordionItem value="build">
+            <AccordionTrigger variant="compact">
+              {copy.details}
+            </AccordionTrigger>
+            <AccordionContent>
+              <ul className="flex flex-col gap-2">
+                {project.highlights.map((h) => (
+                  <li
+                    key={h.title}
+                    className="font-sans text-xs leading-relaxed"
+                  >
+                    <span className="text-foreground font-medium">
+                      {h.title}.
+                    </span>{" "}
+                    <span className="text-muted-foreground">
+                      {h.description}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       )}
 
       {featured && (
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          {project.tags.map((tag) => (
-            <span
-              key={tag}
-              className="border-border/60 bg-muted/60 text-muted-foreground rounded-[2px] border px-1.5 py-0.5 text-[10px]"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
+        <p className="text-muted-foreground text-xs">
+          {project.tags.join(" · ")}
+        </p>
       )}
-    </div>
+    </article>
   );
 }
 
-export function WorkSection() {
-  const publishedProjects = PROJECTS.filter((p) => p.published);
+export function WorkSection({
+  projects,
+  copy,
+}: {
+  projects: Project[];
+  copy: PortfolioCopy["work"];
+}) {
+  const publishedProjects = projects.filter((p) => p.published);
   const featured = publishedProjects.length === 1;
 
   // Nothing published: hide the section rather than promise an empty grid.
@@ -176,15 +177,12 @@ export function WorkSection() {
         <div className="flex w-full flex-col">
           <div className="flex h-8 w-full items-center justify-between gap-x-4">
             <h2 className="text-foreground text-sm leading-none font-bold tracking-wider uppercase">
-              Selected Work
+              {copy.title}
             </h2>
           </div>
         </div>
         <div className="text-muted-foreground flex flex-col gap-y-4 font-sans text-sm leading-relaxed md:text-base">
-          <p>
-            Live products I designed and built from first sketch to production.
-            More are on the way.
-          </p>
+          <p>{copy.intro}</p>
         </div>
       </div>
 
@@ -193,7 +191,12 @@ export function WorkSection() {
         className={`grid w-full grid-cols-1 gap-4 pt-2 ${featured ? "" : "sm:grid-cols-2"}`}
       >
         {publishedProjects.map((project) => (
-          <ProjectCard key={project.id} project={project} featured={featured} />
+          <ProjectCard
+            key={project.id}
+            project={project}
+            featured={featured}
+            copy={copy}
+          />
         ))}
       </div>
     </section>

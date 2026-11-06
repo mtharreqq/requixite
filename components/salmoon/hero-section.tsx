@@ -1,7 +1,9 @@
 "use client";
 
+import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import Image from "next/image";
-import { PolaroidLink } from "@/components/salmoon/portfolio-motion";
+import { ProjectShowcase } from "@/components/salmoon/project-showcase";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import {
   HoverCard,
   HoverCardContent,
@@ -15,31 +17,7 @@ import {
   XSvg,
 } from "@/components/dock-icons";
 
-const POLAROIDS = [
-  {
-    src: "/work/rantai/home.jpg",
-    href: "https://www.rantai.dev",
-    label: "rantai.dev",
-    rotate: -6,
-    position: "50% 45%",
-  },
-  {
-    src: "/work/rantai/products.jpg",
-    href: "https://www.rantai.dev/products",
-    label: "products",
-    rotate: 6,
-    position: "85% 40%",
-  },
-  {
-    src: "/work/rantai/blog.jpg",
-    href: "https://www.rantai.dev/blog",
-    label: "insights ✨",
-    rotate: -3,
-    position: "75% 40%",
-  },
-];
-
-export function HeroSection() {
+export function HeroSection({ copy }: { copy: PortfolioCopy["hero"] }) {
   return (
     <section id="home" className="flex w-full flex-col gap-8 pt-4">
       {/* Title & Identity */}
@@ -94,8 +72,7 @@ export function HeroSection() {
                 </div>
 
                 <p className="text-muted-foreground mt-2.5 font-sans text-xs leading-relaxed">
-                  Product engineer &amp; designer based in Bandung. Frontend at
-                  Telkomsigma, building rantai.dev on the side.
+                  {copy.profile}
                 </p>
 
                 <div className="text-muted-foreground mt-2.5 flex items-center gap-2 text-[11px]">
@@ -103,7 +80,7 @@ export function HeroSection() {
                   <span>&bull;</span>
                   <span className="inline-flex items-center gap-1 font-medium text-emerald-600 dark:text-emerald-400">
                     <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
-                    Available
+                    {copy.available}
                   </span>
                 </div>
 
@@ -155,74 +132,47 @@ export function HeroSection() {
             <TwitterVerifiedBadgeSvg className="size-4 shrink-0" />
           </div>
           <p className="text-muted-foreground text-xs leading-none font-medium md:text-sm">
-            Product Engineer &amp; Designer &bull; Requixite
+            {copy.role}
           </p>
         </div>
       </div>
 
-      {/* Bio Paragraphs */}
-      <div className="hero-copy text-muted-foreground flex flex-col gap-y-4 font-sans text-sm leading-relaxed md:text-base">
-        <p>
-          I&apos;m a product engineer and designer based in{" "}
-          <span className="text-foreground font-medium">
-            Bandung, Indonesia
-          </span>
-          . I work where design meets code: I take an idea from Figma to
-          production and care about every pixel along the way.
-        </p>
-        <p>
-          By day I build internal enterprise apps as a frontend developer at{" "}
-          <span className="text-foreground font-medium">Telkomsigma</span>. On
-          the side I design and ship the website for{" "}
-          <a
-            href="https://www.rantai.dev"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-foreground decoration-muted-foreground/40 hover:decoration-foreground font-medium underline underline-offset-4 transition-colors"
-          >
-            RantAI
-          </a>
-          , an AI company.
-        </p>
-        <p>
-          AI can scaffold an app in minutes. I focus on what it usually misses:
-          consistent spacing, clear hierarchy, considered motion, and the small
-          details that make software feel finished and trustworthy.
-        </p>
-      </div>
-
-      {/* Tilted Polaroid Stack */}
-      <div className="hero-polaroids relative w-full max-w-full pt-2">
-        <div className="mx-auto flex w-fit flex-row items-center gap-2 -space-x-4 px-4 sm:gap-4 sm:-space-x-6">
-          {POLAROIDS.map((card, index) => (
-            <PolaroidLink
-              key={card.src}
-              href={card.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`border-border/70 shrink-0 overflow-hidden rounded-[2px] border shadow-md ${index === 1 ? "z-1" : ""}`}
-              rotation={card.rotate}
-              aria-label={`RantAI ${card.label}`}
-            >
-              <div className="bg-card text-card-foreground flex h-fit w-[27vw] flex-col items-center p-1.5 sm:w-32">
-                <div className="border-border/50 bg-muted relative aspect-square h-auto w-full overflow-hidden rounded-[1px] border">
-                  <Image
-                    src={card.src}
-                    alt={`RantAI ${card.label} page`}
-                    fill
-                    sizes="(min-width: 640px) 128px, 27vw"
-                    className="object-cover"
-                    style={{ objectPosition: card.position }}
-                  />
-                </div>
-                <span className="text-muted-foreground mt-1.5 text-xs tracking-tight sm:text-sm">
-                  {card.label}
-                </span>
-              </div>
-            </PolaroidLink>
+      <div className="hero-copy space-y-5">
+        <h1
+          aria-label={copy.headline.join(" ")}
+          className="text-foreground text-[clamp(1.9rem,5.4vw,3rem)] leading-[1.12] font-medium tracking-[-0.055em]"
+        >
+          {copy.headline.map((line, index) => (
+            <span key={line} aria-hidden="true" className="hero-line-mask">
+              <span
+                className={`hero-line ${index === 1 ? "text-muted-foreground" : ""}`}
+              >
+                {line}
+              </span>
+            </span>
           ))}
+        </h1>
+        <p className="text-muted-foreground max-w-md text-sm leading-relaxed md:text-base">
+          {copy.summary}
+        </p>
+        <div className="flex flex-wrap gap-x-5 gap-y-3 text-xs">
+          <a
+            href="#work"
+            className="text-foreground inline-flex items-center gap-1.5 rounded-sm font-medium underline-offset-4 hover:underline"
+          >
+            {copy.explore}
+            <ArrowDownRight className="size-3.5" />
+          </a>
+          <a
+            href="#contact"
+            className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 rounded-sm transition-colors"
+          >
+            {copy.contact}
+            <ArrowUpRight className="size-3.5" />
+          </a>
         </div>
       </div>
+      <ProjectShowcase copy={copy} />
     </section>
   );
 }

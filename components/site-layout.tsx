@@ -5,14 +5,15 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { ThemeProvider } from "@/providers/theme-provider";
 import { ThemeColorSync } from "@/providers/theme-color-sync";
-import "./globals.css";
+import "@/app/globals.css";
+import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
+const sharedMetadata: Metadata = {
   title: "Requixite — Precise. Exquisite. Requisite.",
   description:
     "Independent product and web studio by Tharreq. Crafting refined, purpose-driven digital experiences.",
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const viewport: Viewport = {
+export const siteViewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
@@ -31,13 +32,33 @@ export const viewport: Viewport = {
   colorScheme: "light dark",
 };
 
-export default function RootLayout({
+export function getLocaleMetadata(language: Locale): Metadata {
+  return {
+    ...sharedMetadata,
+    description: getPortfolioCopy(language).metadata,
+    metadataBase: new URL("https://requixite.my.id"),
+    alternates: {
+      canonical: language === "id" ? "/id" : "/",
+      languages: { en: "/", id: "/id", "x-default": "/" },
+    },
+    openGraph: {
+      title: "Requixite — Tharreq",
+      description: getPortfolioCopy(language).metadata,
+      locale: language === "id" ? "id_ID" : "en_US",
+      alternateLocale: language === "id" ? "en_US" : "id_ID",
+    },
+  };
+}
+
+export function SiteLayout({
   children,
-}: Readonly<{
+  locale,
+}: {
   children: React.ReactNode;
-}>) {
+  locale: Locale;
+}) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body className={`${geistSans.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
