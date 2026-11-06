@@ -1,17 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { ArrowRight, ArrowUpRight, Wallet } from "lucide-react";
 import {
   motion,
-  useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
-  useScroll,
   useTransform,
 } from "framer-motion";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
-import { cn } from "@/lib/utils";
+import { StepRail, StepText, useSteps } from "@/components/salmoon/step-story";
 import { SplitReveal } from "@/components/salmoon/split-reveal";
 
 const clamp = (v: number, a: number, b: number) =>
@@ -19,49 +17,36 @@ const clamp = (v: number, a: number, b: number) =>
 const px = (from: number) => (t: number) =>
   `${Math.round(from + (24 - from) * t)}px`;
 
-// Scroll windows: one fix at a time, never overlapping.
-const SPACING = [0.12, 0.32];
-const COLOR = [0.4, 0.6];
-const TYPE = [0.68, 0.88];
+// One step per phase: vibecoded, spacing, color, type. Each fix plays within
+// its own step and finishes at 75% of it, so each is seen complete.
+const PHASES = 4;
+const dial = (s: number, k: number) => clamp(s, k, k + 0.75);
 
 export function ProofSection({ copy }: { copy: PortfolioCopy["proof"] }) {
   const ref = useRef<HTMLElement>(null);
   const card = useRef<HTMLDivElement>(null);
-  const reduced = useReducedMotion();
-  const [phase, setPhase] = useState(0);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
-  // Same JS motion value pattern as StackStory: sticky targets mismeasure natively.
-  const progress = useMotionValue(0);
-  useMotionValueEvent(scrollYProgress, "change", (value) => {
-    if (!reduced) progress.set(value);
-  });
-  useEffect(() => {
-    if (reduced) progress.set(1);
-  }, [reduced, progress]);
+  const reduce = Boolean(useReducedMotion());
+  const { index, overall } = useSteps(ref, PHASES, reduce);
 
   // The same card throughout; only its CSS dials move (no re-render per frame).
-  const spacing = useTransform(progress, (p) =>
-    clamp(p, SPACING[0], SPACING[1]),
-  );
-  useMotionValueEvent(progress, "change", (p) => {
+  const spacing = useTransform(overall, (v) => dial(v * PHASES, 1));
+  useMotionValueEvent(overall, "change", (v) => {
     const style = card.current?.style;
     if (!style) return;
+    const s = v * PHASES;
+    // Measure guides show up at the end of step 1 and leave once spacing settles.
     style.setProperty(
       "--m",
-      String(clamp(p, 0.06, 0.12) * (1 - clamp(p, 0.32, 0.38))),
+      String(clamp(s, 0.3, 0.7) * (1 - clamp(s, 1.75, 2))),
     );
-    style.setProperty("--p", String(clamp(p, SPACING[0], SPACING[1])));
-    const colour = clamp(p, COLOR[0], COLOR[1]);
+    style.setProperty("--p", String(dial(s, 1)));
+    const colour = dial(s, 2);
     style.setProperty("--c", String(colour));
     // Button text flips at the midpoint so it never matches its own fill.
     style.setProperty("--t", colour < 0.5 ? "0" : "1");
-    style.setProperty("--f", String(clamp(p, TYPE[0], TYPE[1])));
-    setPhase(p < 0.1 ? 0 : p < 0.36 ? 1 : p < 0.64 ? 2 : 3);
+    style.setProperty("--f", String(dial(s, 3)));
   });
-  const line = useTransform(progress, [0, 0.9], [0, 1]);
+  const steps = copy.phases.map((title, i) => ({ title, body: copy.notes[i] }));
 
   return (
     <section
@@ -69,7 +54,7 @@ export function ProofSection({ copy }: { copy: PortfolioCopy["proof"] }) {
       id="proof"
       className="proof-story w-full"
       aria-labelledby="proof-title"
-      data-reduced={Boolean(reduced)}
+      data-reduced={reduce}
     >
       <div className="proof-sticky">
         <SplitReveal
@@ -123,24 +108,20 @@ export function ProofSection({ copy }: { copy: PortfolioCopy["proof"] }) {
             </div>
           </div>
         </div>
-        <ol className="proof-phases">
-          {copy.phases.map((label, i) => (
-            <li
-              key={label}
-              className={cn(i === phase && "text-foreground")}
-              aria-current={i === phase ? "step" : undefined}
-            >
-              <span>0{i + 1}</span>
-              {label}
-            </li>
-          ))}
-        </ol>
-        <div className="stack-progress" aria-hidden="true">
-          <motion.span style={{ scaleX: line }} />
+        <div className="mt-2">
+          <StepText
+            items={steps}
+            index={index}
+            reduce={reduce}
+            titleClassName="text-foreground text-lg font-medium tracking-tight"
+            bodyClassName="text-muted-foreground mt-1.5 text-xs leading-relaxed"
+          />
         </div>
-        <p className="text-muted-foreground mt-4 min-h-[3em] text-xs leading-relaxed">
-          {copy.notes[phase]}
-        </p>
+        {!reduce && (
+          <div className="mt-5">
+            <StepRail overall={overall} index={index} count={PHASES} />
+          </div>
+        )}
       </div>
     </section>
   );

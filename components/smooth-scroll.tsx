@@ -2,7 +2,7 @@
 
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
-import { useEffect } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
 // Same as the RantAI landing page (layout/smooth-scroll.tsx): Lenis only for
 // mouse/trackpad desktops; touch keeps native inertia.
@@ -52,23 +52,31 @@ export function smoothScrollTo(y: number, duration = 0.9) {
   else glideTo(y, duration);
 }
 
+/** Enhanced scrolling is for mouse/trackpad desktops; touch keeps native inertia. */
+export function useDesktopMotion() {
+  return useSyncExternalStore(
+    (onChange) => {
+      const query = window.matchMedia(DESKTOP_MOTION);
+      query.addEventListener("change", onChange);
+      return () => query.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(DESKTOP_MOTION).matches,
+    () => false,
+  );
+}
+
 export function SmoothScroll() {
+  const desktopMotion = useDesktopMotion();
+
   useEffect(() => {
-    const query = window.matchMedia(DESKTOP_MOTION);
-    const sync = () => {
-      activeLenis?.destroy();
-      activeLenis = query.matches
-        ? new Lenis({ lerp: 0.1, autoRaf: true, anchors: true })
-        : null;
-    };
-    sync();
-    query.addEventListener("change", sync);
+    if (!desktopMotion) return;
+    const lenis = new Lenis({ lerp: 0.1, autoRaf: true, anchors: true });
+    activeLenis = lenis;
     return () => {
-      query.removeEventListener("change", sync);
-      activeLenis?.destroy();
-      activeLenis = null;
+      lenis.destroy();
+      if (activeLenis === lenis) activeLenis = null;
     };
-  }, []);
+  }, [desktopMotion]);
 
   return null;
 }

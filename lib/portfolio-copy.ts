@@ -4,6 +4,7 @@ export const english = {
   metadata:
     "Independent product and web studio by Tharreq. Thoughtful design, considered interactions, and websites built to be used.",
   language: "Language",
+  skip: "Skip to content",
   hero: {
     headline: ["Thoughtfully designed.", "A pleasure to use."],
     summary:
@@ -165,6 +166,7 @@ export const indonesian: PortfolioCopy = {
   metadata:
     "Studio produk digital dan web independen milik Tharreq. Desain yang dipikirkan matang, interaksi yang nyaman, dan website yang enak dipakai.",
   language: "Bahasa",
+  skip: "Langsung ke konten",
   hero: {
     headline: ["Rapi dilihat.", "Nyaman dipakai."],
     summary:
