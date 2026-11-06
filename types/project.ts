@@ -38,6 +38,8 @@ export interface Project {
   tags: string[];
   highlights?: ProjectHighlight[];
   image?: string;
+  /** Before/after screenshot pairs, labelled by `work.screens` in the copy. */
+  compare?: [before: string, after: string][];
   role?: string;
   liveUrl?: string;
   repoUrl?: string;

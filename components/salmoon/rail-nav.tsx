@@ -15,14 +15,14 @@ import { HAS_PUBLISHED_WORK } from "@/data/projects";
 import { smoothScrollTo } from "@/components/smooth-scroll";
 
 const ALL_SECTIONS = [
-  { id: "home", label: "Intro" },
-  { id: "dilemma", label: "Dilemma" },
-  { id: "proof", label: "Proof" },
-  { id: "stack", label: "Toolkit" },
-  { id: "process", label: "Process" },
-  { id: "work", label: "Work" },
-  { id: "experience", label: "Experience" },
-  { id: "contact", label: "Contact" },
+  { id: "home" },
+  { id: "stack" },
+  { id: "proof" },
+  { id: "work" },
+  { id: "offer" },
+  { id: "process" },
+  { id: "experience" },
+  { id: "contact" },
 ];
 // No published projects means no Work section, so no rail stop for it either.
 const SECTIONS = ALL_SECTIONS.filter(

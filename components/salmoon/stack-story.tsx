@@ -16,31 +16,23 @@ import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import { SplitReveal } from "@/components/salmoon/split-reveal";
 
 type TileName =
-  | "Figma"
-  | "React"
-  | "Next.js"
-  | "TypeScript"
-  | "Tailwind CSS"
-  | "PostgreSQL";
-const groups: TileName[][] = [
-  ["Figma"],
-  ["React", "Next.js"],
-  ["TypeScript", "Tailwind CSS", "PostgreSQL"],
-];
-
-const LOGOS: Record<TileName, string> = {
-  Figma: "figma",
-  React: "react",
-  "Next.js": "nextjs",
-  TypeScript: "typescript",
-  "Tailwind CSS": "tailwindcss",
-  PostgreSQL: "postgresql",
+  | "Lovable"
+  | "Bolt"
+  | "v0"
+  | "Replit"
+  | "Cursor"
+  | "Claude"
+  | "ChatGPT"
+  | "Antigravity";
+const groups: Record<string, TileName[]> = {
+  build: ["Lovable", "Bolt", "v0", "Replit"],
+  code: ["Cursor", "Claude", "ChatGPT", "Antigravity"],
 };
 
 function Glyph({ name }: { name: TileName }) {
   return (
     <Image
-      src={`/brand-logos/${LOGOS[name]}.svg`}
+      src={`/ai-logos/${name.toLowerCase()}.svg`}
       alt=""
       width={28}
       height={28}
@@ -131,12 +123,14 @@ function StoryWord({
   start,
   unit,
   group,
+  tail,
   progress,
 }: {
   text: string;
   start: number;
   unit: number;
   group?: TileName[];
+  tail?: string;
   progress: MotionValue<number>;
 }) {
   const opacity = useTransform(progress, [start, start + unit], [0.5, 1]);
@@ -154,31 +148,41 @@ function StoryWord({
           progress={progress}
         />
       )}
+      {tail && (
+        <motion.span aria-hidden="true" style={{ opacity }}>
+          {tail}
+        </motion.span>
+      )}
     </span>
   );
 }
 
 function Sentence({
-  phrases,
+  sentence,
   progress,
 }: {
-  phrases: string[];
+  sentence: string;
   progress: MotionValue<number>;
 }) {
-  const words = phrases.flatMap((text, p) =>
-    text.split(" ").map((word, i, all) => ({
-      word,
-      group: i === all.length - 1 ? groups[p] : undefined,
-    })),
-  );
+  // "{build}," joins the word before it: logos, then the trailing comma.
+  const words: { word: string; group?: TileName[]; tail?: string }[] = [];
+  for (const token of sentence.split(" ")) {
+    const marker = token.match(/^\{(\w+)\}(.*)$/);
+    const last = words[words.length - 1];
+    if (marker && last) {
+      last.group = groups[marker[1]];
+      last.tail = marker[2];
+    } else words.push({ word: token });
+  }
   const unit = SPAN / words.length;
-  return words.map(({ word, group }, i) => (
+  return words.map(({ word, group, tail }, i) => (
     <span key={`${word}-${i}`}>
       <StoryWord
         text={word}
         start={i * unit}
         unit={unit}
         group={group}
+        tail={tail}
         progress={progress}
       />
       {i < words.length - 1 && " "}
@@ -236,8 +240,8 @@ export function StackStory({ copy }: { copy: PortfolioCopy["stack"] }) {
           className="text-sm font-bold tracking-wider uppercase"
         />
         <p className="stack-sentence">
-          <span className="sr-only">{copy.phrases.join(" ")}</span>
-          <Sentence phrases={copy.phrases} progress={progress} />
+          <span className="sr-only">{copy.sr}</span>
+          <Sentence sentence={copy.sentence} progress={progress} />
         </p>
         <div className="stack-footer">
           <p className="text-muted-foreground max-w-[40ch] text-xs leading-relaxed">
