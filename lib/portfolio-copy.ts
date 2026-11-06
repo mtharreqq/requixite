@@ -150,7 +150,7 @@ export const english = {
     toolkit:
       "Toolkit: Next.js, React, Vue, TypeScript, Tailwind CSS, PostgreSQL, and Figma.",
     recognition:
-      "Gold Award, WINTEX 2023 • 1st Place, UI/UX Centurion 2023 • 2nd Runner-up, UI/UX JBC 2022",
+      "Gold Award, WINTEX 2023 • 1st Place, UI/UX Centurion 2023 • 2nd Place, UI/UX JBC 2022",
     hire: "Also open to full-time frontend and product engineering roles.",
     cv: "Download CV (PDF)",
   },
@@ -333,7 +333,7 @@ export const indonesian: PortfolioCopy = {
     toolkit:
       "Alat kerja: Next.js, React, Vue, TypeScript, Tailwind CSS, PostgreSQL, dan Figma.",
     recognition:
-      "Medali Emas, WINTEX 2023 • Juara 1, UI/UX Centurion 2023 • Juara 3, UI/UX JBC 2022",
+      "Medali Emas, WINTEX 2023 • Juara 1, UI/UX Centurion 2023 • Juara 2, UI/UX JBC 2022",
     hire: "Juga terbuka untuk posisi full-time sebagai frontend atau product engineer.",
     cv: "Unduh CV (PDF)",
   },
