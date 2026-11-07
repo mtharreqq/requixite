@@ -43,13 +43,8 @@ export function OfferSection({
   const RECOMMENDED = 1;
 
   return (
-    // Three cards need more room than the reading column: break out of it
-    // on wide screens, the way pricing pages do.
-    <section
-      id="offer"
-      className="flex w-full flex-col gap-6 lg:ml-[50%] lg:w-[min(56rem,calc(100vw-8rem))] lg:-translate-x-1/2"
-    >
-      <div className="flex flex-col gap-2 lg:items-center lg:text-center">
+    <section id="offer" className="flex w-full flex-col gap-6">
+      <div className="flex flex-col gap-2">
         <SplitReveal
           text={copy.title}
           className="text-foreground text-sm font-bold tracking-wider uppercase"
@@ -58,7 +53,7 @@ export function OfferSection({
           {copy.intro}
         </p>
       </div>
-      <ul className="grid gap-3 lg:grid-cols-3">
+      <ul className="grid gap-3">
         {copy.plans.map((plan, i) => {
           const price = PRICES[currency][i];
           const featured = i === RECOMMENDED;
@@ -81,7 +76,7 @@ export function OfferSection({
                   </span>
                 )}
               </div>
-              <p className="text-muted-foreground mt-1 text-xs leading-relaxed lg:min-h-[2lh]">
+              <p className="text-muted-foreground mt-1 text-xs leading-relaxed">
                 {plan.desc}
               </p>
               <p className="text-foreground mt-4 flex items-baseline gap-1.5 tabular-nums">
@@ -111,7 +106,7 @@ export function OfferSection({
               >
                 {plan.cta}
               </button>
-              <ul className="border-border/60 mt-5 flex flex-col gap-2 border-t pt-4">
+              <ul className="border-border/60 mt-5 grid gap-2 border-t pt-4 sm:grid-cols-2">
                 {plan.features.map((feature) => (
                   <li
                     key={feature}
@@ -129,7 +124,7 @@ export function OfferSection({
           );
         })}
       </ul>
-      <p className="text-muted-foreground text-[11px] leading-relaxed lg:text-center">
+      <p className="text-muted-foreground text-[11px] leading-relaxed">
         {copy.note}
       </p>
     </section>

@@ -64,64 +64,15 @@
   animation-duration: 0s;
 }
 
-.polaroid-link {
-  position: relative;
-  isolation: isolate;
-}
-.polaroid-link:is(:hover, :focus-visible) {
-  z-index: 5;
-}
-.polaroid-link::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    115deg,
-    transparent 25%,
-    rgb(255 255 255 / 0.24) 48%,
-    transparent 70%
-  );
-  transform: translateX(-120%);
-  transition: transform 650ms var(--ease-out);
-}
-
 .tactile-control {
   transition:
     opacity 180ms ease,
     background-color 180ms ease,
     scale 160ms var(--ease-out);
 }
-.social-tactile {
-  transition:
-    background-color 180ms ease,
-    color 180ms ease,
-    transform 300ms var(--ease-out),
-    scale 160ms var(--ease-out);
-}
-/* Press feedback works for touch too (not gated behind hover). */
-.social-tactile:active {
-  scale: 0.94;
-}
-.social-tactile svg {
-  transition: transform 300ms var(--ease-out);
-}
-
 .portfolio-motion :is(a, button):focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 4px;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .polaroid-link:hover::after {
-    transform: translateX(120%);
-  }
-  .social-tactile:hover {
-    transform: translateY(-3px);
-  }
-  .social-tactile:hover svg {
-    transform: rotate(-8deg);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -132,16 +83,8 @@
     animation: portfolio-fade 200ms ease both;
   }
   /* Hover/press movement off; colour, background, opacity transitions stay. */
-  .portfolio-motion .social-tactile:hover,
-  .portfolio-motion .social-tactile:hover svg {
-    transform: none;
-  }
-  .portfolio-motion .tactile-control:active,
-  .portfolio-motion .social-tactile:active {
+  .portfolio-motion .tactile-control:active {
     scale: none;
-  }
-  .polaroid-link::after {
-    display: none;
   }
   html {
     scroll-behavior: auto;
@@ -491,17 +434,12 @@
    from JS: --m measure guides, --p spacing & corners, --c colour, --f type.
    The "before" colours are tinted from the theme, so text stays readable in
    both light and dark mode at every point of the blend. */
-.proof-story {
-  position: relative;
-  height: 320svh;
-}
-.proof-sticky {
-  position: sticky;
-  top: max(24px, calc((100svh - 600px) / 2));
-}
+/* Tall enough for the tallest component, so switching never moves the text. */
 .proof-stage {
-  margin-top: 28px;
-  padding: 32px 0;
+  display: grid;
+  align-items: center;
+  min-height: 340px;
+  padding-block: 24px;
 }
 .proof-wallet {
   --m: 0;
@@ -514,7 +452,7 @@
   --pr: calc(11px + 13px * var(--p));
   --pb: calc(12px + 12px * var(--p));
   --pl: calc(19px + 5px * var(--p));
-  --violet: color-mix(in oklab, #8b5cf6 32%, var(--card));
+  --violet: color-mix(in oklab, #8b5cf6 16%, var(--card));
   --ink: color-mix(in oklab, #7c3aed 45%, var(--card-foreground));
   position: relative;
   max-width: 340px;
@@ -522,19 +460,10 @@
   padding: var(--pt) var(--pr) var(--pb) var(--pl);
   border: 1px solid color-mix(in oklab, #a78bfa, var(--border) var(--mix));
   border-radius: calc(26px - 6px * var(--p));
-  background: linear-gradient(
-    150deg,
-    color-mix(in oklab, var(--violet), var(--card) var(--mix)),
-    color-mix(
-        in oklab,
-        color-mix(in oklab, #d946ef 22%, var(--card)),
-        var(--card) var(--mix)
-      )
-      100%
-  );
+  background: color-mix(in oklab, var(--violet), var(--card) var(--mix));
   color: color-mix(in oklab, var(--ink), var(--card-foreground) var(--mix));
   box-shadow:
-    0 0 48px -8px color-mix(in srgb, #8b5cf699, transparent var(--mix)),
+    0 0 32px -12px color-mix(in srgb, #8b5cf666, transparent var(--mix)),
     0 12px 32px -20px #0000002e;
 }
 .proof-wallet-heading {
@@ -579,21 +508,11 @@
   line-height: 1.2;
   letter-spacing: calc(-0.01em - 0.03em * var(--f));
   font-variant-numeric: tabular-nums;
-  background: linear-gradient(
-    90deg,
-    color-mix(
-      in oklab,
-      color-mix(in oklab, #9333ea 70%, var(--card-foreground)),
-      var(--card-foreground) var(--mix)
-    ),
-    color-mix(
-      in oklab,
-      color-mix(in oklab, #db2777 70%, var(--card-foreground)),
-      var(--card-foreground) var(--mix)
-    )
+  color: color-mix(
+    in oklab,
+    color-mix(in oklab, #7c3aed 60%, var(--card-foreground)),
+    var(--card-foreground) var(--mix)
   );
-  background-clip: text;
-  color: transparent;
 }
 .proof-growth {
   display: flex;
@@ -646,13 +565,10 @@
   padding: 0 calc(12px + 4px * var(--p));
   /* 22px = half the 44px height: a full pill once spacing settles. */
   border-radius: calc(3px + 19px * var(--p));
-  background: linear-gradient(
-    90deg,
-    color-mix(in oklab, #8b5cf6, var(--foreground) var(--mix)),
-    color-mix(in oklab, #d946ef, var(--foreground) var(--mix))
-  );
+  background: color-mix(in oklab, #7c3aed, var(--foreground) var(--mix));
   color: color-mix(in oklab, #fff, var(--background) calc(var(--t) * 100%));
-  box-shadow: 0 0 20px color-mix(in srgb, #d946ef80, transparent var(--mix));
+  box-shadow: 0 6px 16px -8px
+    color-mix(in srgb, #7c3aed99, transparent var(--mix));
   font-size: 12px;
   font-weight: calc(700 - 200 * var(--f));
   letter-spacing: calc(0.03em * (1 - var(--f)));
@@ -713,12 +629,212 @@
   right: -6px;
   top: -20px;
 }
-.proof-story[data-reduced="true"] {
-  height: auto;
+/* Text that changes with the type pass: the loud vibecoded words, then plain
+   ones. Both share one cell; the swap happens over the middle of the pass. */
+.proof-swap {
+  display: inline-grid;
 }
-.proof-story[data-reduced="true"] .proof-sticky {
+.proof-swap > * {
+  grid-area: 1 / 1;
+  --k: clamp(0, (var(--f) - 0.3) * 2.5, 1);
+}
+.proof-swap > :first-child {
+  opacity: calc(1 - var(--k));
+}
+.proof-swap > :last-child {
+  opacity: var(--k);
+}
+/* Form: placeholders as labels and a shouting banner, then labels, inline
+   feedback, and calm type. Shell, colours and button come from .proof-wallet. */
+.proof-form {
+  padding: calc(16px + 8px * var(--p));
+}
+.proof-form-title {
+  font-size: calc(14px + 3px * var(--f));
+  font-weight: calc(850 - 300 * var(--f));
+  letter-spacing: calc(0.08em * (1 - var(--f)) - 0.01em * var(--f));
+  line-height: 1.3;
+}
+.proof-form-banner {
+  overflow: hidden;
+  max-height: calc(40px * (1 - var(--c)));
+  margin-top: calc(10px * (1 - var(--c)));
+  padding: calc(7px * (1 - var(--c))) 10px;
+  border: 1px solid #ef4444;
+  border-radius: 6px;
+  background: #ef444426;
+  color: #ef4444;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-align: center;
+  opacity: calc(1 - var(--c));
+}
+.proof-field {
+  margin-top: calc(10px + 6px * var(--p));
+}
+.proof-label {
+  display: block;
+  overflow: hidden;
+  max-height: calc(20px * var(--p));
+  margin-bottom: calc(6px * var(--p));
+  font-size: 12px;
+  font-weight: calc(650 - 150 * var(--f));
+  color: color-mix(in oklab, var(--ink), var(--muted-foreground) var(--mix));
+  opacity: var(--p);
+}
+.proof-input {
+  display: block;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid color-mix(in oklab, #a78bfa, var(--border) var(--mix));
+  border-radius: calc(4px + 6px * var(--p));
+  background: color-mix(in srgb, #8b5cf61f, var(--background) var(--mix));
+  box-shadow: 0 0 8px color-mix(in srgb, #a78bfa4d, transparent var(--mix));
+  font-size: 13px;
+  font-weight: calc(600 - 200 * var(--f));
+  line-height: 38px;
+}
+.proof-input-bad {
+  border-color: color-mix(in oklab, #a78bfa, var(--destructive) var(--mix));
+}
+.proof-hint {
+  display: block;
+  overflow: hidden;
+  max-height: calc(36px * var(--c));
+  margin-top: calc(6px * var(--c));
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--destructive);
+  opacity: var(--c);
+}
+.proof-form .proof-action {
+  margin-top: calc(14px + 6px * var(--p));
+}
+/* Settings: separate glowing cards, then one group with dividers, one switch
+   size, one "on" colour, and a title/description hierarchy. */
+.proof-list {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.proof-list-title {
+  margin-bottom: 12px;
+  font-size: calc(11px + 4px * var(--f));
+  font-weight: calc(850 - 300 * var(--f));
+  letter-spacing: calc(0.12em * (1 - var(--f)));
+}
+.proof-list-group {
+  display: flex;
+  flex-direction: column;
+  gap: calc(10px * (1 - var(--p)));
+  border: 1px solid
+    color-mix(in oklab, var(--border), transparent calc((1 - var(--p)) * 100%));
+  border-radius: 18px;
+  background: color-mix(
+    in oklab,
+    var(--card),
+    transparent calc((1 - var(--p)) * 100%)
+  );
+}
+.proof-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: calc(10px + 4px * var(--p)) calc(12px + 4px * var(--p));
+  border: 1px solid
+    color-mix(
+      in oklab,
+      color-mix(in oklab, #a78bfa, var(--border) var(--mix)),
+      transparent calc(var(--p) * 100%)
+    );
+  border-radius: calc(14px * (1 - var(--p)));
+  background: color-mix(
+    in oklab,
+    color-mix(in oklab, var(--violet), var(--card) var(--mix)),
+    transparent calc(var(--p) * 100%)
+  );
+  box-shadow: 0 0 12px
+    color-mix(
+      in srgb,
+      color-mix(in srgb, var(--hue) 18%, transparent),
+      transparent calc(var(--p) * 100%)
+    );
+}
+/* Each row's own top edge, which becomes the divider once grouped. */
+.proof-row + .proof-row {
+  border-top-color: color-mix(in oklab, #a78bfa, var(--border) var(--mix));
+}
+.proof-row-icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: color-mix(
+    in oklab,
+    color-mix(in srgb, var(--hue) 22%, transparent),
+    var(--muted) var(--mix)
+  );
+  color: color-mix(in oklab, var(--hue), var(--muted-foreground) var(--mix));
+}
+.proof-row-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.proof-row-title {
+  font-size: calc(12px + 1px * var(--f));
+  font-weight: calc(750 - 250 * var(--f));
+  letter-spacing: calc(0.05em * (1 - var(--f)));
+}
+.proof-row-desc {
+  font-size: calc(12px - 1px * var(--f));
+  font-weight: calc(700 - 300 * var(--f));
+  color: color-mix(
+    in oklab,
+    color-mix(in oklab, var(--ink), var(--card-foreground) var(--mix)),
+    var(--muted-foreground) calc(var(--f) * 100%)
+  );
+}
+.proof-switch {
+  --h: calc(var(--sh) + (20px - var(--sh)) * var(--p));
   position: relative;
-  top: auto;
+  flex-shrink: 0;
+  width: calc(var(--sw) + (36px - var(--sw)) * var(--p));
+  height: var(--h);
+  border-radius: 999px;
+  background: color-mix(
+    in oklab,
+    color-mix(in srgb, #a78bfa 40%, transparent),
+    var(--input) var(--mix)
+  );
+}
+.proof-switch[data-on="true"] {
+  background: color-mix(in oklab, var(--hue), var(--foreground) var(--mix));
+}
+.proof-switch > span {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(var(--h) - 4px);
+  height: calc(var(--h) - 4px);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px #0000002e;
+}
+.proof-switch[data-on="true"] > span {
+  left: auto;
+  right: 2px;
+  background: color-mix(
+    in oklab,
+    #fff,
+    var(--background) calc(var(--t) * 100%)
+  );
 }
 /* Process: same pin as RantAI's home-problem (h-[320svh], sticky 100svh stage). */
 .process-story {
@@ -740,11 +856,9 @@
   height: auto;
 }
 @media (max-height: 680px), print {
-  .proof-story,
   .process-story {
     height: auto;
   }
-  .proof-sticky,
   .process-stage {
     position: relative;
     top: auto;

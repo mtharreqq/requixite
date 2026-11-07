@@ -20,7 +20,7 @@ import {
 } from "@/components/dock-icons";
 
 const SHORTCUTS = [
-  "work",
+  "proof",
   "experience",
   "process",
   "offer",

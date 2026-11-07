@@ -3,11 +3,9 @@ import { HeroSection } from "@/components/salmoon/hero-section";
 import { OfferSection } from "@/components/salmoon/offer-section";
 import { ProofSection } from "@/components/salmoon/proof-section";
 import { ProcessSection } from "@/components/salmoon/process-section";
-import { WorkSection } from "@/components/salmoon/work-section";
 import { ExperienceSection } from "@/components/salmoon/experience-section";
 import { ConnectSection } from "@/components/salmoon/connect-section";
 import { RailNav } from "@/components/salmoon/rail-nav";
-import { getProjects } from "@/data/projects";
 import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
 import { LanguageSwitch } from "@/components/language-switch";
 import {
@@ -17,8 +15,6 @@ import {
 
 export function PortfolioPage({ locale }: { locale: Locale }) {
   const copy = getPortfolioCopy(locale);
-  const projects = getProjects(locale).filter((project) => project.published);
-  const hasWork = projects.some((project) => project.published);
   return (
     // overflow-x: clip, not hidden: hidden would make this a scroll container
     // and stop the pinned sections from sticking.
@@ -42,11 +38,6 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
         <HeroSection copy={copy.hero} rail={copy.rail} />
         <StackStory copy={copy.stack} />
         <ProofSection copy={copy.proof} />
-        {hasWork && (
-          <SectionReveal>
-            <WorkSection projects={projects} copy={copy.work} />
-          </SectionReveal>
-        )}
         <SectionReveal>
           <ExperienceSection copy={copy.experience} />
         </SectionReveal>
