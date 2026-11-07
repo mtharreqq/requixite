@@ -48,13 +48,13 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
           </SectionReveal>
         )}
         <SectionReveal>
-          <OfferSection copy={copy.offer} locale={locale} />
+          <ExperienceSection copy={copy.experience} />
         </SectionReveal>
         <SectionReveal>
           <ProcessSection copy={copy.process} />
         </SectionReveal>
         <SectionReveal>
-          <ExperienceSection copy={copy.experience} />
+          <OfferSection copy={copy.offer} locale={locale} />
         </SectionReveal>
         <SectionReveal>
           <ConnectSection copy={copy.contact} />
