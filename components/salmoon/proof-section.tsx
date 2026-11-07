@@ -16,7 +16,12 @@ import {
   useTransform,
 } from "framer-motion";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
-import { StepRail, StepText, useSteps } from "@/components/salmoon/step-story";
+import {
+  StepRail,
+  StepText,
+  usePinCenter,
+  useSteps,
+} from "@/components/salmoon/step-story";
 import { SplitReveal } from "@/components/salmoon/split-reveal";
 
 const clamp = (v: number, a: number, b: number) =>
@@ -60,10 +65,13 @@ function Swap({ from, to }: { from: string; to: string }) {
 
 export function ProofSection({ copy }: { copy: PortfolioCopy["proof"] }) {
   const ref = useRef<HTMLDivElement>(null);
+  const stage = useRef<HTMLDivElement>(null);
+  const track = useRef<HTMLDivElement>(null);
   const card = useRef<HTMLDivElement>(null);
+  usePinCenter(ref, stage);
   const reduce = Boolean(useReducedMotion());
   const [tab, setTab] = useState(0);
-  const { index, overall } = useSteps(ref, PHASES, reduce);
+  const { index, overall } = useSteps(track, PHASES, reduce);
 
   // The same component throughout; only its CSS dials move (no re-render per
   // frame). Every component reads the same dials: --m guides, --p spacing,
@@ -98,150 +106,180 @@ export function ProofSection({ copy }: { copy: PortfolioCopy["proof"] }) {
   }));
 
   return (
-    <section
-      id="proof"
-      className="flex w-full flex-col gap-5"
-      aria-labelledby="proof-title"
-    >
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <SplitReveal
-          text={copy.title}
-          id="proof-title"
-          className="text-foreground text-sm font-bold tracking-wider uppercase"
-        />
-        <p className="text-muted-foreground text-xs">{copy.intro}</p>
-      </div>
-      {/* Same pin and split as Process: component left, steps right. */}
+    <section id="proof" className="w-full" aria-labelledby="proof-title">
+      {/* Same pin and split as Process: component left, steps right. The
+          title pins too, so it stays right above the component. */}
       <div ref={ref} className="process-story" data-reduced={reduce}>
-        <div className="process-stage">
-          <div className="text-foreground grid w-full items-center gap-6 md:grid-cols-[1.05fr_1fr] md:gap-8">
-            <div className="proof-stage" aria-hidden="true">
-              {tab === 0 && (
-                <div ref={card} className="proof-wallet">
-                  <div className="proof-wallet-heading">
-                    <span className="inline-flex items-center gap-2">
-                      <Wallet className="size-3.5" />
-                      {copy.account}
-                    </span>
-                    <span className="proof-wallet-status">
-                      <span className="proof-dot" />
-                      {copy.synced}
-                    </span>
-                  </div>
-                  <div className="proof-balance">
-                    <p>{copy.balance}</p>
-                    <div className="proof-amount">{copy.amount}</div>
-                    <span className="proof-growth">
-                      <ArrowUpRight className="size-3.5" />
-                      {copy.growth}
-                      <span>{copy.cashflow}</span>
-                    </span>
-                  </div>
-                  <div className="proof-activity">
-                    <span className="proof-activity-line" />
-                    <span>{copy.reconciled}</span>
-                  </div>
-                  <div className="proof-action">
-                    {copy.manage}
-                    <ArrowRight className="size-4" />
-                  </div>
-                  <div className="proof-guides">
-                    <span className="proof-guide-box" />
-                    <span className="proof-guide proof-guide-top">
-                      <motion.span>{g13}</motion.span>
-                    </span>
-                    <span className="proof-guide proof-guide-left">
-                      <motion.span>{g19}</motion.span>
-                    </span>
-                    <span className="proof-guide proof-guide-right">
-                      <motion.span>{g11}</motion.span>
-                    </span>
-                  </div>
-                </div>
-              )}
-              {tab === 1 && (
-                <div ref={card} className="proof-wallet proof-form">
-                  <p className="proof-form-title">
-                    <Swap from={copy.form.loud} to={copy.form.title} />
-                  </p>
-                  <p className="proof-form-banner">{copy.form.banner}</p>
-                  <div className="proof-field">
-                    <span className="proof-label">{copy.form.email}</span>
-                    <span className="proof-input proof-input-bad">
-                      {copy.form.emailValue}
-                    </span>
-                    <span className="proof-hint">{copy.form.error}</span>
-                  </div>
-                  <div className="proof-field">
-                    <span className="proof-label">{copy.form.password}</span>
-                    <span className="proof-input">••••••••••</span>
-                  </div>
-                  <div className="proof-action">
-                    <Swap from={copy.form.loudAction} to={copy.form.action} />
-                    <ArrowRight className="size-4" />
-                  </div>
-                </div>
-              )}
-              {tab === 2 && (
-                <div ref={card} className="proof-wallet proof-list">
-                  <p className="proof-list-title">
-                    <Swap from={copy.list.loud} to={copy.list.title} />
-                  </p>
-                  <div className="proof-list-group">
-                    {ROWS.map(({ Icon, on, style }, i) => (
-                      <div key={i} className="proof-row" style={style}>
-                        <span className="proof-row-icon">
-                          <Icon className="size-4" />
+        <div ref={track} className="pin-track" aria-hidden="true" />
+        <div ref={stage} className="process-stage">
+          <div className="flex w-full flex-col gap-8">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <SplitReveal
+                text={copy.title}
+                id="proof-title"
+                className="text-foreground text-sm font-bold tracking-wider uppercase"
+              />
+              <p className="text-muted-foreground text-xs">{copy.intro}</p>
+            </div>
+            <div className="text-foreground grid w-full items-center gap-6 md:grid-cols-[1.05fr_1fr] md:gap-8">
+              <div className="proof-stage" aria-hidden="true">
+                {/* Each pick swaps the component in place with a short rise. */}
+                <motion.div
+                  key={tab}
+                  initial={reduce ? false : { opacity: 0, y: 12, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {tab === 0 && (
+                    <div ref={card} className="proof-wallet">
+                      <div className="proof-wallet-heading">
+                        <span className="inline-flex items-center gap-2">
+                          <Wallet className="size-3.5" />
+                          {copy.account}
                         </span>
-                        <span className="proof-row-text">
-                          <span className="proof-row-title">
-                            {copy.list.rows[i][0]}
-                          </span>
-                          <span className="proof-row-desc">
-                            {copy.list.rows[i][1]}
-                          </span>
-                        </span>
-                        <span className="proof-switch" data-on={on}>
-                          <span />
+                        <span className="proof-wallet-status">
+                          <span className="proof-dot" />
+                          {copy.synced}
                         </span>
                       </div>
-                    ))}
+                      <div className="proof-balance">
+                        <p>{copy.balance}</p>
+                        <div className="proof-amount">{copy.amount}</div>
+                        <span className="proof-growth">
+                          <ArrowUpRight className="size-3.5" />
+                          {copy.growth}
+                          <span>{copy.cashflow}</span>
+                        </span>
+                      </div>
+                      <div className="proof-activity">
+                        <span className="proof-activity-line" />
+                        <span>{copy.reconciled}</span>
+                      </div>
+                      <div className="proof-action">
+                        {copy.manage}
+                        <ArrowRight className="size-4" />
+                      </div>
+                      <div className="proof-guides">
+                        <span className="proof-guide-box" />
+                        <span className="proof-guide proof-guide-top">
+                          <motion.span>{g13}</motion.span>
+                        </span>
+                        <span className="proof-guide proof-guide-left">
+                          <motion.span>{g19}</motion.span>
+                        </span>
+                        <span className="proof-guide proof-guide-right">
+                          <motion.span>{g11}</motion.span>
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  {tab === 1 && (
+                    <div ref={card} className="proof-wallet proof-form">
+                      <p className="proof-form-title">
+                        <Swap from={copy.form.loud} to={copy.form.title} />
+                      </p>
+                      <p className="proof-form-banner">{copy.form.banner}</p>
+                      <div className="proof-field">
+                        <span className="proof-label">{copy.form.email}</span>
+                        <span className="proof-input proof-input-bad">
+                          {copy.form.emailValue}
+                        </span>
+                        <span className="proof-hint">{copy.form.error}</span>
+                      </div>
+                      <div className="proof-field">
+                        <span className="proof-label">
+                          {copy.form.password}
+                        </span>
+                        <span className="proof-input">••••••••••</span>
+                      </div>
+                      <div className="proof-action">
+                        <Swap
+                          from={copy.form.loudAction}
+                          to={copy.form.action}
+                        />
+                        <ArrowRight className="size-4" />
+                      </div>
+                    </div>
+                  )}
+                  {tab === 2 && (
+                    <div ref={card} className="proof-wallet proof-list">
+                      <p className="proof-list-title">
+                        <Swap from={copy.list.loud} to={copy.list.title} />
+                      </p>
+                      <div className="proof-list-group">
+                        {ROWS.map(({ Icon, on, style }, i) => (
+                          <div key={i} className="proof-row" style={style}>
+                            <span className="proof-row-icon">
+                              <Icon className="size-4" />
+                            </span>
+                            <span className="proof-row-text">
+                              <span className="proof-row-title">
+                                {copy.list.rows[i][0]}
+                              </span>
+                              <span className="proof-row-desc">
+                                {copy.list.rows[i][1]}
+                              </span>
+                            </span>
+                            <span className="proof-switch" data-on={on}>
+                              <span />
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+              </div>
+              <div>
+                <div
+                  role="group"
+                  aria-label={copy.title}
+                  className="mb-6 flex gap-2"
+                >
+                  {copy.tabs.map((label, i) => (
+                    <button
+                      key={label}
+                      type="button"
+                      aria-pressed={tab === i}
+                      onClick={() => setTab(i)}
+                      className={`relative isolate h-8 rounded-full border px-3.5 text-xs transition-colors duration-200 ${tab === i ? "text-background border-transparent" : "border-border text-muted-foreground hover:border-foreground/30 hover:text-foreground"}`}
+                    >
+                      {/* Active fill slides between tabs (RantAI filter chips). */}
+                      {tab === i && (
+                        <motion.span
+                          layoutId="proof-tab"
+                          className="bg-foreground absolute inset-0 -z-10 rounded-full"
+                          transition={
+                            reduce
+                              ? { duration: 0 }
+                              : { type: "spring", stiffness: 420, damping: 34 }
+                          }
+                        />
+                      )}
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                <motion.div
+                  key={tab}
+                  initial={reduce ? false : { opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <StepText
+                    items={steps}
+                    index={index}
+                    reduce={reduce}
+                    titleClassName="text-foreground text-lg font-medium tracking-tight"
+                    bodyClassName="text-muted-foreground mt-1.5 text-xs leading-relaxed"
+                  />
+                </motion.div>
+                {!reduce && (
+                  <div className="mt-5">
+                    <StepRail overall={overall} index={index} count={PHASES} />
                   </div>
-                </div>
-              )}
-            </div>
-            <div>
-              <div
-                role="group"
-                aria-label={copy.title}
-                className="mb-6 flex gap-2"
-              >
-                {copy.tabs.map((label, i) => (
-                  <button
-                    key={label}
-                    type="button"
-                    aria-pressed={tab === i}
-                    onClick={() => setTab(i)}
-                    className={`h-8 rounded-full border px-3.5 text-xs transition-colors duration-200 ${tab === i ? "bg-foreground text-background border-foreground" : "border-border text-muted-foreground hover:border-foreground/30 hover:text-foreground"}`}
-                  >
-                    {label}
-                  </button>
-                ))}
+                )}
               </div>
-              <div key={tab}>
-                <StepText
-                  items={steps}
-                  index={index}
-                  reduce={reduce}
-                  titleClassName="text-foreground text-lg font-medium tracking-tight"
-                  bodyClassName="text-muted-foreground mt-1.5 text-xs leading-relaxed"
-                />
-              </div>
-              {!reduce && (
-                <div className="mt-5">
-                  <StepRail overall={overall} index={index} count={PHASES} />
-                </div>
-              )}
             </div>
           </div>
         </div>

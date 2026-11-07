@@ -17,6 +17,8 @@ export const english = {
       after: "Polished",
       visit: "Visit site",
       pages: ["Home", "Products"],
+      caseStudy: "Read the case study",
+      caseStudyHref: "/work/rantai",
     },
     chat: {
       open: "Message",
@@ -41,11 +43,18 @@ export const english = {
   },
   stack: {
     title: "Sound familiar?",
-    // {build} and {code} mark where the logo groups pop in.
-    sentence:
-      "You built it with AI app builders {build} and coding assistants {code}. It works. But something feels unfinished, and your users can tell.",
-    sr: "You built it with AI app builders like Lovable, Bolt, v0, and Replit, and coding assistants like Cursor, Claude, ChatGPT, and Antigravity. It works. But something feels unfinished, and your users can tell.",
-    note: "People decide in seconds whether an app feels trustworthy. Uneven spacing, clashing type, and stiff buttons read as unfinished, so they leave before trying what you built.",
+    // One sentence at a time. {ai:label} gets the tool logos beside it,
+    // {slop:label} turns into AI-slop gradient text, {keep:word} gets a red
+    // squiggle while the rest of its sentence dims. A punctuation-only punch
+    // replaces the kept word's period; any other punch gets its own line.
+    sentences: [
+      "You can build an app now with {ai:AI tools}.",
+      "But what they hand you is still {slop:AI slop}.",
+      "It works, but it still doesn't feel {keep:right}.",
+    ],
+    punch: "?",
+    sr: "You can build an app now with AI tools like Cursor, Claude, ChatGPT, or Antigravity. But what they hand you is still AI slop. It works, but it still doesn't feel right. Right?",
+    note: "Users notice in seconds, and leave before they try it.",
   },
   proof: {
     title: "See the difference",
@@ -111,70 +120,25 @@ export const english = {
       {
         name: "Honest take",
         desc: "Find out what to fix first.",
-        features: [
-          "Top 3 fixes for your app",
-          "As a short video or notes",
-          "Reply within 2 days",
-          "No commitment",
-        ],
+        time: "Reply in 2 days",
         cta: "Send my app",
       },
       {
         name: "Polish sprint",
-        desc: "For a vibecoded app that works but feels unfinished.",
-        features: [
-          "Consistent spacing, type, and color",
-          "Hover, press, loading, and empty states",
-          "Motion and phone layouts tuned",
-          "Done in your code and your repo",
-          "About 1 week",
-        ],
+        desc: "For apps that work but feel unfinished.",
+        time: "About 1 week",
         cta: "Start a sprint",
       },
       {
         name: "Build from scratch",
-        desc: "A landing page or small site, done right from day one.",
-        features: [
-          "Designed and built in Next.js",
-          "Fast on phones",
-          "Easy for you to update",
-          "2 to 3 weeks",
-        ],
+        desc: "A landing page or small site, done right.",
+        time: "2–3 weeks",
         cta: "Plan a build",
       },
     ],
     note: "Final price depends on scope. You get a fixed quote before any work starts.",
     // Chat draft when a plan is picked; {plan} is its name.
     ask: "I’m interested in {plan}. My app: ",
-  },
-  process: {
-    title: "How a sprint goes",
-    intro: "Review. Align. Refine. Ship.",
-    study: "Design study",
-    stages: [
-      "Find the rough edges",
-      "Give it a consistent rhythm",
-      "Make interactions respond",
-      "Ready for the final checks",
-    ],
-    steps: [
-      {
-        title: "Look closely",
-        desc: "Find the rough edges in spacing, contrast, and interaction states.",
-      },
-      {
-        title: "Bring it together",
-        desc: "Give spacing, type, and shapes one consistent visual language.",
-      },
-      {
-        title: "Make it feel right",
-        desc: "Tune motion, keyboard navigation, and touch targets.",
-      },
-      {
-        title: "Get it ready to ship",
-        desc: "Check accessibility and performance. Deliver code that’s easy to maintain.",
-      },
-    ],
   },
   experience: {
     title: "Who you’ll work with",
@@ -240,7 +204,6 @@ export const english = {
     stack: "Problem",
     proof: "Comparison",
     offer: "Pricing",
-    process: "Process",
     experience: "About",
     contact: "Contact",
   },
@@ -265,6 +228,8 @@ export const indonesian: PortfolioCopy = {
       after: "Sudah dirapikan",
       visit: "Buka situsnya",
       pages: ["Beranda", "Produk"],
+      caseStudy: "Baca studi kasusnya",
+      caseStudyHref: "/id/work/rantai",
     },
     chat: {
       open: "Chat",
@@ -289,10 +254,14 @@ export const indonesian: PortfolioCopy = {
   },
   stack: {
     title: "Kenal situasi ini?",
-    sentence:
-      "Kamu membangunnya pakai pembuat aplikasi AI {build} dan asisten coding {code}. Aplikasinya jalan. Tapi ada yang terasa belum jadi, dan penggunamu menyadarinya.",
-    sr: "Kamu membangunnya pakai pembuat aplikasi AI seperti Lovable, Bolt, v0, dan Replit, dan asisten coding seperti Cursor, Claude, ChatGPT, dan Antigravity. Aplikasinya jalan. Tapi ada yang terasa belum jadi, dan penggunamu menyadarinya.",
-    note: "Orang memutuskan dalam hitungan detik apakah sebuah aplikasi bisa dipercaya. Jarak yang tidak rata, huruf yang bertabrakan, dan tombol yang kaku terasa setengah jadi, jadi mereka pergi sebelum mencoba yang kamu bangun.",
+    sentences: [
+      "Sekarang kamu bisa bikin aplikasi pakai {ai:AI}.",
+      "Tapi hasilnya masih {slop:AI slop}.",
+      "Berfungsi sih, tapi masih kerasa {keep:kurang}.",
+    ],
+    punch: "Iya, kan?",
+    sr: "Sekarang kamu bisa bikin aplikasi pakai AI seperti Cursor, Claude, ChatGPT, atau Antigravity. Tapi hasilnya masih AI slop. Berfungsi sih, tapi masih kerasa kurang. Iya, kan?",
+    note: "Pengguna sadar dalam hitungan detik, lalu pergi sebelum mencobanya.",
   },
   proof: {
     title: "Lihat bedanya",
@@ -358,69 +327,24 @@ export const indonesian: PortfolioCopy = {
       {
         name: "Honest take",
         desc: "Cari tahu apa yang perlu dibenahi dulu.",
-        features: [
-          "3 perbaikan utama untuk aplikasimu",
-          "Lewat video singkat atau catatan",
-          "Dibalas maksimal 2 hari",
-          "Tanpa ikatan",
-        ],
+        time: "Dibalas dalam 2 hari",
         cta: "Kirim aplikasiku",
       },
       {
         name: "Polish sprint",
-        desc: "Untuk aplikasi vibecoded yang sudah jalan tapi terasa belum jadi.",
-        features: [
-          "Jarak, huruf, dan warna yang konsisten",
-          "State hover, tekan, loading, dan kosong",
-          "Animasi dan tampilan HP dirapikan",
-          "Langsung di kode dan repo-mu",
-          "Sekitar 1 minggu",
-        ],
+        desc: "Untuk aplikasi yang jalan tapi belum terasa jadi.",
+        time: "Sekitar 1 minggu",
         cta: "Mulai sprint",
       },
       {
         name: "Bangun dari nol",
-        desc: "Landing page atau website kecil yang rapi sejak awal.",
-        features: [
-          "Didesain dan dibangun dengan Next.js",
-          "Cepat di HP",
-          "Gampang kamu perbarui",
-          "2 sampai 3 minggu",
-        ],
+        desc: "Landing page atau situs kecil, rapi sejak awal.",
+        time: "2–3 minggu",
         cta: "Rencanakan",
       },
     ],
     note: "Harga akhir tergantung cakupan. Kamu dapat harga pasti sebelum pekerjaan dimulai.",
     ask: "Saya tertarik dengan {plan}. Aplikasi saya: ",
-  },
-  process: {
-    title: "Alur polish sprint",
-    intro: "Cek. Selaraskan. Nyamankan. Rilis.",
-    study: "Studi desain",
-    stages: [
-      "Cari yang kurang pas",
-      "Selaraskan jarak dan bentuknya",
-      "Buat interaksinya terasa",
-      "Siap untuk pengecekan akhir",
-    ],
-    steps: [
-      {
-        title: "Cek dulu",
-        desc: "Cari bagian yang kurang pas: jarak, kontras, dan respons interaksi.",
-      },
-      {
-        title: "Rapikan dasarnya",
-        desc: "Satukan jarak, tipografi, dan bentuk agar tampilannya selaras.",
-      },
-      {
-        title: "Nyamankan interaksinya",
-        desc: "Atur animasi, navigasi keyboard, dan area sentuh agar nyaman dipakai.",
-      },
-      {
-        title: "Siapkan untuk rilis",
-        desc: "Cek aksesibilitas dan performa. Siapkan kode yang mudah dirawat.",
-      },
-    ],
   },
   experience: {
     title: "Yang akan mengerjakan",
@@ -486,7 +410,6 @@ export const indonesian: PortfolioCopy = {
     stack: "Masalah",
     proof: "Perbandingan",
     offer: "Harga",
-    process: "Proses",
     experience: "Tentang",
     contact: "Kontak",
   },

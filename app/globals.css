@@ -273,124 +273,6 @@
   color: theme("colors.black");
 }
 
-/* Static blueprint illustrations explain the work; hover lets people explore
-   them without hiding content or requiring a precise pointer. */
-.study-scan,
-.study-tile,
-.study-button,
-.study-pointer,
-.study-ship {
-  transition:
-    transform 250ms var(--ease-out),
-    opacity 200ms ease;
-}
-.study-tile:nth-child(2),
-.study-tile:nth-child(5) {
-  opacity: 0.5;
-}
-@media (hover: hover) and (pointer: fine) {
-  .process-cell:hover .study-scan {
-    transform: translate(-20px, -12px);
-  }
-  .process-cell:hover .study-tile {
-    opacity: 1;
-    transform: translateY(-2px);
-  }
-  .process-cell:hover .study-pointer {
-    transform: translate(-5px, -6px);
-  }
-  .process-cell:hover .study-button {
-    transform: scale(0.97);
-  }
-  .process-cell:hover .study-ship {
-    transform: translate(4px, -4px);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .study-scan,
-  .study-tile,
-  .study-button,
-  .study-pointer,
-  .study-ship {
-    transform: none !important;
-    transition: opacity 150ms ease;
-  }
-}
-
-.scene-interface,
-.scene-tile,
-.scene-heading,
-.scene-action,
-.scene-cursor,
-.scene-audit,
-.scene-ready,
-.scene-guides,
-.scene-action-check {
-  transition:
-    transform 250ms var(--ease-out),
-    opacity 200ms ease,
-    border-radius 200ms ease,
-    background-color 200ms ease;
-}
-.scene-cursor,
-.scene-ready,
-.scene-guides,
-.scene-action-check {
-  opacity: 0;
-}
-.scene-audit {
-  opacity: 0;
-}
-.process-scene[data-step="0"] .scene-interface {
-  transform: rotate(-3deg);
-}
-.process-scene[data-step="0"] .scene-tile-0 {
-  transform: translateY(3px);
-  border-radius: 2px;
-}
-.process-scene[data-step="0"] .scene-tile-1 {
-  transform: translateY(-3px);
-  border-radius: 9px;
-}
-.process-scene[data-step="0"] .scene-tile-2 {
-  transform: translateY(5px);
-}
-.process-scene[data-step="0"] .scene-heading {
-  transform: translateX(3px);
-}
-.process-scene[data-step="0"] .scene-audit {
-  opacity: 1;
-}
-.process-scene[data-step="1"] .scene-guides {
-  opacity: 1;
-}
-.process-scene[data-step="2"] .scene-cursor {
-  opacity: 1;
-  transform: translate(-8px, -1px);
-}
-.process-scene[data-step="2"] .scene-action {
-  transform: scale(0.95);
-  background-color: var(--primary);
-}
-.process-scene[data-step="2"] .scene-action-check {
-  opacity: 1;
-}
-.process-scene[data-step="3"] .scene-ready {
-  opacity: 1;
-}
-.process-scene[data-step="3"] .scene-action-check {
-  opacity: 1;
-}
-.process-scene[data-step="3"] .scene-interface {
-  transform: translateY(-4px);
-}
-@media (prefers-reduced-motion: reduce) {
-  .process-scene * {
-    animation: none !important;
-    transform: none !important;
-    transition: opacity 150ms ease;
-  }
-}
 /* Viewport edge fades. Eased alpha stops: a plain linear ramp shows a hard
    band where it ends. Rotated copy at the bottom. */
 .edge-fade {
@@ -425,20 +307,18 @@
   .edge-fade {
     display: none;
   }
-  .process-explainer {
-    break-inside: avoid;
-  }
 }
 
 /* Scroll-scrubbed refinement of ONE card, one fix at a time. Dials 0 to 1 set
    from JS: --m measure guides, --p spacing & corners, --c colour, --f type.
    The "before" colours are tinted from the theme, so text stays readable in
    both light and dark mode at every point of the blend. */
-/* Tall enough for the tallest component, so switching never moves the text. */
+/* Tall enough for the tallest component at every step, so the pinned block
+   keeps one height and the centred title never moves. */
 .proof-stage {
   display: grid;
   align-items: center;
-  min-height: 340px;
+  min-height: 420px;
   padding-block: 24px;
 }
 .proof-wallet {
@@ -468,7 +348,7 @@
 }
 .proof-wallet-heading {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   gap: 8px;
   font-size: calc(10px + 1px * var(--f));
@@ -560,7 +440,7 @@
 .proof-action {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   min-height: calc(38px + 6px * var(--p));
   padding: 0 calc(12px + 4px * var(--p));
   /* 22px = half the 44px height: a full pill once spacing settles. */
@@ -836,69 +716,87 @@
     var(--background) calc(var(--t) * 100%)
   );
 }
-/* Process: same pin as RantAI's home-problem (h-[320svh], sticky 100svh stage). */
-.process-story {
+/* Pinned stories, after RantAI's home-problem: a tall section with its
+   content sticky and centred. usePinCenter sets --pin-h; --run is the scroll
+   distance while pinned. .pin-track spans exactly that stretch, so scroll
+   progress starts and ends with the pin and no empty band follows it. */
+.process-story,
+.stack-story {
+  --top: max(24px, calc((100svh - var(--pin-h, 600px)) / 2));
   position: relative;
-  height: 320svh;
+  height: calc(var(--pin-h, 600px) + var(--run));
+}
+.process-story {
+  --run: 220svh;
+}
+.stack-story {
+  --run: 200svh;
+}
+.process-stage,
+.stack-sticky {
+  position: sticky;
+  top: var(--top);
 }
 .process-stage {
-  position: sticky;
-  top: 0;
   display: flex;
-  align-items: center;
-  height: 100svh;
 }
-.process-story[data-reduced="true"] {
+.stack-sticky {
+  display: flex;
+  flex-direction: column;
+}
+.pin-track {
+  position: absolute;
+  top: calc(-1 * var(--top));
+  left: 0;
+  width: 1px;
+  height: calc(100dvh + var(--run));
+  visibility: hidden;
+  pointer-events: none;
+}
+/* Unpinned: reduced motion, short screens, content taller than the screen. */
+.process-story[data-reduced="true"],
+.process-story[data-overflow="true"],
+.stack-story[data-reduced="true"],
+.stack-story[data-overflow="true"] {
   height: auto;
 }
-.process-story[data-reduced="true"] .process-stage {
+.process-story[data-reduced="true"] .process-stage,
+.process-story[data-overflow="true"] .process-stage,
+.stack-story[data-reduced="true"] .stack-sticky,
+.stack-story[data-overflow="true"] .stack-sticky {
   position: relative;
-  height: auto;
+  top: auto;
 }
 @media (max-height: 680px), print {
-  .process-story {
+  .process-story,
+  .stack-story {
     height: auto;
   }
-  .process-stage {
+  .process-stage,
+  .stack-sticky {
     position: relative;
     top: auto;
-    height: auto;
   }
 }
 /* Scroll story: fixed composition, no wheel interception or layout animation. */
-.stack-story {
-  position: relative;
-  height: 190svh;
-}
-.stack-sticky {
-  position: sticky;
-  top: max(24px, calc((100svh - var(--stack-content-height, 560px)) / 2));
-  min-height: 0;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding: 0 0 24px;
-}
 .stack-sentence {
+  display: grid;
   margin-top: 36px;
   font-size: clamp(27px, 5.6vw, 43px);
   font-weight: 500;
   line-height: 1.52;
   letter-spacing: -0.045em;
 }
-/* --w grows from 0 on a spring (JS). Phones keep the full gap from the start:
-   a growing gap there would rewrap the sentence again and again. */
+/* Sentences take turns in one cell; the tallest reserves the height. */
+.stack-line {
+  grid-area: 1 / 1;
+}
+/* Logos sit beside their label, full size from the start (scaled to 0), so
+   popping in never moves a word. */
 .stack-inline {
   display: inline-flex;
-  justify-content: flex-end;
-  vertical-align: 0.1em;
-  width: var(--w, var(--full));
-}
-@media (max-width: 767px) {
-  .stack-inline {
-    width: var(--full);
-  }
+  margin-left: 0.22em;
+  vertical-align: -0.1em;
 }
 .stack-tile {
   position: relative;
@@ -914,95 +812,133 @@
     0 0 0 0.04em #fff,
     0 0 0 calc(0.04em + 1px) #0000001a,
     0 0.08em 0.2em #0000002e;
+  /* `translate` stacks on Motion's transform (scale, rotate). */
+  transition:
+    translate 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out);
 }
 .stack-tile + .stack-tile {
   margin-left: -0.3em;
+}
+@media (hover: hover) {
+  .stack-tile:hover {
+    z-index: 10 !important;
+    translate: 0 -0.16em;
+    box-shadow:
+      0 0 0 0.04em #fff,
+      0 0 0 calc(0.04em + 1px) #0000001a,
+      0 0.2em 0.4em #00000033;
+  }
 }
 .stack-logo {
   width: 65%;
   height: 65%;
   object-fit: contain;
 }
+/* "AI slop": the purple-pink gradient and glow every AI landing page ships. */
+.stack-slop {
+  position: relative;
+  display: inline-grid;
+}
+.stack-slop-plain,
+.stack-slop-fill {
+  grid-area: 1 / 1;
+}
+.stack-slop-fill {
+  background: linear-gradient(
+      90deg,
+      #8b5cf6,
+      #ec4899,
+      #6366f1,
+      #06b6d4,
+      #8b5cf6
+    )
+    0 50% / 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 0.18em rgb(168 85 247 / 0.45));
+  animation: slop-shift 4s linear infinite;
+}
+@keyframes slop-shift {
+  to {
+    background-position: 200% 50%;
+  }
+}
+.stack-spark {
+  position: absolute;
+  width: var(--s);
+  height: var(--s);
+  color: #c084fc;
+  pointer-events: none;
+}
+.stack-spark:nth-of-type(odd) {
+  color: #f472b6;
+}
+.stack-spark svg {
+  width: 100%;
+  height: 100%;
+  animation: spark-twinkle 1.6s ease-in-out var(--d) infinite;
+}
+@keyframes spark-twinkle {
+  50% {
+    transform: scale(0.55) rotate(45deg);
+    opacity: 0.6;
+  }
+}
+/* Hand-drawn red squiggle under the word that gives it away; JS draws it. */
+.stack-keep {
+  position: relative;
+}
+.stack-squiggle {
+  position: absolute;
+  left: -0.04em;
+  right: -0.04em;
+  bottom: -0.06em;
+  width: calc(100% + 0.08em);
+  height: 0.2em;
+  overflow: visible;
+  fill: none;
+  stroke: #ef4444;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.stack-squiggle path {
+  vector-effect: non-scaling-stroke;
+}
+/* "right." swaps its period for "?" in the same spot. */
+.stack-end {
+  display: inline-grid;
+}
+.stack-end > span {
+  grid-area: 1 / 1;
+  justify-self: start;
+}
+.stack-q {
+  display: inline-block;
+  transform-origin: left bottom;
+}
+.stack-punch {
+  display: block;
+  width: fit-content;
+  margin-top: 0.15em;
+  transform-origin: left center;
+}
 .stack-footer {
   margin-top: 32px;
-}
-.stack-progress {
-  margin-top: 24px;
-  height: 1px;
-  background: var(--border);
-}
-.stack-progress > span {
-  display: block;
-  height: 100%;
-  background: var(--foreground);
-  transform-origin: left;
+  padding-bottom: 24px;
 }
 @media (max-width: 480px) {
   .stack-story {
-    height: 180svh;
-  }
-  .stack-sticky {
-    min-height: 0;
+    --run: 170svh;
   }
   .stack-sentence {
     margin-top: 28px;
   }
   .stack-footer {
     margin-top: 24px;
-  }
-  .stack-logo {
-    max-width: 65%;
-    max-height: 65%;
-  }
-}
-@media (max-height: 680px), (prefers-reduced-motion: reduce) {
-  .stack-story {
-    height: auto;
-  }
-  .stack-sticky {
-    position: relative;
-    top: auto;
-    height: auto;
-    min-height: 0;
-    padding: 24px 0;
-  }
-  .stack-sentence span {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-  .stack-progress {
-    display: none;
-  }
-}
-.stack-story[data-reduced="true"] {
-  height: auto;
-}
-.stack-story[data-reduced="true"] .stack-sticky {
-  position: relative;
-  top: auto;
-  height: auto;
-  min-height: 0;
-  padding: 24px 0;
-}
-.stack-story[data-reduced="true"] .stack-sentence span {
-  opacity: 1 !important;
-  transform: none !important;
-}
-@media print {
-  .stack-story {
-    height: auto;
-  }
-  .stack-sticky {
-    position: static;
-    height: auto;
-    min-height: 0;
-  }
-  .stack-sentence span {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-  .stack-progress {
-    display: none;
   }
 }
 
@@ -1082,28 +1018,61 @@ html {
   }
 }
 
-/* Tall content stays readable in flow rather than pinning below the fold. */
-.stack-story[data-overflow="true"] {
-  height: auto;
+/* Static story (reduced motion, short or overflowing screens, print): the
+   finished state as one paragraph. */
+.stack-story[data-reduced="true"] .stack-sentence,
+.stack-story[data-overflow="true"] .stack-sentence {
+  display: block;
 }
-.stack-story[data-overflow="true"] .stack-sticky {
-  position: relative;
-  top: auto;
-}
+.stack-story[data-reduced="true"] .stack-sentence span,
 .stack-story[data-overflow="true"] .stack-sentence span {
   opacity: 1 !important;
   transform: none !important;
+  filter: none !important;
 }
-.stack-story[data-overflow="true"] .stack-progress {
+.stack-story[data-reduced="true"] .stack-line,
+.stack-story[data-overflow="true"] .stack-line {
+  display: inline;
+}
+.stack-story[data-reduced="true"] .stack-slop-plain,
+.stack-story[data-overflow="true"] .stack-slop-plain,
+.stack-story[data-reduced="true"] .stack-q,
+.stack-story[data-overflow="true"] .stack-q {
   display: none;
 }
-/* Static fallbacks show the finished sentence, gaps open. */
-.stack-story[data-overflow="true"] .stack-inline,
-.stack-story[data-reduced="true"] .stack-inline {
-  width: var(--full);
+.stack-story[data-reduced="true"] .stack-squiggle path,
+.stack-story[data-overflow="true"] .stack-squiggle path {
+  opacity: 1 !important;
+  stroke-dasharray: none !important;
+  stroke-dashoffset: 0 !important;
+}
+.stack-story[data-reduced="true"] .stack-spark svg,
+.stack-story[data-reduced="true"] .stack-slop-fill {
+  animation: none;
 }
 @media (max-height: 680px), (prefers-reduced-motion: reduce), print {
-  .stack-inline {
-    width: var(--full) !important;
+  .stack-sentence {
+    display: block;
+  }
+  .stack-sentence span {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  .stack-line {
+    display: inline;
+  }
+  .stack-slop-plain,
+  .stack-q {
+    display: none;
+  }
+  .stack-squiggle path {
+    opacity: 1 !important;
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .stack-slop-fill,
+  .stack-spark svg {
+    animation: none;
   }
 }

@@ -35,7 +35,7 @@ export function ExperienceSection({
                     alt=""
                     width={28}
                     height={28}
-                    className="border-border/80 size-7 shrink-0 rounded-md border bg-white object-contain p-0.5"
+                    className="size-7 shrink-0 object-contain"
                   />
                   <span className="min-w-0 font-semibold">
                     {item.role}{" "}

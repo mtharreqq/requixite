@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import {
   AnimatePresence,
   motion,
@@ -562,7 +563,7 @@ export function RantaiLive({
               className="absolute inset-0 rounded-xl opacity-(--k) shadow-[0_48px_120px_-32px_rgb(0_0_0/0.6)] max-md:hidden"
             />
             <figure className="hero-live border-border/80 bg-muted/50 w-full overflow-hidden rounded-xl border shadow-[0_24px_60px_-28px_rgb(0_0_0/0.45)]">
-              <div className="border-border/80 flex h-10 items-center gap-3 border-b px-3">
+              <div className="flex h-10 items-center gap-3 px-3">
                 <span className="flex gap-1.5 max-sm:hidden" aria-hidden>
                   {[0, 1, 2].map((i) => (
                     <span
@@ -621,7 +622,7 @@ export function RantaiLive({
               <div
                 ref={box}
                 aria-hidden
-                className="relative aspect-[8/5] w-full overflow-hidden bg-[#0a0b10]"
+                className={`relative aspect-[8/5] w-full overflow-hidden ${polished ? "bg-white" : "bg-[#0a0b10]"}`}
               >
                 <div
                   className="absolute top-0 left-0 origin-top-left"
@@ -665,6 +666,13 @@ export function RantaiLive({
                 {label}
               </button>
             ))}
+            <Link
+              href={copy.caseStudyHref}
+              className="text-muted-foreground hover:text-foreground inline-flex h-8 items-center gap-1 px-2 text-xs font-medium transition-colors"
+            >
+              {copy.caseStudy}
+              <ArrowRight aria-hidden className="size-3" />
+            </Link>
           </div>
         </motion.div>
       </div>

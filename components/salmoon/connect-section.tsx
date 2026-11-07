@@ -175,49 +175,57 @@ export function ConnectSection({ copy }: { copy: PortfolioCopy["contact"] }) {
         {copyError ? copy.copyFailed : copied ? copy.copied : ""}
       </p>
 
-      {/* Quiet, optional brand context; shared Accordion works on touch and keyboard. */}
-      <footer className="text-muted-foreground text-center text-xs leading-[1.8]">
-        <p>Precise. Exquisite. Requisite.</p>
-        <HoverCard openDelay={120} closeDelay={150}>
-          <HoverCardTrigger asChild>
-            <button
-              type="button"
-              className="hover:text-foreground decoration-muted-foreground/40 mt-1 cursor-pointer underline decoration-dotted underline-offset-4 transition-colors"
+      {/* One row: brand left, version right. The name opens its meaning. */}
+      <footer className="text-muted-foreground text-[11px] leading-relaxed">
+        <div className="flex flex-col items-center gap-1 sm:flex-row sm:justify-between">
+          <p>
+            © {new Date().getFullYear()}{" "}
+            <HoverCard openDelay={120} closeDelay={150}>
+              <HoverCardTrigger asChild>
+                <button
+                  type="button"
+                  aria-label={copy.aboutName}
+                  className="hover:text-foreground decoration-muted-foreground/40 cursor-pointer underline decoration-dotted underline-offset-4 transition-colors"
+                >
+                  Requixite
+                </button>
+              </HoverCardTrigger>
+              <HoverCardContent
+                side="top"
+                sideOffset={8}
+                className="bg-popover/95 border-border/80 text-muted-foreground w-72 rounded-lg p-4 text-xs leading-relaxed shadow-xl backdrop-blur-md"
+              >
+                <p className="text-foreground mb-1 font-medium">
+                  Precise. Exquisite. Requisite.
+                </p>
+                {copy.nameMeaning}
+              </HoverCardContent>
+            </HoverCard>
+            {` • ${copy.made}`}
+          </p>
+          {/* Version and last deploy, so it's clear the site is still kept up. */}
+          <p>
+            <a
+              href={`${REPO}/commits/main`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
             >
-              {copy.aboutName}
-            </button>
-          </HoverCardTrigger>
-          <HoverCardContent
-            side="top"
-            sideOffset={8}
-            className="bg-popover/95 border-border/80 text-muted-foreground w-72 rounded-lg p-4 text-xs leading-relaxed shadow-xl backdrop-blur-md"
-          >
-            {copy.nameMeaning}
-          </HoverCardContent>
-        </HoverCard>
-        <p className="mt-2 text-[10px]">{`© ${new Date().getFullYear()} Requixite • ${copy.made}`}</p>
-        {/* Version and last deploy, so it's clear the site is still kept up. */}
-        <p className="mt-1 text-[10px]">
-          <a
-            href={`${REPO}/commits/main`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-foreground transition-colors"
-          >
-            v{process.env.NEXT_PUBLIC_VERSION}
-            {updated &&
-              ` • ${copy.updated} ${new Intl.DateTimeFormat(copy.dateLocale, { dateStyle: "medium", timeZone: "Asia/Jakarta" }).format(new Date(updated))}`}
-          </a>
-          {" • "}
-          <a
-            href={REPO}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-foreground transition-colors"
-          >
-            {copy.source}
-          </a>
-        </p>
+              v{process.env.NEXT_PUBLIC_VERSION}
+              {updated &&
+                ` • ${copy.updated} ${new Intl.DateTimeFormat(copy.dateLocale, { dateStyle: "medium", timeZone: "Asia/Jakarta" }).format(new Date(updated))}`}
+            </a>
+            {" • "}
+            <a
+              href={REPO}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
+            >
+              {copy.source}
+            </a>
+          </p>
+        </div>
         <div className="relative mt-6 overflow-hidden">
           <FooterWordmark
             text="Requixite"
