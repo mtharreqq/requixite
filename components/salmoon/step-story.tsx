@@ -10,6 +10,37 @@ import {
   type MotionValue,
 } from "framer-motion";
 import { useEffect, useState, type RefObject } from "react";
+
+/**
+ * Pin `content` centred in the viewport (CSS reads --pin-h). Centring the
+ * content itself, not a 100svh stage, leaves no empty band when it unpins.
+ * Content taller than the viewport sets data-overflow so CSS can unpin it.
+ * Scroll progress should target a `.pin-track` child: it spans exactly the
+ * pinned stretch, so 0 and 1 land where the pin starts and ends.
+ */
+export function usePinCenter(
+  section: RefObject<HTMLElement | null>,
+  content: RefObject<HTMLElement | null>,
+) {
+  useEffect(() => {
+    const s = section.current;
+    const c = content.current;
+    if (!s || !c) return;
+    const measure = () => {
+      const height = c.getBoundingClientRect().height;
+      s.style.setProperty("--pin-h", `${height}px`);
+      s.dataset.overflow = String(height + 48 > window.innerHeight);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(c);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [section, content]);
+}
 import { SplitReveal } from "@/components/salmoon/split-reveal";
 import { cn } from "@/lib/utils";
 
@@ -89,7 +120,7 @@ export function StepRail({
 }) {
   return (
     <div className="flex items-center gap-4" aria-hidden="true">
-      <span className="text-muted-foreground text-xs tabular-nums">
+      <span className="text-muted-foreground shrink-0 text-xs whitespace-nowrap tabular-nums">
         <span className="text-foreground">0{index + 1}</span> / 0{count}
       </span>
       <div className="flex gap-2">

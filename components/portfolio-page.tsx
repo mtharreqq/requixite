@@ -2,7 +2,6 @@ import { StackStory } from "@/components/salmoon/stack-story";
 import { HeroSection } from "@/components/salmoon/hero-section";
 import { OfferSection } from "@/components/salmoon/offer-section";
 import { ProofSection } from "@/components/salmoon/proof-section";
-import { ProcessSection } from "@/components/salmoon/process-section";
 import { ExperienceSection } from "@/components/salmoon/experience-section";
 import { ConnectSection } from "@/components/salmoon/connect-section";
 import { RailNav } from "@/components/salmoon/rail-nav";
@@ -40,9 +39,6 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
         <ProofSection copy={copy.proof} />
         <SectionReveal>
           <ExperienceSection copy={copy.experience} />
-        </SectionReveal>
-        <SectionReveal>
-          <ProcessSection copy={copy.process} />
         </SectionReveal>
         <SectionReveal>
           <OfferSection copy={copy.offer} locale={locale} />

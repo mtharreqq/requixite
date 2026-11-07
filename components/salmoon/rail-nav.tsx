@@ -18,7 +18,6 @@ const SECTIONS = [
   { id: "stack" },
   { id: "proof" },
   { id: "experience" },
-  { id: "process" },
   { id: "offer" },
   { id: "contact" },
 ];

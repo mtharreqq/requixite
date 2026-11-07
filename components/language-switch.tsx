@@ -4,15 +4,18 @@ import type { Locale } from "@/lib/portfolio-copy";
 export function LanguageSwitch({
   locale,
   label,
+  path = "",
 }: {
   locale: Locale;
   label: string;
+  /** Same page in the other language, e.g. "/work/rantai". */
+  path?: string;
 }) {
   const action =
     locale === "id" ? "Ganti ke bahasa Inggris" : "Switch to Indonesian";
   return (
     <Link
-      href={locale === "id" ? "/" : "/id"}
+      href={locale === "id" ? path || "/" : `/id${path}`}
       hrefLang={locale === "id" ? "en" : "id"}
       aria-label={`${label}: ${locale.toUpperCase()}. ${action}`}
       title={action}
