@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import {
   Accordion,
@@ -27,11 +28,20 @@ export function ExperienceSection({
         {copy.items.map((item) => (
           <AccordionItem value={item.org} key={`${item.org}-${item.role}`}>
             <AccordionTrigger>
-              <span className="flex min-w-0 flex-1 flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-                <span className="min-w-0 font-semibold">
-                  {item.role}{" "}
-                  <span className="text-muted-foreground font-normal">
-                    @ {item.org}
+              <span className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                <span className="flex min-w-0 items-center gap-3">
+                  <Image
+                    src={`/logos/${item.logo}.png`}
+                    alt=""
+                    width={28}
+                    height={28}
+                    className="border-border/80 size-7 shrink-0 rounded-md border bg-white object-contain p-0.5"
+                  />
+                  <span className="min-w-0 font-semibold">
+                    {item.role}{" "}
+                    <span className="text-muted-foreground font-normal">
+                      @ {item.org}
+                    </span>
                   </span>
                 </span>
                 <span className="text-muted-foreground shrink-0 text-[11px] font-normal">

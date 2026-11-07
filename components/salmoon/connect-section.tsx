@@ -1,11 +1,10 @@
 "use client";
 
 import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "@/components/ui/accordion";
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -17,7 +16,6 @@ import {
   LinkedinSvg,
   XSvg,
 } from "@/components/dock-icons";
-import { Magnetic } from "@/components/salmoon/portfolio-motion";
 import { FooterWordmark } from "@/components/salmoon/footer-wordmark";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import {
@@ -28,9 +26,8 @@ import {
 
 const EMAIL = "mtharreq@gmail.com";
 const EASE_OUT = [0.23, 1, 0.32, 1] as const; // matches --ease-out token
-// RantAI's buttonSheen (home-hero.tsx): a streak of light sweeps across on hover.
-const sheen =
-  "relative overflow-hidden before:pointer-events-none before:absolute before:inset-y-0 before:-left-1/2 before:w-1/2 before:-skew-x-12 before:bg-linear-to-r before:from-transparent before:to-transparent before:transition-transform before:duration-700 before:ease-out hover:before:translate-x-[300%] motion-reduce:before:hidden";
+const REPO = "https://github.com/mtharreqq/requixite";
+const updated = process.env.NEXT_PUBLIC_UPDATED_AT;
 
 const SOCIALS = [
   { label: "X", href: "https://x.com/tooreeq", Icon: XSvg },
@@ -97,53 +94,49 @@ export function ConnectSection({ copy }: { copy: PortfolioCopy["contact"] }) {
         </p>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Magnetic>
-            <button
-              type="button"
-              onClick={handleCopy}
-              className={`${sheen} before:via-background/25 tactile-control bg-foreground text-background inline-flex h-[38px] min-w-[116px] cursor-pointer items-center justify-center gap-1.5 rounded-full px-4 text-[13px] font-medium transition-opacity hover:opacity-85 active:scale-[0.98]`}
-            >
-              <AnimatePresence mode="popLayout" initial={false}>
-                <motion.span
-                  key={copied ? "copied" : "idle"}
-                  className="inline-flex items-center gap-1.5"
-                  initial={{
-                    opacity: 0,
-                    transform: "scale(0.9)",
-                    filter: "blur(2px)",
-                  }}
-                  animate={{
-                    opacity: 1,
-                    transform: "scale(1)",
-                    filter: "blur(0px)",
-                  }}
-                  exit={{
-                    opacity: 0,
-                    transform: "scale(0.9)",
-                    filter: "blur(2px)",
-                  }}
-                  transition={{ duration: 0.16, ease: EASE_OUT }}
-                >
-                  {copied ? (
-                    <>
-                      <Check className="size-3.5" />
-                      {copy.copied}
-                    </>
-                  ) : (
-                    copy.copy
-                  )}
-                </motion.span>
-              </AnimatePresence>
-            </button>
-          </Magnetic>
-          <Magnetic>
-            <a
-              href={`mailto:${EMAIL}?subject=${encodeURIComponent(copy.subject)}`}
-              className={`${sheen} before:via-foreground/10 tactile-control bg-card text-foreground hover:bg-muted border-border/80 inline-flex h-[38px] items-center rounded-full border px-4 text-[13px] font-medium transition-colors active:scale-[0.98]`}
-            >
-              {copy.send}
-            </a>
-          </Magnetic>
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="bg-foreground text-background inline-flex h-[38px] min-w-[116px] cursor-pointer items-center justify-center gap-1.5 rounded-full px-4 text-[13px] font-medium transition-opacity hover:opacity-85"
+          >
+            <AnimatePresence mode="popLayout" initial={false}>
+              <motion.span
+                key={copied ? "copied" : "idle"}
+                className="inline-flex items-center gap-1.5"
+                initial={{
+                  opacity: 0,
+                  transform: "scale(0.9)",
+                  filter: "blur(2px)",
+                }}
+                animate={{
+                  opacity: 1,
+                  transform: "scale(1)",
+                  filter: "blur(0px)",
+                }}
+                exit={{
+                  opacity: 0,
+                  transform: "scale(0.9)",
+                  filter: "blur(2px)",
+                }}
+                transition={{ duration: 0.16, ease: EASE_OUT }}
+              >
+                {copied ? (
+                  <>
+                    <Check className="size-3.5" />
+                    {copy.copied}
+                  </>
+                ) : (
+                  copy.copy
+                )}
+              </motion.span>
+            </AnimatePresence>
+          </button>
+          <a
+            href={`mailto:${EMAIL}?subject=${encodeURIComponent(copy.subject)}`}
+            className="bg-card text-foreground hover:bg-muted border-border/80 inline-flex h-[38px] items-center rounded-full border px-4 text-[13px] font-medium transition-colors"
+          >
+            {copy.send}
+          </a>
 
           {/* One provider for the group: after the first tooltip, the next
               ones open instantly (skip delay) and without the entrance. */}
@@ -157,7 +150,7 @@ export function ConnectSection({ copy }: { copy: PortfolioCopy["contact"] }) {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={label}
-                      className="social-tactile text-muted-foreground hover:text-foreground hover:bg-muted border-border/80 grid size-[38px] place-items-center rounded-full border transition-colors"
+                      className="text-muted-foreground hover:text-foreground hover:bg-muted border-border/80 grid size-[38px] place-items-center rounded-full border transition-colors"
                     >
                       <Icon className="size-4" />
                     </a>
@@ -185,19 +178,46 @@ export function ConnectSection({ copy }: { copy: PortfolioCopy["contact"] }) {
       {/* Quiet, optional brand context; shared Accordion works on touch and keyboard. */}
       <footer className="text-muted-foreground text-center text-xs leading-[1.8]">
         <p>Precise. Exquisite. Requisite.</p>
-        <Accordion type="single" collapsible className="mx-auto mt-1 max-w-xs">
-          <AccordionItem value="brand">
-            <AccordionTrigger variant="quiet">
+        <HoverCard openDelay={120} closeDelay={150}>
+          <HoverCardTrigger asChild>
+            <button
+              type="button"
+              className="hover:text-foreground decoration-muted-foreground/40 mt-1 cursor-pointer underline decoration-dotted underline-offset-4 transition-colors"
+            >
               {copy.aboutName}
-            </AccordionTrigger>
-            <AccordionContent>
-              <p className="px-3 pt-2 pb-3 text-xs leading-relaxed">
-                {copy.nameMeaning}
-              </p>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+            </button>
+          </HoverCardTrigger>
+          <HoverCardContent
+            side="top"
+            sideOffset={8}
+            className="bg-popover/95 border-border/80 text-muted-foreground w-72 rounded-lg p-4 text-xs leading-relaxed shadow-xl backdrop-blur-md"
+          >
+            {copy.nameMeaning}
+          </HoverCardContent>
+        </HoverCard>
         <p className="mt-2 text-[10px]">{`© ${new Date().getFullYear()} Requixite • ${copy.made}`}</p>
+        {/* Version and last deploy, so it's clear the site is still kept up. */}
+        <p className="mt-1 text-[10px]">
+          <a
+            href={`${REPO}/commits/main`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
+            v{process.env.NEXT_PUBLIC_VERSION}
+            {updated &&
+              ` • ${copy.updated} ${new Intl.DateTimeFormat(copy.dateLocale, { dateStyle: "medium", timeZone: "Asia/Jakarta" }).format(new Date(updated))}`}
+          </a>
+          {" • "}
+          <a
+            href={REPO}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
+            {copy.source}
+          </a>
+        </p>
         <div className="relative mt-6 overflow-hidden">
           <FooterWordmark
             text="Requixite"

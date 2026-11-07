@@ -11,23 +11,17 @@ import {
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import { HAS_PUBLISHED_WORK } from "@/data/projects";
 import { smoothScrollTo } from "@/components/smooth-scroll";
 
-const ALL_SECTIONS = [
+const SECTIONS = [
   { id: "home" },
   { id: "stack" },
   { id: "proof" },
-  { id: "work" },
   { id: "experience" },
   { id: "process" },
   { id: "offer" },
   { id: "contact" },
 ];
-// No published projects means no Work section, so no rail stop for it either.
-const SECTIONS = ALL_SECTIONS.filter(
-  (s) => s.id !== "work" || HAS_PUBLISHED_WORK,
-);
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const; // matches --ease-out token
 
