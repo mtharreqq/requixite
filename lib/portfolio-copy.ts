@@ -9,42 +9,47 @@ export const english = {
     headline: ["Vibecoded it?", "I’ll make it feel finished."],
     summary:
       "I’m Tharreq, a product engineer and designer in Bandung. You built the app with AI. I fix the spacing, type, and interactions so it feels made with care.",
-    featured: "Selected project · RantAI",
     shortcuts: "Jump to",
+    visual: {
+      label:
+        "rantai.dev, rebuilt live: scrolling turns the AI-built version into the polished one.",
+      before: "Built with AI",
+      after: "Polished",
+      visit: "Visit site",
+    },
     chat: {
       open: "Message",
-      status: "Usually replies within a day",
+      status: "Replies within 2 days",
       typing: "Tharreq is typing",
       greeting: [
         "Hi! 👋",
-        "Got an app that needs polish? Tell me where you'd like to chat.",
+        "Send me a link to your app. I’ll reply with the top 3 fixes I’d make, free.",
       ],
-      via: "Chat via",
-      message: "Hi Tharreq, I'd like you to polish my app",
+      placeholder: "Paste a link, or tell me about your app…",
+      send: "Send",
+      pick: "Got it. Where should I reply?",
+      via: "Send via",
+      subject: "Honest take on my app — Requixite",
+      copied: "Message copied. Paste it into the DM.",
       close: "Close",
     },
-    view: "Visit website",
-    screens: "Project screenshots",
-    contribution: "Design & code",
     profile:
       "Product engineer and designer in Bandung. Frontend at Telkomsigma, building rantai.dev on the side.",
     available: "Open to projects",
     role: "Product Engineer & Designer",
-    polaroids: ["rantai.dev", "products", "insights ✨"],
-    preview: "RantAI page preview",
   },
   stack: {
-    title: "Built with AI",
+    title: "Sound familiar?",
     // {build} and {code} mark where the logo groups pop in.
     sentence:
-      "Apps get built in {build}, with code from {code}. Anyone can ship now. That’s why so much of it looks the same.",
-    sr: "Apps get built in Lovable, Bolt, v0, and Replit, with code from Cursor, Claude, ChatGPT, and Antigravity. Anyone can ship now. That’s why so much of it looks the same.",
-    note: "The tools are great at getting you to working. I get you to finished: the spacing, type, states, and motion people feel without noticing.",
+      "You built it with AI app builders {build} and coding assistants {code}. It works. But something feels unfinished, and your users can tell.",
+    sr: "You built it with AI app builders like Lovable, Bolt, v0, and Replit, and coding assistants like Cursor, Claude, ChatGPT, and Antigravity. It works. But something feels unfinished, and your users can tell.",
+    note: "People decide in seconds whether an app feels trustworthy. Uneven spacing, clashing type, and stiff buttons read as unfinished, so they leave before trying what you built.",
   },
   proof: {
     title: "See the difference",
     intro:
-      "One card, fixed one detail at a time as you scroll: spacing first, then color, then type.",
+      "Here’s what finished looks like. One card, fixed one detail at a time as you scroll: spacing first, then color, then type.",
     account: "Main • Vault 01",
     balance: "Net balance",
     amount: "$42,850.20",
@@ -64,7 +69,7 @@ export const english = {
   work: {
     title: "Before & after",
     intro:
-      "rantai.dev before I redesigned it, and today. Drag across a screen to compare.",
+      "rantai.dev started as an AI-built site. It worked, but looked like every other AI site. Here it is before I polished it, and today. Drag across a screen to compare.",
     before: "Before",
     after: "After",
     compare: "Compare before and after",
@@ -79,25 +84,46 @@ export const english = {
     intro: "Start free. Pay only if you want me to do the work.",
     from: "From",
     free: "Free",
+    recommended: "Recommended",
     plans: [
       {
         name: "Honest take",
-        desc: "Send me a link. I reply with the top 3 fixes I’d make, as a short video or notes.",
-        time: "Within 2 days",
+        desc: "Find out what to fix first.",
+        features: [
+          "Top 3 fixes for your app",
+          "As a short video or notes",
+          "Reply within 2 days",
+          "No commitment",
+        ],
+        cta: "Send my app",
       },
       {
         name: "Polish sprint",
-        desc: "Spacing, type, color, states, motion, and phone layouts, fixed in your vibecoded app. Your code, your repo.",
-        time: "About 1 week",
+        desc: "For a vibecoded app that works but feels unfinished.",
+        features: [
+          "Consistent spacing, type, and color",
+          "Hover, press, loading, and empty states",
+          "Motion and phone layouts tuned",
+          "Done in your code and your repo",
+          "About 1 week",
+        ],
+        cta: "Start a sprint",
       },
       {
         name: "Build from scratch",
-        desc: "A landing page or small site, designed and built in Next.js. Fast on phones and easy to update.",
-        time: "2 to 3 weeks",
+        desc: "A landing page or small site, done right from day one.",
+        features: [
+          "Designed and built in Next.js",
+          "Fast on phones",
+          "Easy for you to update",
+          "2 to 3 weeks",
+        ],
+        cta: "Plan a build",
       },
     ],
     note: "Final price depends on scope. You get a fixed quote before any work starts.",
-    cta: "Send me your app",
+    // Chat draft when a plan is picked; {plan} is its name.
+    ask: "I’m interested in {plan}. My app: ",
   },
   process: {
     title: "How a sprint goes",
@@ -129,9 +155,10 @@ export const english = {
     ],
   },
   experience: {
-    title: "About",
+    title: "Who you’ll work with",
     intro:
-      "Computer Engineering, Telkom University · GPA 3.93. Now building interfaces people use every day.",
+      "Me, directly. I design and build interfaces every day, so I fix the details in your code myself, not in a mockup someone else has to rebuild.",
+    education: "Computer Engineering, Telkom University · GPA 3.93",
     items: [
       {
         role: "Frontend Developer",
@@ -162,8 +189,6 @@ export const english = {
       "Toolkit: Next.js, React, Vue, TypeScript, Tailwind CSS, PostgreSQL, and Figma.",
     recognition:
       "Gold Award, WINTEX 2023 • 1st Place, UI/UX Centurion 2023 • 2nd Place, UI/UX JBC 2022",
-    hire: "Also open to full-time frontend and product engineering roles.",
-    cv: "Download CV (PDF)",
   },
   contact: {
     available: "Open to new projects",
@@ -183,7 +208,7 @@ export const english = {
     navigation: "Page sections",
     theme: "Switch color theme",
     home: "Intro",
-    stack: "Tools",
+    stack: "Problem",
     proof: "Comparison",
     work: "Before & after",
     offer: "Pricing",
@@ -204,41 +229,46 @@ export const indonesian: PortfolioCopy = {
     headline: ["Udah di-vibecode?", "Saya rapikan sampai terasa jadi."],
     summary:
       "Saya Tharreq, product engineer dan designer dari Bandung. Aplikasimu dibangun dengan AI, saya rapikan jarak, huruf, dan interaksinya supaya terasa dibuat dengan serius.",
-    featured: "Proyek pilihan · RantAI",
     shortcuts: "Langsung ke",
+    visual: {
+      label:
+        "rantai.dev, dibangun ulang langsung: saat di-scroll, versi buatan AI berubah jadi versi yang sudah dirapikan.",
+      before: "Dibuat dengan AI",
+      after: "Sudah dirapikan",
+      visit: "Buka situsnya",
+    },
     chat: {
       open: "Chat",
-      status: "Biasanya balas dalam sehari",
+      status: "Membalas dalam 2 hari",
       typing: "Tharreq sedang mengetik",
       greeting: [
         "Halo! 👋",
-        "Ada aplikasi yang mau dirapikan? Pilih mau ngobrol lewat mana.",
+        "Kirim link aplikasimu. Saya balas dengan 3 hal yang paling perlu dibenahi, gratis.",
       ],
-      via: "Chat lewat",
-      message: "Halo Tharreq, saya mau aplikasi saya dirapikan",
+      placeholder: "Tempel link, atau ceritakan aplikasimu…",
+      send: "Kirim",
+      pick: "Siap. Mau dikirim lewat mana?",
+      via: "Kirim lewat",
+      subject: "Minta honest take untuk aplikasiku — Requixite",
+      copied: "Pesan sudah disalin. Tempel di DM, ya.",
       close: "Tutup",
     },
-    view: "Buka website",
-    screens: "Cuplikan proyek",
-    contribution: "Desain & kode",
     profile:
       "Saya merancang dan membangun produk digital dari Bandung. Bekerja sebagai frontend developer di Telkomsigma, juga mengembangkan rantai.dev.",
     available: "Terbuka untuk proyek baru",
     role: "Product Engineer & Designer",
-    polaroids: ["rantai.dev", "produk", "tulisan ✨"],
-    preview: "Cuplikan halaman RantAI",
   },
   stack: {
-    title: "Dibangun dengan AI",
+    title: "Kenal situasi ini?",
     sentence:
-      "Aplikasinya dibangun di {build}, kodenya ditulis bareng {code}. Sekarang semua orang bisa rilis. Makanya banyak yang terlihat mirip.",
-    sr: "Aplikasinya dibangun di Lovable, Bolt, v0, dan Replit, kodenya ditulis bareng Cursor, Claude, ChatGPT, dan Antigravity. Sekarang semua orang bisa rilis. Makanya banyak yang terlihat mirip.",
-    note: "Alat-alat ini hebat untuk bikin aplikasi jalan. Saya bantu sampai terasa jadi: jarak, huruf, state, dan animasi yang dirasakan pengguna tanpa mereka sadari.",
+      "Kamu membangunnya pakai pembuat aplikasi AI {build} dan asisten coding {code}. Aplikasinya jalan. Tapi ada yang terasa belum jadi, dan penggunamu menyadarinya.",
+    sr: "Kamu membangunnya pakai pembuat aplikasi AI seperti Lovable, Bolt, v0, dan Replit, dan asisten coding seperti Cursor, Claude, ChatGPT, dan Antigravity. Aplikasinya jalan. Tapi ada yang terasa belum jadi, dan penggunamu menyadarinya.",
+    note: "Orang memutuskan dalam hitungan detik apakah sebuah aplikasi bisa dipercaya. Jarak yang tidak rata, huruf yang bertabrakan, dan tombol yang kaku terasa setengah jadi, jadi mereka pergi sebelum mencoba yang kamu bangun.",
   },
   proof: {
     title: "Lihat bedanya",
     intro:
-      "Satu kartu, dirapikan satu per satu sambil kamu scroll: jarak dulu, lalu warna, lalu huruf.",
+      "Begini rasanya kalau sudah jadi. Satu kartu, dirapikan satu per satu sambil kamu scroll: jarak dulu, lalu warna, lalu huruf.",
     account: "Utama • Dompet 01",
     balance: "Saldo bersih",
     amount: "US$42.850,20",
@@ -258,7 +288,7 @@ export const indonesian: PortfolioCopy = {
   work: {
     title: "Sebelum & sesudah",
     intro:
-      "rantai.dev sebelum saya desain ulang, dan sekarang. Geser di atas layar untuk membandingkan.",
+      "rantai.dev awalnya dibuat dengan AI. Jalan, tapi mirip semua situs AI lainnya. Ini sebelum saya rapikan, dan sekarang. Geser di atas layar untuk membandingkan.",
     before: "Sebelum",
     after: "Sesudah",
     compare: "Bandingkan sebelum dan sesudah",
@@ -273,25 +303,45 @@ export const indonesian: PortfolioCopy = {
     intro: "Mulai gratis. Bayar hanya kalau kamu mau saya yang mengerjakan.",
     from: "Mulai",
     free: "Gratis",
+    recommended: "Disarankan",
     plans: [
       {
         name: "Honest take",
-        desc: "Kirim link aplikasimu. Saya balas dengan 3 perbaikan utama, lewat video singkat atau catatan.",
-        time: "Maksimal 2 hari",
+        desc: "Cari tahu apa yang perlu dibenahi dulu.",
+        features: [
+          "3 perbaikan utama untuk aplikasimu",
+          "Lewat video singkat atau catatan",
+          "Dibalas maksimal 2 hari",
+          "Tanpa ikatan",
+        ],
+        cta: "Kirim aplikasiku",
       },
       {
         name: "Polish sprint",
-        desc: "Jarak, huruf, warna, state, animasi, dan tampilan di HP, dirapikan langsung di aplikasimu. Kode tetap milikmu.",
-        time: "Sekitar 1 minggu",
+        desc: "Untuk aplikasi vibecoded yang sudah jalan tapi terasa belum jadi.",
+        features: [
+          "Jarak, huruf, dan warna yang konsisten",
+          "State hover, tekan, loading, dan kosong",
+          "Animasi dan tampilan HP dirapikan",
+          "Langsung di kode dan repo-mu",
+          "Sekitar 1 minggu",
+        ],
+        cta: "Mulai sprint",
       },
       {
         name: "Bangun dari nol",
-        desc: "Landing page atau website kecil, didesain dan dibangun dengan Next.js. Cepat di HP dan gampang diperbarui.",
-        time: "2 sampai 3 minggu",
+        desc: "Landing page atau website kecil yang rapi sejak awal.",
+        features: [
+          "Didesain dan dibangun dengan Next.js",
+          "Cepat di HP",
+          "Gampang kamu perbarui",
+          "2 sampai 3 minggu",
+        ],
+        cta: "Rencanakan",
       },
     ],
     note: "Harga akhir tergantung cakupan. Kamu dapat harga pasti sebelum pekerjaan dimulai.",
-    cta: "Kirim aplikasimu",
+    ask: "Saya tertarik dengan {plan}. Aplikasi saya: ",
   },
   process: {
     title: "Alur polish sprint",
@@ -323,9 +373,10 @@ export const indonesian: PortfolioCopy = {
     ],
   },
   experience: {
-    title: "Tentang saya",
+    title: "Yang akan mengerjakan",
     intro:
-      "Teknik Komputer, Telkom University · IPK 3,93. Sekarang fokus membangun antarmuka untuk kebutuhan sehari-hari.",
+      "Saya sendiri, langsung. Setiap hari saya mendesain dan membangun antarmuka, jadi detailnya saya perbaiki langsung di kodemu, bukan di mockup yang harus dibangun ulang orang lain.",
+    education: "Teknik Komputer, Telkom University · IPK 3,93",
     items: [
       {
         role: "Frontend Developer",
@@ -356,8 +407,6 @@ export const indonesian: PortfolioCopy = {
       "Alat kerja: Next.js, React, Vue, TypeScript, Tailwind CSS, PostgreSQL, dan Figma.",
     recognition:
       "Medali Emas, WINTEX 2023 • Juara 1, UI/UX Centurion 2023 • Juara 2, UI/UX JBC 2022",
-    hire: "Juga terbuka untuk posisi full-time sebagai frontend atau product engineer.",
-    cv: "Unduh CV (PDF)",
   },
   contact: {
     available: "Terbuka untuk proyek baru",
@@ -377,7 +426,7 @@ export const indonesian: PortfolioCopy = {
     navigation: "Bagian halaman",
     theme: "Ganti tema warna",
     home: "Halo",
-    stack: "Alat",
+    stack: "Masalah",
     proof: "Perbandingan",
     work: "Sebelum & sesudah",
     offer: "Harga",

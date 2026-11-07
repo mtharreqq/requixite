@@ -1,9 +1,10 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { Check } from "lucide-react";
 import type { Locale, PortfolioCopy } from "@/lib/portfolio-copy";
 import { SplitReveal } from "@/components/salmoon/split-reveal";
+import { openChat } from "@/lib/chat-events";
 
 // Starting prices per plan, in whole units. Free plan first.
 const PRICES = {
@@ -39,9 +40,16 @@ export function OfferSection({
     maximumFractionDigits: 1,
   });
 
+  const RECOMMENDED = 1;
+
   return (
-    <section id="offer" className="flex w-full flex-col gap-4">
-      <div className="flex flex-col gap-2">
+    // Three cards need more room than the reading column: break out of it
+    // on wide screens, the way pricing pages do.
+    <section
+      id="offer"
+      className="flex w-full flex-col gap-6 lg:ml-[50%] lg:w-[min(56rem,calc(100vw-8rem))] lg:-translate-x-1/2"
+    >
+      <div className="flex flex-col gap-2 lg:items-center lg:text-center">
         <SplitReveal
           text={copy.title}
           className="text-foreground text-sm font-bold tracking-wider uppercase"
@@ -50,48 +58,80 @@ export function OfferSection({
           {copy.intro}
         </p>
       </div>
-      <ul className="divide-border/70 border-border/70 divide-y border-y">
+      <ul className="grid gap-3 lg:grid-cols-3">
         {copy.plans.map((plan, i) => {
           const price = PRICES[currency][i];
+          const featured = i === RECOMMENDED;
           return (
-            <li key={plan.name} className="flex flex-col gap-1.5 py-4">
-              <div className="flex items-baseline justify-between gap-3">
+            <li
+              key={plan.name}
+              className={`bg-card relative flex flex-col rounded-2xl border p-5 ${
+                featured
+                  ? "border-foreground shadow-lg shadow-black/5"
+                  : "border-border/80"
+              }`}
+            >
+              <div className="flex items-center justify-between gap-3">
                 <h3 className="text-foreground text-sm font-semibold">
                   {plan.name}
                 </h3>
-                <p className="text-foreground shrink-0 text-sm font-medium tabular-nums">
-                  {price ? (
-                    <>
-                      <span className="text-muted-foreground text-xs font-normal">
-                        {copy.from}{" "}
-                      </span>
-                      {format.format(price)}
-                    </>
-                  ) : (
-                    copy.free
-                  )}
-                </p>
+                {featured && (
+                  <span className="bg-foreground text-background -my-1 rounded-full px-2 py-0.5 text-[11px] font-medium">
+                    {copy.recommended}
+                  </span>
+                )}
               </div>
-              <p className="text-muted-foreground max-w-[52ch] text-xs leading-relaxed">
+              <p className="text-muted-foreground mt-1 text-xs leading-relaxed lg:min-h-[2lh]">
                 {plan.desc}
               </p>
-              <p className="text-muted-foreground text-[11px]">{plan.time}</p>
+              <p className="text-foreground mt-4 flex items-baseline gap-1.5 tabular-nums">
+                {price ? (
+                  <>
+                    <span className="text-muted-foreground text-xs">
+                      {copy.from}
+                    </span>
+                    <span className="text-3xl font-semibold tracking-tight">
+                      {format.format(price)}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-3xl font-semibold tracking-tight">
+                    {copy.free}
+                  </span>
+                )}
+              </p>
+              <button
+                type="button"
+                onClick={() => openChat(copy.ask.replace("{plan}", plan.name))}
+                className={`tactile-control mt-4 h-9 w-full rounded-full text-sm font-medium transition-colors ${
+                  featured
+                    ? "bg-foreground text-background hover:bg-foreground/85"
+                    : "border-border hover:bg-muted border"
+                }`}
+              >
+                {plan.cta}
+              </button>
+              <ul className="border-border/60 mt-5 flex flex-col gap-2 border-t pt-4">
+                {plan.features.map((feature) => (
+                  <li
+                    key={feature}
+                    className="text-muted-foreground flex gap-2 text-xs leading-relaxed"
+                  >
+                    <Check
+                      aria-hidden
+                      className="text-foreground mt-0.5 size-3.5 shrink-0"
+                    />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
             </li>
           );
         })}
       </ul>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-muted-foreground max-w-[44ch] text-[11px] leading-relaxed">
-          {copy.note}
-        </p>
-        <a
-          href="#contact"
-          className="text-foreground inline-flex items-center gap-1.5 rounded-sm text-xs font-medium underline-offset-4 hover:underline"
-        >
-          {copy.cta}
-          <ArrowUpRight className="size-3.5" />
-        </a>
-      </div>
+      <p className="text-muted-foreground text-[11px] leading-relaxed lg:text-center">
+        {copy.note}
+      </p>
     </section>
   );
 }

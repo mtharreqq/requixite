@@ -5,7 +5,6 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import { ArrowUpRight } from "lucide-react";
 import { SplitReveal } from "@/components/salmoon/split-reveal";
 
 export function ExperienceSection({
@@ -45,19 +44,9 @@ export function ExperienceSection({
         ))}
       </Accordion>
       <div className="text-muted-foreground border-border/40 flex flex-col gap-2 border-t pt-4 text-[11px] leading-relaxed">
+        <p>{copy.education}</p>
         <p>{copy.toolkit}</p>
         <p>{copy.recognition}</p>
-      </div>
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-xs">
-        <p className="text-foreground">{copy.hire}</p>
-        <a
-          href="/cv-tharreq.pdf"
-          target="_blank"
-          className="text-foreground inline-flex items-center gap-1.5 rounded-sm font-medium underline-offset-4 hover:underline"
-        >
-          {copy.cv}
-          <ArrowUpRight className="size-3.5" />
-        </a>
       </div>
     </section>
   );

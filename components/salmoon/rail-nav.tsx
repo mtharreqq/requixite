@@ -19,9 +19,9 @@ const ALL_SECTIONS = [
   { id: "stack" },
   { id: "proof" },
   { id: "work" },
-  { id: "offer" },
-  { id: "process" },
   { id: "experience" },
+  { id: "process" },
+  { id: "offer" },
   { id: "contact" },
 ];
 // No published projects means no Work section, so no rail stop for it either.

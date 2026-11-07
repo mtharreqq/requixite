@@ -32,14 +32,6 @@
   }
 }
 
-@keyframes hero-showcase-enter {
-  from {
-    transform: translateY(30px) scale(0.975);
-  }
-  to {
-    transform: translateY(0) scale(1);
-  }
-}
 .hero-identity {
   animation: portfolio-arrive 480ms var(--ease-out) both;
 }
@@ -57,15 +49,19 @@
 .hero-copy > :nth-child(3) {
   animation: hero-rise 800ms 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-.hero-showcase {
-  transform-origin: center top;
-  animation: hero-showcase-enter 760ms 420ms var(--ease-out) both;
+/* The live rantai.dev frame rises after the CTAs. */
+.hero-live {
+  animation: hero-rise 900ms 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-/* A fast Tab press must never leave focused controls hidden or in motion. */
+/* A fast Tab press must never leave focused controls hidden or in motion.
+   Collapse the timing instead of `animation: none`: removing the name and
+   adding it back restarts the animation, so focus leaving #home (e.g. into
+   the chat dialog portal) would replay the whole hero entrance. */
 #home:focus-within .hero-identity,
 #home:focus-within .hero-copy > *,
-#home:focus-within .hero-showcase {
-  animation: none;
+#home:focus-within .hero-live {
+  animation-delay: 0s;
+  animation-duration: 0s;
 }
 
 .polaroid-link {
@@ -132,7 +128,7 @@
   /* Hero: short opacity fade, no translate. Sections stay put. */
   .hero-identity,
   .hero-copy > *,
-  .hero-showcase {
+  .hero-live {
     animation: portfolio-fade 200ms ease both;
   }
   /* Hover/press movement off; colour, background, opacity transitions stay. */
@@ -336,9 +332,6 @@
 
 /* Static blueprint illustrations explain the work; hover lets people explore
    them without hiding content or requiring a precise pointer. */
-.showcase-frame {
-  transition: transform 300ms var(--ease-out);
-}
 .study-scan,
 .study-tile,
 .study-button,
@@ -371,7 +364,6 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .showcase-frame,
   .study-scan,
   .study-tile,
   .study-button,
@@ -382,44 +374,6 @@
   }
 }
 
-/* Layered product screens: a static composition first, enhanced by scroll
-   where CSS view timelines are available. No scroll interception. */
-.showcase-ghost-left {
-  transform: rotate(-7deg) translateY(8px);
-}
-.showcase-ghost-right {
-  transform: rotate(7deg) translateY(8px);
-}
-@keyframes showcase-spread-left {
-  from {
-    transform: rotate(-2deg) translate(14px, 14px);
-  }
-  to {
-    transform: rotate(-8deg) translate(-3px, -3px);
-  }
-}
-@keyframes showcase-spread-right {
-  from {
-    transform: rotate(2deg) translate(-14px, 14px);
-  }
-  to {
-    transform: rotate(8deg) translate(3px, -3px);
-  }
-}
-@supports (animation-timeline: view()) {
-  @media (min-width: 768px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    .showcase-ghost-left {
-      animation: showcase-spread-left linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 55%;
-    }
-    .showcase-ghost-right {
-      animation: showcase-spread-right linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 55%;
-    }
-  }
-}
 .scene-interface,
 .scene-tile,
 .scene-heading,
@@ -488,9 +442,7 @@
   transform: translateY(-4px);
 }
 @media (prefers-reduced-motion: reduce) {
-  .process-scene *,
-  .showcase-ghost,
-  .showcase-frame {
+  .process-scene * {
     animation: none !important;
     transform: none !important;
     transition: opacity 150ms ease;
@@ -527,8 +479,7 @@
 }
 
 @media print {
-  .edge-fade,
-  .showcase-ghost {
+  .edge-fade {
     display: none;
   }
   .process-explainer {

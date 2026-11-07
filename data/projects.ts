@@ -6,7 +6,7 @@ export const PROJECTS: Project[] = [
     slug: "rantai",
     title: "RantAI",
     description:
-      "Website and CMS for RantAI, an AI company building agents, data platforms, and engineering teams for enterprise and government. I took it from Figma to Vercel, handling the design and full-stack development.",
+      "Website and CMS for RantAI, an AI company building agents, data platforms, and engineering teams for enterprise and government. The first version was AI-generated and looked generic. I redesigned it in Figma and built it through to Vercel, design and full-stack.",
     category: {
       slug: "client-work",
       name: "Product Website",
@@ -202,7 +202,7 @@ const INDONESIAN_PROJECTS: Record<string, ProjectCopy> = {
     category: "Website perusahaan",
     role: "Desain, frontend & full-stack",
     description:
-      "Website dan CMS untuk RantAI, perusahaan AI yang mengembangkan agen, platform data, serta tim engineering untuk perusahaan dan instansi pemerintah. Saya mengerjakan desain sampai pengembangannya, dari Figma hingga rilis di Vercel.",
+      "Website dan CMS untuk RantAI, perusahaan AI yang mengembangkan agen, platform data, serta tim engineering untuk perusahaan dan instansi pemerintah. Versi pertamanya dibuat dengan AI dan terlihat generik. Saya mendesain ulang di Figma lalu membangunnya sampai rilis di Vercel, dari desain hingga full-stack.",
     highlights: [
       {
         title: "Produk, layanan, Academy & tulisan",

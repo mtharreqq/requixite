@@ -2,9 +2,9 @@
 
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import Image from "next/image";
-import { ProjectShowcase } from "@/components/salmoon/project-showcase";
 import { SplitReveal } from "@/components/salmoon/split-reveal";
 import { ChatDialog } from "@/components/salmoon/chat-dialog";
+import { RantaiLive } from "@/components/salmoon/rantai-live";
 import { smoothScrollTo } from "@/components/smooth-scroll";
 import {
   HoverCard,
@@ -21,11 +21,19 @@ import {
 
 const SHORTCUTS = [
   "work",
-  "offer",
-  "process",
   "experience",
+  "process",
+  "offer",
   "contact",
 ] as const;
+
+function jump(e: React.MouseEvent, id: string) {
+  const target = document.getElementById(id);
+  if (!target) return;
+  e.preventDefault();
+  smoothScrollTo(target.getBoundingClientRect().top + window.scrollY);
+  history.replaceState(null, "", `#${id}`);
+}
 
 export function HeroSection({
   copy,
@@ -94,10 +102,7 @@ export function HeroSection({
                 <div className="text-muted-foreground mt-2.5 flex items-center gap-2 text-[11px]">
                   <span>📍 Bandung, ID</span>
                   <span>&bull;</span>
-                  <span className="inline-flex items-center gap-1 font-medium text-emerald-600 dark:text-emerald-400">
-                    <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
-                    {copy.available}
-                  </span>
+                  <span>{copy.available}</span>
                 </div>
 
                 {/* Social links row */}
@@ -174,21 +179,13 @@ export function HeroSection({
           {copy.summary}
         </p>
         <nav aria-label={copy.shortcuts}>
-          <ul className="bg-muted/70 border-border/60 inline-flex flex-wrap gap-0.5 rounded-[18px] border p-1 text-xs">
+          <ul className="flex flex-wrap gap-x-5 gap-y-1 text-xs">
             {SHORTCUTS.map((id) => (
               <li key={id}>
                 <a
                   href={`#${id}`}
-                  onClick={(e) => {
-                    const target = document.getElementById(id);
-                    if (!target) return;
-                    e.preventDefault();
-                    smoothScrollTo(
-                      target.getBoundingClientRect().top + window.scrollY,
-                    );
-                    history.replaceState(null, "", `#${id}`);
-                  }}
-                  className="text-muted-foreground hover:bg-background hover:text-foreground block rounded-full px-3 py-1.5 font-medium transition-colors"
+                  onClick={(e) => jump(e, id)}
+                  className="text-muted-foreground hover:text-foreground block rounded-sm py-1.5 font-medium transition-colors"
                 >
                   {rail[id]}
                 </a>
@@ -197,7 +194,7 @@ export function HeroSection({
           </ul>
         </nav>
       </div>
-      <ProjectShowcase copy={copy} />
+      <RantaiLive copy={copy.visual} />
     </section>
   );
 }
