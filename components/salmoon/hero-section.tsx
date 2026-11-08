@@ -19,7 +19,7 @@ import {
   XSvg,
 } from "@/components/dock-icons";
 
-const SHORTCUTS = ["proof", "experience", "offer", "contact"] as const;
+const SHORTCUTS = ["review", "offer", "experience", "contact"] as const;
 
 function jump(e: React.MouseEvent, id: string) {
   const target = document.getElementById(id);

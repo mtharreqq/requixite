@@ -1,7 +1,5 @@
-import { StackStory } from "@/components/salmoon/stack-story";
+import { ReviewStory } from "@/components/salmoon/review-story";
 import { HeroSection } from "@/components/salmoon/hero-section";
-import { OfferSection } from "@/components/salmoon/offer-section";
-import { ProofSection } from "@/components/salmoon/proof-section";
 import { ExperienceSection } from "@/components/salmoon/experience-section";
 import { ConnectSection } from "@/components/salmoon/connect-section";
 import { RailNav } from "@/components/salmoon/rail-nav";
@@ -35,13 +33,9 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
         className="flex w-full max-w-lg flex-col items-center gap-y-14 pt-8 pr-4 pl-10 outline-none md:max-w-xl md:gap-y-16 md:px-4 md:pt-12"
       >
         <HeroSection copy={copy.hero} rail={copy.rail} />
-        <StackStory copy={copy.stack} />
-        <ProofSection copy={copy.proof} />
+        <ReviewStory copy={copy.review} offer={copy.offer} locale={locale} />
         <SectionReveal>
           <ExperienceSection copy={copy.experience} />
-        </SectionReveal>
-        <SectionReveal>
-          <OfferSection copy={copy.offer} locale={locale} />
         </SectionReveal>
         <SectionReveal>
           <ConnectSection copy={copy.contact} />
