@@ -15,10 +15,9 @@ import { smoothScrollTo } from "@/components/smooth-scroll";
 
 const SECTIONS = [
   { id: "home" },
-  { id: "stack" },
-  { id: "proof" },
-  { id: "experience" },
+  { id: "review" },
   { id: "offer" },
+  { id: "experience" },
   { id: "contact" },
 ];
 
