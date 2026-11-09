@@ -16,7 +16,8 @@ The site sells polishing vibecoded apps. English lives at `/`, Indonesian at `/i
 
 - **Home** (`components/home/portfolio-page.tsx`): `ReviewStory` (`components/home/review-story.tsx`), one pinned scroll story: hello, a vibecoded dashboard, feedback, handoff, then a composer with geo-priced plans. `ChatDialog` opens from any composer.
 - **Sub-pages** (`components/layout/sub-page.tsx`): `/about`, `/work`, `/contact` and the case study `/work/rantai` (`components/case-study/case-study-page.tsx`, with the live before/after demo in `rantai-live.tsx` and `rantai-panorama.tsx`). Each ends with a composer (`AskBox`), "Or look around first" links and the wordmark footer; Contact is just the composer.
-- **Rail** (`components/layout/rail-nav.tsx`): navigation on every page, one tick per section; the avatar opens pages, theme and language.
+- **Rail** (`components/layout/rail-nav.tsx`): navigation on every page. With a mouse (`side`), one tick per section on the left and the avatar opens pages, theme and language in hover cards. On touch (`bar`: phones and tablets, by pointer type, not width) it is a bottom bar: sections button, current section, avatar, each opening a sheet (`components/ui/sheet.tsx`).
+- **Touch**: the `bar`, `side` and `tablet` variants live in `app/globals.css` (`BAR_QUERY` in `lib/touch.ts` for JS). Touch targets are at least 44px; hover cards that must work on touch use `useTapOpen`.
 
 Components by feature: `home/`, `case-study/`, `chat/` (composer and dialog), `layout/` (shell, rail, footer, scroll), `shared/` (used across features), `ui/` (shadcn primitives). Heavy client parts have a `*-lazy.tsx` wrapper that loads them after the first paint.
 

@@ -21,10 +21,10 @@ export function CaseStudyPage({ locale }: { locale: Locale }) {
         <h1 className="text-2xl font-semibold tracking-tight text-balance md:text-3xl">
           {copy.title}
         </h1>
-        <p className="text-muted-foreground text-sm leading-relaxed md:text-base">
+        <p className="text-muted-foreground text-[15px] leading-relaxed md:text-base">
           {copy.description}
         </p>
-        <dl className="mt-2 flex flex-wrap gap-x-8 gap-y-2 text-xs">
+        <dl className="side:text-xs mt-2 flex flex-wrap gap-x-8 gap-y-2 text-[13px]">
           {copy.meta.map(([term, value]) => (
             <div key={term}>
               <dt className="text-muted-foreground">{term}</dt>
@@ -52,10 +52,12 @@ export function CaseStudyPage({ locale }: { locale: Locale }) {
 
       {copy.shots.map((shot) => (
         <figure key={shot.name} className="flex flex-col gap-3">
-          <figcaption className="text-sm font-semibold">{shot.name}</figcaption>
+          <figcaption className="side:text-sm text-[15px] font-semibold">
+            {shot.name}
+          </figcaption>
           {(["before", "after"] as const).map((side) => (
             <div key={side} className="flex flex-col gap-1.5">
-              <span className="text-muted-foreground text-xs">
+              <span className="text-muted-foreground side:text-xs text-[13px]">
                 {copy[side]}
               </span>
               <Image
@@ -63,7 +65,7 @@ export function CaseStudyPage({ locale }: { locale: Locale }) {
                 alt={`${shot.name}, ${copy[side]}`}
                 width={1200}
                 height={750}
-                sizes="(min-width: 768px) 576px, 100vw"
+                sizes="(min-width: 768px) 640px, 100vw"
                 className="border-border/80 w-full rounded-lg border"
               />
             </div>
@@ -83,13 +85,13 @@ export function CaseStudyPage({ locale }: { locale: Locale }) {
           {section.body?.map((p) => (
             <p
               key={p}
-              className="text-muted-foreground text-sm leading-relaxed md:text-base"
+              className="text-muted-foreground text-[15px] leading-relaxed md:text-base"
             >
               {p}
             </p>
           ))}
           {section.list && (
-            <ul className="text-muted-foreground flex list-disc flex-col gap-2 pl-5 text-sm leading-relaxed marker:text-current/40 md:text-base">
+            <ul className="text-muted-foreground flex list-disc flex-col gap-2 pl-5 text-[15px] leading-relaxed marker:text-current/40 md:text-base">
               {section.list.map((item) => (
                 <li key={item}>{item}</li>
               ))}
@@ -104,7 +106,10 @@ export function CaseStudyPage({ locale }: { locale: Locale }) {
         </h2>
         <ul className="flex flex-wrap gap-2">
           {copy.stack.map((tech) => (
-            <li key={tech} className="bg-muted rounded-full px-3 py-1 text-xs">
+            <li
+              key={tech}
+              className="bg-muted side:py-1 side:text-xs rounded-full px-3 py-1.5 text-[13px]"
+            >
               {tech}
             </li>
           ))}

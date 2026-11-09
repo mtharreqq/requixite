@@ -2,6 +2,24 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+/* Touch first vs mouse first. `bar`: phones and anything you touch (iPad
+   too): the bottom bar, sheets, thumb-sized targets. `side`: a wide screen
+   with a mouse: the side rail and hover cards. `tablet`: touch, but wide. */
+@custom-variant bar {
+  @media (max-width: 767px), (pointer: coarse), (pointer: none) {
+    @slot;
+  }
+}
+@custom-variant side {
+  @media (min-width: 768px) and (pointer: fine) {
+    @slot;
+  }
+}
+@custom-variant tablet {
+  @media (min-width: 768px) and (pointer: coarse) {
+    @slot;
+  }
+}
 
 @keyframes portfolio-focus {
   from {
@@ -183,6 +201,12 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    /* Taps answer with their own pressed states, not the grey flash. */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
   body {
     @apply bg-background text-foreground;
   }
@@ -254,6 +278,17 @@
 /* Motion measures sticky targets relative to the document root. */
 html {
   position: relative;
+}
+
+/* The home story's stage: room for the chat and dashboard under the caption.
+   A touch tablet is tall and has no side rail, so the stage gets more of it. */
+:root {
+  --stage-h: min(36rem, 100svh - 12rem);
+}
+@media (min-width: 768px) and (pointer: coarse) {
+  :root {
+    --stage-h: min(52rem, 100svh - 15rem);
+  }
 }
 
 /* Radix measures the actual content: opening and closing both preserve layout. */
@@ -472,6 +507,50 @@ html {
 }
 .composer-chip:hover {
   background: var(--muted);
+}
+/* Touch: thumb-sized controls. The send button and chips grow a little and
+   an invisible halo takes each target to 44px; inline links (.tap-area)
+   keep their look and only get the halo. Matches the `bar` variant. */
+@media (max-width: 767px), (pointer: coarse), (pointer: none) {
+  .composer-icon,
+  .composer-send {
+    width: 36px;
+    height: 36px;
+  }
+  .composer-send,
+  .composer-chip,
+  .tap-area {
+    position: relative;
+  }
+  .composer-send::before,
+  .composer-chip::before,
+  .tap-area::before {
+    content: "";
+    position: absolute;
+    border-radius: inherit;
+  }
+  .composer-send::before {
+    inset: -4px;
+  }
+  .composer-chip {
+    height: 40px;
+    padding: 0 14px;
+    font-size: 14px;
+  }
+  .composer-chip::before {
+    inset: -2px;
+  }
+  .tap-area::before {
+    inset: -12px -6px;
+  }
+  /* Pressed, since there is no hover to answer a tap. */
+  .composer-chip:active,
+  .composer-tool:active {
+    background: var(--muted);
+  }
+  .composer-send:not(:disabled):active {
+    scale: 0.92;
+  }
 }
 /* Page links: no outline until hovered. */
 .composer-chip-ghost {

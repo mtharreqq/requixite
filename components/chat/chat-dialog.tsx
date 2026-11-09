@@ -256,13 +256,13 @@ function Composer({
             send();
           }
         }}
-        className="bg-muted placeholder:text-muted-foreground focus-visible:ring-ring/40 max-h-32 min-h-9 flex-1 resize-none rounded-[18px] px-3.5 py-[7px] text-base leading-snug outline-none focus-visible:ring-2 sm:py-2 sm:text-sm"
+        className="bg-muted placeholder:text-muted-foreground focus-visible:ring-ring/40 bar:min-h-11 bar:py-[10px] side:py-2 side:text-sm max-h-32 min-h-9 flex-1 resize-none rounded-[18px] px-3.5 py-[7px] text-base leading-snug outline-none focus-visible:ring-2"
       />
       <button
         type="submit"
         disabled={empty}
         aria-label={copy.send}
-        className="tactile-control bg-foreground text-background grid size-9 shrink-0 place-items-center rounded-full transition-opacity hover:opacity-85 disabled:opacity-30"
+        className="tactile-control bg-foreground text-background bar:size-11 grid size-9 shrink-0 place-items-center rounded-full transition-opacity hover:opacity-85 disabled:opacity-30"
       >
         <ArrowUp className="size-4" />
       </button>
@@ -303,7 +303,12 @@ export function ChatDialog({ copy }: { copy: ChatCopy }) {
     >
       <Dialog.Portal>
         <Dialog.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/30 backdrop-blur-[2px]" />
-        <Dialog.Content className="bg-popover text-popover-foreground border-border/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 fixed top-1/2 left-1/2 z-50 flex max-h-[min(36rem,calc(100svh-2rem))] w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[22px] border shadow-2xl">
+        <Dialog.Content className="bg-popover text-popover-foreground border-border/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 bar:top-auto bar:bottom-0 bar:max-h-[85svh] bar:w-full bar:max-w-lg bar:translate-y-0 bar:rounded-b-none bar:rounded-t-[28px] bar:border-b-0 bar:pb-[env(safe-area-inset-bottom)] bar:duration-300 bar:data-[state=closed]:zoom-out-100 bar:data-[state=closed]:slide-out-to-bottom bar:data-[state=open]:zoom-in-100 bar:data-[state=open]:slide-in-from-bottom fixed top-1/2 left-1/2 z-50 flex max-h-[min(36rem,calc(100svh-2rem))] w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[22px] border shadow-2xl">
+          {/* Touch: it opens as a sheet; the handle says so. */}
+          <span
+            aria-hidden
+            className="bg-muted-foreground/30 side:hidden mx-auto mt-2.5 -mb-1 h-1 w-9 shrink-0 rounded-full"
+          />
           <header className="border-border/60 flex items-center gap-3 border-b px-4 py-3">
             <Avatar />
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
@@ -317,7 +322,7 @@ export function ChatDialog({ copy }: { copy: ChatCopy }) {
             </div>
             <Dialog.Close
               aria-label={copy.close}
-              className="text-muted-foreground hover:text-foreground hover:bg-muted -mr-1.5 rounded-full p-1.5 transition-colors"
+              className="text-muted-foreground hover:text-foreground hover:bg-muted active:bg-muted bar:-mr-2.5 bar:p-2.5 -mr-1.5 rounded-full p-1.5 transition-colors"
             >
               <X className="size-4" />
             </Dialog.Close>

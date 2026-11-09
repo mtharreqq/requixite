@@ -298,7 +298,7 @@ const english = {
       theme: "Theme",
       light: "Light",
       dark: "Dark",
-      system: "Match system",
+      system: "System",
     },
   },
 };
@@ -596,7 +596,7 @@ const indonesian: PortfolioCopy = {
       theme: "Tema",
       light: "Terang",
       dark: "Gelap",
-      system: "Ikut sistem",
+      system: "Sistem",
     },
   },
 };

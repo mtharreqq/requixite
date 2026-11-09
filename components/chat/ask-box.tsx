@@ -8,6 +8,12 @@ import {
   type PortfolioCopy,
 } from "@/lib/portfolio-copy";
 import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+  useTapOpen,
+} from "@/components/ui/hover-card";
+import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -70,29 +76,40 @@ export function Send({
  * centered on phones. */
 export function Foot({ offer, contact }: { offer: Offer; contact: Contact }) {
   return (
-    <div className="mt-2 flex flex-col items-center gap-2 px-1 text-xs md:flex-row md:items-baseline md:justify-between md:gap-4">
+    <div className="bar:gap-3 bar:text-[13px] mt-2 flex flex-col items-center gap-2 px-1 text-xs md:flex-row md:items-baseline md:justify-between md:gap-4">
       <Note offer={offer} />
       <FooterMeta copy={contact} />
     </div>
   );
 }
 
-/** "Human, can make mistakes", with the fine print on hover. */
+/** "Human, can make mistakes", with the fine print on hover, or a tap. */
 function Note({ offer }: { offer: Offer }) {
+  const note = useTapOpen();
   return (
-    <Tooltip delayDuration={600}>
-      <TooltipTrigger asChild>
+    <HoverCard
+      open={note.open}
+      onOpenChange={note.onOpenChange}
+      openDelay={600}
+      closeDelay={100}
+    >
+      <HoverCardTrigger asChild>
         <button
           type="button"
-          className="text-muted-foreground hover:text-foreground cursor-help decoration-dotted underline-offset-4 transition-colors hover:underline focus-visible:underline"
+          className="tap-area text-muted-foreground hover:text-foreground cursor-help decoration-dotted underline-offset-4 transition-colors hover:underline focus-visible:underline"
+          {...note.tap}
         >
           {offer.note}
         </button>
-      </TooltipTrigger>
-      <TooltipContent sideOffset={6} className="max-w-64 text-balance">
+      </HoverCardTrigger>
+      <HoverCardContent
+        side="top"
+        sideOffset={6}
+        className="bg-foreground text-background max-w-64 rounded-md border-0 px-3 py-1.5 text-xs text-balance"
+      >
         {offer.noteTip}
-      </TooltipContent>
-    </Tooltip>
+      </HoverCardContent>
+    </HoverCard>
   );
 }
 

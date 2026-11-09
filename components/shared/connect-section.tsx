@@ -4,6 +4,7 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
+  useTapOpen,
 } from "@/components/ui/hover-card";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import { useEffect, useRef, useState } from "react";
@@ -81,7 +82,7 @@ function useCopyEmail() {
 export function ContactIcons({ copy }: { copy: PortfolioCopy["contact"] }) {
   const { copied, copyError, handleCopy } = useCopyEmail();
   const icon =
-    "composer-tool grid size-[30px] cursor-pointer place-items-center rounded-full transition-colors";
+    "composer-tool grid size-[30px] cursor-pointer place-items-center rounded-full transition-colors bar:relative bar:size-9 bar:before:absolute bar:before:-inset-1 bar:before:rounded-full";
   const items = [
     {
       label: copied ? copy.copied : copy.copy,
@@ -154,13 +155,25 @@ export function FooterMeta({ copy }: { copy: PortfolioCopy["contact"] }) {
   const card =
     "bg-popover/95 border-border/80 text-muted-foreground rounded-lg p-4 text-xs leading-relaxed shadow-xl backdrop-blur-md";
   const trigger =
-    "hover:text-foreground decoration-muted-foreground/40 cursor-pointer underline decoration-dotted underline-offset-4 transition-colors";
+    "tap-area hover:text-foreground decoration-muted-foreground/40 cursor-pointer underline decoration-dotted underline-offset-4 transition-colors";
+  const name = useTapOpen();
+  const version = useTapOpen();
   return (
-    <p className="text-muted-foreground text-xs">
+    <p className="text-muted-foreground bar:text-[13px] text-xs">
       © {new Date().getFullYear()}{" "}
-      <HoverCard openDelay={120} closeDelay={150}>
+      <HoverCard
+        open={name.open}
+        onOpenChange={name.onOpenChange}
+        openDelay={120}
+        closeDelay={150}
+      >
         <HoverCardTrigger asChild>
-          <button type="button" aria-label={copy.aboutName} className={trigger}>
+          <button
+            type="button"
+            aria-label={copy.aboutName}
+            className={trigger}
+            {...name.tap}
+          >
             Requixite
           </button>
         </HoverCardTrigger>
@@ -172,9 +185,14 @@ export function FooterMeta({ copy }: { copy: PortfolioCopy["contact"] }) {
         </HoverCardContent>
       </HoverCard>
       {" • "}
-      <HoverCard openDelay={120} closeDelay={150}>
+      <HoverCard
+        open={version.open}
+        onOpenChange={version.onOpenChange}
+        openDelay={120}
+        closeDelay={150}
+      >
         <HoverCardTrigger asChild>
-          <button type="button" className={trigger}>
+          <button type="button" className={trigger} {...version.tap}>
             v{process.env.NEXT_PUBLIC_VERSION}
           </button>
         </HoverCardTrigger>
@@ -205,7 +223,7 @@ export function FooterMeta({ copy }: { copy: PortfolioCopy["contact"] }) {
             rel="noopener noreferrer"
             aria-label={copy.source}
             title={copy.source}
-            className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-md p-1.5 transition-colors"
+            className="text-muted-foreground hover:text-foreground hover:bg-muted active:bg-muted bar:p-2.5 rounded-md p-1.5 transition-colors"
           >
             <GithubSvg className="size-4" />
           </a>

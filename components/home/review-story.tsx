@@ -49,6 +49,7 @@ import { jumpTo, smoothScrollTo } from "@/components/layout/smooth-scroll";
 import { ContactIcons } from "@/components/shared/connect-section";
 import { Foot, Send, useDraft } from "@/components/chat/ask-box";
 import { cn } from "@/lib/utils";
+import { BAR_QUERY } from "@/lib/touch";
 import {
   HoverCard,
   HoverCardContent,
@@ -75,6 +76,9 @@ const spring = { type: "spring", stiffness: 260, damping: 30 } as const;
 const morph = { duration: 0.7, ease: EASE };
 // The dashboard first shows as a small card in the chat.
 const PREVIEW = 0.55;
+// A touch tablet has the room: the card can come in bigger.
+const PREVIEW_TABLET = 0.8;
+const TABLET = "(min-width: 768px) and (pointer: coarse)";
 const PAD = 8;
 const cursorSpring = { type: "spring", stiffness: 140, damping: 22 } as const;
 const clamp = (v: number, a: number, b: number) =>
@@ -264,6 +268,8 @@ const country = () => document.cookie.match(/(?:^|; )country=([A-Z]{2})/)?.[1];
 const noop = () => () => {};
 
 const STILL = "(prefers-reduced-motion: reduce), (max-height: 600px)";
+// Gap between the docked composer and the touch bottom bar.
+const BAR_GAP = 24;
 /** Reduced motion or a short screen: show the finished state, unpinned. */
 function useStill() {
   return useSyncExternalStore(
@@ -1039,16 +1045,23 @@ function Cursor({
 function Answer({
   copy,
   p,
+  fit,
   onSettle,
 }: {
   copy: Copy;
   p: P;
+  /** Shrink the preview card to the room the stage leaves it. */
+  fit: boolean;
   onSettle: () => void;
 }) {
   const root = useRef<HTMLDivElement>(null);
   const dash = useRef<HTMLDivElement>(null);
+  const chat = useRef<HTMLDivElement>(null);
   const bubble = useRef<HTMLParagraphElement>(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
+  // Height left for the preview card under the chat, 0 when unconstrained.
+  const [room, setRoom] = useState(0);
+  const [cap, setCap] = useState(PREVIEW);
   // Sent: your prompt rises straight up from where you typed it.
   useLayoutEffect(() => {
     const b = bubble.current;
@@ -1062,13 +1075,19 @@ function Answer({
     const r = root.current;
     const d = dash.current;
     if (!r || !d) return;
-    const ro = new ResizeObserver(() =>
-      setSize({ w: r.offsetWidth, h: d.offsetHeight }),
-    );
+    const box = r.parentElement;
+    const c = chat.current;
+    const ro = new ResizeObserver(() => {
+      setSize({ w: r.offsetWidth, h: d.offsetHeight });
+      setRoom(fit && box && c ? box.clientHeight - c.offsetHeight : 0);
+      setCap(matchMedia(TABLET).matches ? PREVIEW_TABLET : PREVIEW);
+    });
     ro.observe(r);
     ro.observe(d);
+    if (box) ro.observe(box);
+    if (c) ro.observe(c);
     return () => ro.disconnect();
-  }, []);
+  }, [fit]);
   const built = useBeat(p, (v) => v > BUILT, settle);
   const polished = useBeat(p, (v) => v > FIXALL, settle);
   const commenting = useBeat(p, (v) => v > MAIN_AT[0] - 0.01, settle);
@@ -1128,12 +1147,17 @@ function Answer({
   };
 
   const fold = { duration: 0.6, ease: EASE };
-  // The small preview card zooms into the full dashboard.
+  // The small preview card zooms into the full dashboard. On a short screen
+  // it shrinks further, so it never runs into the composer below.
+  const preview =
+    room > 0 && size.h
+      ? Math.min(cap, Math.max(0.3, (room - 2 * PAD) / size.h))
+      : PREVIEW;
   const card = focus
     ? { width: size.w, height: "auto", padding: 0 }
     : {
-        width: size.w * PREVIEW + 2 * PAD,
-        height: size.h * PREVIEW + 2 * PAD,
+        width: size.w * preview + 2 * PAD,
+        height: size.h * preview + 2 * PAD,
         padding: PAD,
       };
 
@@ -1149,7 +1173,10 @@ function Answer({
         style={{ overflow: focus ? "hidden" : "visible" }}
         onAnimationComplete={onSettle}
       >
-        <div className="flex flex-col gap-3 pb-3 text-sm">
+        <div
+          ref={chat}
+          className="tablet:text-base flex flex-col gap-3 pb-3 text-sm"
+        >
           <p
             ref={bubble}
             className="bg-foreground text-background ml-auto w-fit max-w-[85%] rounded-[18px] rounded-br-md px-3.5 py-2 leading-snug"
@@ -1169,7 +1196,7 @@ function Answer({
               <m.p
                 key={label}
                 {...rise}
-                className="text-muted-foreground flex items-center gap-2 pl-6 text-xs"
+                className="text-muted-foreground tablet:text-sm flex items-center gap-2 pl-6 text-xs"
               >
                 {i < step - 1 ? (
                   <Check className="size-3.5" />
@@ -1221,7 +1248,7 @@ function Answer({
         >
           <m.div
             initial={false}
-            animate={{ scale: focus ? 1 : PREVIEW }}
+            animate={{ scale: focus ? 1 : preview }}
             transition={fold}
             style={{ width: size.w || "100%", originX: 0, originY: 0 }}
           >
@@ -1275,6 +1302,41 @@ function Stage({
   useMotionValueEvent(p, "change", read);
   useLayoutEffect(() => read(p.get()));
 
+  // Touch, while docked: the stage reaches down to the bottom bar, so the
+  // composer sits at the very bottom and the chat gets the room. A matching
+  // negative margin keeps the stage's spot, so nothing above it moves.
+  const [reach, setReach] = useState(0);
+  const reachNow = useRef(0);
+  useLayoutEffect(() => {
+    const s = stage.current;
+    const pin = s?.offsetParent as HTMLElement | null;
+    if (!s || !pin || still) return;
+    const touch = matchMedia(BAR_QUERY);
+    const measure = () => {
+      const top = offsetIn(s, pin)?.y ?? 0;
+      const base = s.offsetHeight - reachNow.current;
+      // The bar's own top edge, safe-area inset included.
+      const bar = document.querySelector("[data-bottom-bar]");
+      const room = bar
+        ? innerHeight - bar.getBoundingClientRect().top + BAR_GAP
+        : 0;
+      const next =
+        touch.matches && mode === "dock" && room
+          ? Math.max(0, Math.round(pin.offsetHeight - room - top - base))
+          : 0;
+      reachNow.current = next;
+      setReach(next);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(pin);
+    touch.addEventListener("change", measure);
+    return () => {
+      ro.disconnect();
+      touch.removeEventListener("change", measure);
+    };
+  }, [mode, still]);
+
   const selOn = sel >= 0;
   // The popover sits on its pin and your cursor aims at real elements,
   // measured once per target.
@@ -1290,7 +1352,7 @@ function Stage({
       w: root.offsetWidth,
       h: root.offsetHeight,
     });
-  }, [act, selOn, mode, tick]);
+  }, [act, selOn, mode, tick, reach]);
   const d = box.dash;
   const drag = Math.min(1, sel);
   const youAt: Point =
@@ -1314,9 +1376,17 @@ function Stage({
       aria-hidden={mode === "big" || mode === "dock"}
       className={cn(
         "relative flex flex-col gap-4",
-        !still && mode !== "cta" && "h-[min(36rem,calc(100svh-12rem))]",
+        !still && mode !== "cta" && "h-(--stage-h)",
         mode === "dock" ? "justify-between" : "justify-center",
       )}
+      style={
+        reach
+          ? {
+              height: `calc(var(--stage-h) + ${reach}px)`,
+              marginBottom: -reach,
+            }
+          : undefined
+      }
     >
       <AnimatePresence mode="popLayout" initial={false}>
         {(mode === "dock" || still) && (
@@ -1335,7 +1405,12 @@ function Stage({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Answer copy={copy} p={p} onSettle={() => setTick((t) => t + 1)} />
+            <Answer
+              copy={copy}
+              p={p}
+              fit={!still}
+              onSettle={() => setTick((t) => t + 1)}
+            />
           </m.div>
         )}
       </AnimatePresence>
@@ -1722,7 +1797,7 @@ export function ReviewStory({
   const captionY = useTransform(
     p,
     (v): string =>
-      `calc(${1 - ease(clamp(v, GROW[0], GROW[1]))} * (min(36rem, 100svh - 12rem) + 24px) / 2)`,
+      `calc(${1 - ease(clamp(v, GROW[0], GROW[1]))} * (var(--stage-h) + 24px) / 2)`,
   );
 
   return (

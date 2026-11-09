@@ -41,4 +41,25 @@ function HoverCardContent({
   );
 }
 
-export { HoverCard, HoverCardTrigger, HoverCardContent };
+/**
+ * Hover cards have no hover on a touch screen, so a tap opens (or closes) the
+ * card instead. Spread `tap` on the trigger and pass `open`/`onOpenChange` to
+ * the HoverCard; the mouse keeps its hover.
+ */
+function useTapOpen() {
+  const [open, setOpen] = React.useState(false);
+  // Read at pointerdown: tapping the trigger of an open card also counts as
+  // a tap outside it, which closes it first.
+  const was = React.useRef(false);
+  const tap = {
+    onPointerDown: (e: React.PointerEvent) => {
+      if (e.pointerType !== "mouse") was.current = open;
+    },
+    onPointerUp: (e: React.PointerEvent) => {
+      if (e.pointerType !== "mouse") setOpen(!was.current);
+    },
+  };
+  return { open, onOpenChange: setOpen, tap };
+}
+
+export { HoverCard, HoverCardTrigger, HoverCardContent, useTapOpen };
