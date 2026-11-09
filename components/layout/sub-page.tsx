@@ -79,7 +79,7 @@ export function SubPage({
   const ask = copy.review.cta.pages[path] ?? copy.review.cta;
   return (
     <PortfolioMotion className="bg-background text-foreground selection:bg-foreground selection:text-background flex min-h-screen w-full justify-center overflow-x-clip">
-      <main className="tablet:max-w-2xl tablet:px-8 tablet:pb-[calc(6rem+env(safe-area-inset-bottom))] tablet:pt-20 flex w-full max-w-lg flex-col gap-y-14 px-4 pt-10 pb-[calc(5rem+env(safe-area-inset-bottom))] md:max-w-xl md:gap-y-16 md:px-4 md:pt-14 md:pb-0">
+      <main className="tablet:max-w-2xl tablet:px-8 tablet:pb-[calc(2rem+env(safe-area-inset-bottom))] bar:pt-[calc(max(env(safe-area-inset-top),12px)+4.5rem)] flex w-full max-w-lg flex-col gap-y-14 px-4 pt-10 pb-[calc(2rem+env(safe-area-inset-bottom))] md:max-w-xl md:gap-y-16 md:px-4 md:pt-14 md:pb-0">
         {children}
         {!bare && (
           <>
