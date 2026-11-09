@@ -26,12 +26,14 @@ function Suggestions({ locale, path }: { locale: Locale; path: string }) {
     ["", skip.home, skip.homeTip],
     ["/about", skip.about, skip.aboutTip],
     ["/work", skip.work, skip.workTip],
-    ["/work/rantai", skip.caseStudy, skip.caseStudyTip],
     ["/contact", skip.contact, skip.contactTip],
   ];
-  const at = all.findIndex(([p]) => p === path);
+  // Case studies count as Work (they live in its list), so Work stays on.
+  const at = all.findIndex(([p]) => p && (path + "/").startsWith(p + "/"));
   // Start at the next page and wrap, skipping this one.
-  const pages = [...all.slice(at + 1), ...all.slice(0, at)];
+  const pages = [...all.slice(at + 1), ...all.slice(0, at + 1)].filter(
+    ([p]) => p !== path,
+  );
   return (
     <nav
       aria-label={skip.next}

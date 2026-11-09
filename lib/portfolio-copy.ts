@@ -140,8 +140,6 @@ export const english = {
       next: "Keep looking",
       home: "The story",
       homeTip: "Back to the vibecoded app",
-      caseStudy: "Case study",
-      caseStudyTip: "How rantai.dev got finished",
     },
     float: {
       label: "Ask Tharreq anything",
@@ -442,8 +440,6 @@ export const indonesian: PortfolioCopy = {
       next: "Lihat yang lain",
       home: "Ceritanya",
       homeTip: "Balik ke aplikasi vibecoded tadi",
-      caseStudy: "Studi kasus",
-      caseStudyTip: "Gimana rantai.dev dirapikan",
     },
     float: {
       label: "Tanya Tharreq apa saja",
