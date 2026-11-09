@@ -836,41 +836,19 @@ function Note({ offer }: { offer: Offer }) {
   );
 }
 
-/** The story's last composer on its own, for the contact page. */
+/** The story's last composer on its own, without the plans: the sub-pages
+ * and the contact page. */
 export function AskBox({ locale }: { locale: Locale }) {
   const { review: copy, offer, contact } = getPortfolioCopy(locale);
-  const prices = usePrices(locale);
-  const field = useRef<HTMLTextAreaElement>(null);
   const { text, setText, send, onKeyDown } = useDraft();
-  const pick = (name: string) => {
-    const draft = offer.ask.replace("{plan}", name);
-    setText(draft);
-    requestAnimationFrame(() => {
-      field.current?.focus();
-      field.current?.setSelectionRange(draft.length, draft.length);
-    });
-  };
   return (
     <div>
-      <div className="-mx-1 mb-1 flex flex-wrap gap-1.5 p-1">
-        {offer.plans.map((pl, i) => (
-          <PlanChip
-            key={pl.name}
-            index={i}
-            plan={pl}
-            price={prices[i] ? `${offer.from} ${prices[i]}` : offer.free}
-            onPick={() => pick(pl.name)}
-            enter={{}}
-          />
-        ))}
-      </div>
       <div className="composer" data-mode="cta" style={{ borderRadius: 22 }}>
         <div className="composer-body">
           <label htmlFor="contact-ask" className="sr-only">
             {copy.cta.title}
           </label>
           <textarea
-            ref={field}
             id="contact-ask"
             rows={2}
             value={text}
