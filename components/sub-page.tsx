@@ -17,7 +17,7 @@ import {
   SectionReveal,
 } from "@/components/salmoon/portfolio-motion";
 
-/** The other pages, minus this one, before the contact card. */
+/** The other pages, minus this one, before the closing composer. */
 function Suggestions({ locale, path }: { locale: Locale; path: string }) {
   const { skip } = getPortfolioCopy(locale).review;
   const base = locale === "id" ? "/id" : "";
@@ -29,7 +29,7 @@ function Suggestions({ locale, path }: { locale: Locale; path: string }) {
     ["/contact", skip.contact, skip.contactTip],
   ].filter(([p]) => p !== path);
   return (
-    <nav id="more" className="flex flex-col items-center gap-3">
+    <nav className="flex flex-col items-center gap-3">
       <p className="text-muted-foreground text-sm">{skip.next}</p>
       <div className="flex flex-wrap justify-center gap-1.5">
         {pages.map(([p, label, tip]) => (
@@ -48,7 +48,7 @@ function Suggestions({ locale, path }: { locale: Locale; path: string }) {
 }
 
 /** About, Work and case studies: their own page, same column, then other
- * pages to try, the contact card and the footer. */
+ * pages to try, the story's closing composer and the footer. */
 export function SubPage({
   locale,
   path,
@@ -62,28 +62,40 @@ export function SubPage({
   children: React.ReactNode;
 }) {
   const copy = getPortfolioCopy(locale);
+  // The contact page is only its composer: nothing to scroll to.
+  const bare = path === "/contact";
   return (
     <PortfolioMotion className="bg-background text-foreground selection:bg-foreground selection:text-background flex min-h-screen w-full justify-center overflow-x-clip">
       <main className="flex w-full max-w-lg flex-col gap-y-14 pt-10 pr-4 pl-10 md:max-w-xl md:gap-y-16 md:px-4 md:pt-14">
         {children}
-        <Suggestions locale={locale} path={path} />
-        {/* Short pages push the footer to the bottom of the screen. */}
-        <div className="mt-auto">
-          <SectionReveal>
-            <ConnectSection copy={copy.contact} card={path !== "/contact"} />
-          </SectionReveal>
-        </div>
+        {!bare && (
+          <>
+            <Suggestions locale={locale} path={path} />
+            <SectionReveal>
+              <section id="contact" className="flex flex-col gap-5">
+                <h2 className="text-xl leading-tight font-medium tracking-[-0.03em] md:text-2xl">
+                  {copy.review.cta.title}
+                </h2>
+                <AskBox locale={locale} />
+              </section>
+            </SectionReveal>
+            {/* Short pages push the footer to the bottom of the screen. */}
+            <div className="mt-auto">
+              <ConnectSection copy={copy.contact} />
+            </div>
+          </>
+        )}
       </main>
+      <ChatDialog copy={copy.hero.chat} />
       <RailNav
         copy={copy.rail}
         locale={locale}
         path={path}
-        sections={[
-          ...sections,
-          path === "/contact"
-            ? { id: "more", label: copy.review.skip.next }
-            : { id: "contact", label: copy.rail.contact },
-        ]}
+        sections={
+          bare
+            ? sections
+            : [...sections, { id: "contact", label: copy.rail.contact }]
+        }
       />
     </PortfolioMotion>
   );
@@ -132,7 +144,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
         id="intro"
         className="flex min-h-[calc(100svh-2.5rem)] flex-col justify-center gap-8 md:min-h-[calc(100svh-3.5rem)]"
       >
-        <header className="flex flex-col gap-3 text-center text-balance">
+        <header className="flex flex-col gap-3">
           <h1 className="text-[clamp(24px,4.8vw,36px)] leading-tight font-medium tracking-[-0.04em]">
             {copy.review.cta.title}
           </h1>
@@ -142,7 +154,6 @@ export function ContactPage({ locale }: { locale: Locale }) {
         </header>
         <AskBox locale={locale} />
       </section>
-      <ChatDialog copy={copy.hero.chat} />
     </SubPage>
   );
 }
