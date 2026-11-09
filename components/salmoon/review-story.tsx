@@ -1575,7 +1575,7 @@ function Shortcuts({
           <button
             type="button"
             onClick={() => jumpTo(0)}
-            className="composer-chip inline-flex items-center gap-1.5"
+            className="composer-chip composer-chip-ghost inline-flex items-center gap-1.5"
           >
             <ArrowUp aria-hidden className="size-3" />
             {copy.skip.top}
