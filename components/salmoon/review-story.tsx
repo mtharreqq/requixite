@@ -51,7 +51,7 @@ import {
 import { openChat } from "@/lib/chat-events";
 import { SplitReveal } from "@/components/salmoon/split-reveal";
 import { jumpTo, smoothScrollTo } from "@/components/smooth-scroll";
-import { ContactIcons } from "@/components/salmoon/connect-section";
+import { ContactIcons, FooterMeta } from "@/components/salmoon/connect-section";
 import { cn } from "@/lib/utils";
 import {
   HoverCard,
@@ -887,9 +887,10 @@ export function AskBox({ locale }: { locale: Locale }) {
           </span>
         </div>
       </div>
-      <p className="mt-2 px-1 text-xs">
+      <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 px-1 text-xs">
         <Note offer={offer} />
-      </p>
+        <FooterMeta copy={contact} />
+      </div>
     </div>
   );
 }

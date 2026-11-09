@@ -7,14 +7,13 @@ import {
 } from "@/components/ui/hover-card";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import { useEffect, useRef, useState } from "react";
-import { Check, Copy, Mail } from "lucide-react";
+import { ArrowUpRight, Check, Copy, Mail } from "lucide-react";
 import {
   GithubSvg,
   InstagramSvg,
   LinkedinSvg,
   XSvg,
 } from "@/components/dock-icons";
-import { FooterWordmark } from "@/components/salmoon/footer-wordmark";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import {
   TooltipContent,
@@ -135,68 +134,64 @@ export function ContactIcons({ copy }: { copy: PortfolioCopy["contact"] }) {
   );
 }
 
-/** The footer, for the pages without the story. */
-export function ConnectSection({ copy }: { copy: PortfolioCopy["contact"] }) {
+/** "© 2026 Requixite • v0.8.1": the name opens its meaning, the version
+ * opens when the site was last updated and its source. */
+export function FooterMeta({ copy }: { copy: PortfolioCopy["contact"] }) {
+  const card =
+    "bg-popover/95 border-border/80 text-muted-foreground rounded-lg p-4 text-xs leading-relaxed shadow-xl backdrop-blur-md";
+  const trigger =
+    "hover:text-foreground decoration-muted-foreground/40 cursor-pointer underline decoration-dotted underline-offset-4 transition-colors";
   return (
-    <section className="w-full">
-      {/* One row: brand left, version right. The name opens its meaning. */}
-      <footer className="text-muted-foreground text-[11px] leading-relaxed">
-        <div className="flex flex-col items-center gap-1 sm:flex-row sm:justify-between">
-          <p>
-            © {new Date().getFullYear()}{" "}
-            <HoverCard openDelay={120} closeDelay={150}>
-              <HoverCardTrigger asChild>
-                <button
-                  type="button"
-                  aria-label={copy.aboutName}
-                  className="hover:text-foreground decoration-muted-foreground/40 cursor-pointer underline decoration-dotted underline-offset-4 transition-colors"
-                >
-                  Requixite
-                </button>
-              </HoverCardTrigger>
-              <HoverCardContent
-                side="top"
-                sideOffset={8}
-                className="bg-popover/95 border-border/80 text-muted-foreground w-72 rounded-lg p-4 text-xs leading-relaxed shadow-xl backdrop-blur-md"
-              >
-                <p className="text-foreground mb-1 font-medium">
-                  Precise. Exquisite. Requisite.
-                </p>
-                {copy.nameMeaning}
-              </HoverCardContent>
-            </HoverCard>
-            {` • ${copy.made}`}
+    <p className="text-muted-foreground text-xs">
+      © {new Date().getFullYear()}{" "}
+      <HoverCard openDelay={120} closeDelay={150}>
+        <HoverCardTrigger asChild>
+          <button type="button" aria-label={copy.aboutName} className={trigger}>
+            Requixite
+          </button>
+        </HoverCardTrigger>
+        <HoverCardContent side="top" sideOffset={8} className={`${card} w-72`}>
+          <p className="text-foreground mb-1 font-medium">
+            Precise. Exquisite. Requisite.
           </p>
-          {/* Version and last deploy, so it's clear the site is still kept up. */}
-          <p>
-            <a
-              href={`${REPO}/commits/main`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-foreground transition-colors"
-            >
-              v{process.env.NEXT_PUBLIC_VERSION}
-              {updated &&
-                ` • ${copy.updated} ${new Intl.DateTimeFormat(copy.dateLocale, { dateStyle: "medium", timeZone: "Asia/Jakarta" }).format(new Date(updated))}`}
-            </a>
-            {" • "}
-            <a
-              href={REPO}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-foreground transition-colors"
-            >
-              {copy.source}
-            </a>
-          </p>
-        </div>
-        <div className="relative mt-6 overflow-hidden">
-          <FooterWordmark
-            text="Requixite"
-            className="mb-[-0.2em] text-[clamp(3.5rem,15vw,7.5rem)] leading-[0.85] font-semibold tracking-[-0.06em]"
-          />
-        </div>
-      </footer>
-    </section>
+          {copy.nameMeaning}
+        </HoverCardContent>
+      </HoverCard>
+      {" • "}
+      <HoverCard openDelay={120} closeDelay={150}>
+        <HoverCardTrigger asChild>
+          <button type="button" className={trigger}>
+            v{process.env.NEXT_PUBLIC_VERSION}
+          </button>
+        </HoverCardTrigger>
+        <HoverCardContent
+          side="top"
+          align="end"
+          sideOffset={8}
+          className={`${card} flex w-56 flex-col gap-2`}
+        >
+          {updated && (
+            <p>
+              {copy.updated}{" "}
+              <span className="text-foreground">
+                {new Intl.DateTimeFormat(copy.dateLocale, {
+                  dateStyle: "long",
+                  timeZone: "Asia/Jakarta",
+                }).format(new Date(updated))}
+              </span>
+            </p>
+          )}
+          <a
+            href={REPO}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground inline-flex items-center gap-1 hover:underline"
+          >
+            {copy.source}
+            <ArrowUpRight aria-hidden className="size-3" />
+          </a>
+        </HoverCardContent>
+      </HoverCard>
+    </p>
   );
 }
