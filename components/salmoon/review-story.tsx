@@ -842,19 +842,15 @@ export function AskBox({
   locale,
   title,
   placeholder,
-  top,
 }: {
   locale: Locale;
   title?: string;
   placeholder?: string;
-  /** Above the composer, where the homepage has its plans. */
-  top?: React.ReactNode;
 }) {
   const { review: copy, offer, contact } = getPortfolioCopy(locale);
   const { text, setText, send, onKeyDown } = useDraft();
   return (
     <div>
-      {top && <div className="-mx-1 mb-1 p-1">{top}</div>}
       <div className="composer" data-mode="cta" style={{ borderRadius: 22 }}>
         <div className="composer-body">
           <label htmlFor="contact-ask" className="sr-only">
