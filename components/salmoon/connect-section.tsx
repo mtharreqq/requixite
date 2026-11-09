@@ -191,7 +191,7 @@ export function ContactActions({ copy }: { copy: PortfolioCopy["contact"] }) {
         {/* One provider for the group: after the first tooltip, the next
               ones open instantly (skip delay) and without the entrance. */}
         <TooltipProvider delayDuration={250} skipDelayDuration={300}>
-          <div className="ml-auto flex gap-1.5">
+          <div className="flex gap-1.5 sm:ml-auto">
             {SOCIALS.map(({ label, href, Icon }) => (
               <TooltipPrimitive.Root key={label}>
                 <TooltipTrigger asChild>
