@@ -30,8 +30,8 @@ import {
   Youtube,
 } from "lucide-react";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
-import { SplitReveal } from "@/components/salmoon/split-reveal";
-import { RantaiPanorama } from "@/components/salmoon/rantai-panorama";
+import { SplitReveal } from "@/components/shared/split-reveal";
+import { RantaiPanorama } from "@/components/case-study/rantai-panorama";
 
 // Both versions of rantai.dev are laid out at desktop size and scaled to fit,
 // so the frame reads as the real site at any width.

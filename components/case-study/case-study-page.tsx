@@ -2,8 +2,8 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { getCaseStudyCopy } from "@/lib/case-study-copy";
 import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
-import { RantaiLiveLazy } from "@/components/salmoon/rantai-live-lazy";
-import { SubPage } from "@/components/sub-page";
+import { RantaiLiveLazy } from "@/components/case-study/rantai-live-lazy";
+import { SubPage } from "@/components/layout/sub-page";
 
 export function CaseStudyPage({ locale }: { locale: Locale }) {
   const copy = getCaseStudyCopy(locale);

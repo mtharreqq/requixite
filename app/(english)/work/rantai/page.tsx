@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CaseStudyPage } from "@/components/case-study-page";
+import { CaseStudyPage } from "@/components/case-study/case-study-page";
 import { getCaseStudyCopy } from "@/lib/case-study-copy";
 
 const copy = getCaseStudyCopy("en");

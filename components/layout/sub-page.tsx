@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
-import { FooterWordmark } from "@/components/salmoon/footer-wordmark";
-import { RailNav, type RailSection } from "@/components/salmoon/rail-nav";
-import { AskBox } from "@/components/salmoon/ask-box";
-import { ChatDialog } from "@/components/salmoon/chat-dialog-lazy";
-import { ExperienceSection } from "@/components/salmoon/experience-section";
+import { FooterWordmark } from "@/components/layout/footer-wordmark";
+import { RailNav, type RailSection } from "@/components/layout/rail-nav";
+import { AskBox } from "@/components/chat/ask-box";
+import { ChatDialog } from "@/components/chat/chat-dialog-lazy";
+import { ExperienceSection } from "@/components/shared/experience-section";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import {
@@ -15,7 +15,7 @@ import {
 import {
   PortfolioMotion,
   SectionReveal,
-} from "@/components/salmoon/portfolio-motion";
+} from "@/components/shared/portfolio-motion";
 
 /** The other pages under the closing composer, like the homepage's end:
  * starting at the next one. */

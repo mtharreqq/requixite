@@ -1,8 +1,8 @@
-import { ReviewStory } from "@/components/salmoon/review-story-lazy";
-import { ChatDialog } from "@/components/salmoon/chat-dialog-lazy";
-import { RailNav } from "@/components/salmoon/rail-nav";
+import { ReviewStory } from "@/components/home/review-story-lazy";
+import { ChatDialog } from "@/components/chat/chat-dialog-lazy";
+import { RailNav } from "@/components/layout/rail-nav";
 import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
-import { PortfolioMotion } from "@/components/salmoon/portfolio-motion";
+import { PortfolioMotion } from "@/components/shared/portfolio-motion";
 
 export function PortfolioPage({ locale }: { locale: Locale }) {
   const copy = getPortfolioCopy(locale);

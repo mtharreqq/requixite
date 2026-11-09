@@ -13,7 +13,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { openChat } from "@/lib/chat-events";
-import { ContactIcons, FooterMeta } from "@/components/salmoon/connect-section";
+import { ContactIcons, FooterMeta } from "@/components/shared/connect-section";
 
 // The composer pieces the sub-pages share with the home story, apart from it
 // so they don't load the whole story.

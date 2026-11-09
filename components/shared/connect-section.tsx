@@ -13,7 +13,7 @@ import {
   InstagramSvg,
   LinkedinSvg,
   XSvg,
-} from "@/components/dock-icons";
+} from "@/components/shared/dock-icons";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import {
   TooltipContent,

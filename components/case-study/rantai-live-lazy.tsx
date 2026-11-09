@@ -20,7 +20,7 @@ export function RantaiLiveLazy({ copy }: { copy: Copy }) {
   useEffect(() => {
     let gone = false;
     const start = async () => {
-      const mod = await import("@/components/salmoon/rantai-live");
+      const mod = await import("@/components/case-study/rantai-live");
       if (!gone) setLive(() => mod.RantaiLive);
     };
     if (document.readyState === "complete") start();

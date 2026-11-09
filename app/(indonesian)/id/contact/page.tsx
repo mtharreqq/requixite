@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ContactPage } from "@/components/sub-page";
+import { ContactPage } from "@/components/layout/sub-page";
 import { getPortfolioCopy } from "@/lib/portfolio-copy";
 
 const copy = getPortfolioCopy("id").contactPage;

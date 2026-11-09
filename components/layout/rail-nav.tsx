@@ -23,7 +23,7 @@ import {
   Sun,
   User,
 } from "lucide-react";
-import { smoothScrollTo } from "@/components/smooth-scroll";
+import { smoothScrollTo } from "@/components/layout/smooth-scroll";
 import {
   HoverCard,
   HoverCardContent,

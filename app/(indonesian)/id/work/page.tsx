@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { WorkPage } from "@/components/sub-page";
+import { WorkPage } from "@/components/layout/sub-page";
 import { getPortfolioCopy } from "@/lib/portfolio-copy";
 
 const copy = getPortfolioCopy("id").workPage;
