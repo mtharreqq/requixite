@@ -1335,6 +1335,12 @@ function Stage({
   // composer sits at the very bottom and the chat gets the room. A matching
   // negative margin keeps the stage's spot, so nothing above it moves.
   const [reach, setReach] = useState(0);
+  // The floor probe is portaled to <body>, which only exists in the browser.
+  const client = useSyncExternalStore(
+    noop,
+    () => true,
+    () => false,
+  );
   const reachNow = useRef(0);
   useLayoutEffect(() => {
     const s = stage.current;
@@ -1369,7 +1375,7 @@ function Stage({
       touch.removeEventListener("change", measure);
       removeEventListener("resize", measure);
     };
-  }, [mode, still]);
+  }, [mode, still, client]);
 
   const selOn = sel >= 0;
   // The popover sits on its pin and your cursor aims at real elements,
@@ -1463,6 +1469,7 @@ function Stage({
         home indicator. Portaled: the stage's transforms would pin "fixed"
         to the stage. */}
       {!still &&
+        client &&
         createPortal(
           <span
             data-dock-floor
