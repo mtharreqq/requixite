@@ -107,6 +107,21 @@ export const english = {
       title: "Your turn. What needs fixing?",
       placeholder: "Paste your app’s link, or tell me what feels off…",
       send: "Send",
+      // The closing composer on each sub-page, about what that page showed.
+      pages: {
+        "/about": {
+          title: "Now you know me. What’s your app?",
+          placeholder: "Tell me about your app, or just say hi…",
+        },
+        "/work": {
+          title: "Liked these? Yours is next.",
+          placeholder: "Paste your app’s link, it could be the next one here…",
+        },
+        "/work/rantai": {
+          title: "Got a rantai.dev of your own?",
+          placeholder: "Paste the AI-built site that needs the same treatment…",
+        },
+      } as Record<string, { title: string; placeholder: string }>,
     },
     skip: {
       story: "Scroll for the story",
@@ -396,6 +411,21 @@ export const indonesian: PortfolioCopy = {
       placeholder:
         "Tempel link aplikasimu, atau ceritakan apa yang terasa aneh…",
       send: "Kirim",
+      pages: {
+        "/about": {
+          title: "Udah kenal aku. Sekarang aplikasimu?",
+          placeholder: "Ceritain aplikasimu, atau sapa aja dulu…",
+        },
+        "/work": {
+          title: "Suka yang ini? Berikutnya punyamu.",
+          placeholder:
+            "Tempel link aplikasimu, biar jadi yang berikutnya di sini…",
+        },
+        "/work/rantai": {
+          title: "Punya rantai.dev versimu sendiri?",
+          placeholder: "Tempel situs buatan AI yang butuh perlakuan yang sama…",
+        },
+      } as Record<string, { title: string; placeholder: string }>,
     },
     skip: {
       story: "Scroll untuk lihat ceritanya",
