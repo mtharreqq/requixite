@@ -155,14 +155,9 @@ export function ContactPage({ locale }: { locale: Locale }) {
         id="intro"
         className="flex min-h-[calc(100svh-2.5rem)] flex-col justify-center gap-8 md:min-h-[calc(100svh-3.5rem)]"
       >
-        <header className="flex flex-col gap-3">
-          <h1 className="text-[clamp(24px,4.8vw,36px)] leading-tight font-medium tracking-[-0.04em]">
-            {copy.review.cta.title}
-          </h1>
-          <p className="text-muted-foreground text-sm leading-relaxed md:text-base">
-            {copy.contactPage.intro}
-          </p>
-        </header>
+        <h1 className="text-[clamp(24px,4.8vw,36px)] leading-tight font-medium tracking-[-0.04em]">
+          {copy.review.cta.title}
+        </h1>
         <AskBox locale={locale} />
       </section>
     </SubPage>
