@@ -24,7 +24,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
       <main
         id="main"
         tabIndex={-1}
-        className="relative flex w-full max-w-lg flex-col items-center gap-y-14 pt-8 pr-4 pl-10 outline-none md:max-w-xl md:gap-y-16 md:px-4 md:pt-12"
+        className="relative flex w-full max-w-lg flex-col items-center gap-y-14 px-4 pt-8 pb-20 outline-none md:max-w-xl md:gap-y-16 md:px-4 md:pt-12 md:pb-0"
       >
         <ReviewStory
           copy={copy.review}

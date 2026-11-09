@@ -1,7 +1,13 @@
 "use client";
 
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
-import { useEffect, useRef, useState, type PointerEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type PointerEvent,
+} from "react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import Image from "next/image";
@@ -84,6 +90,7 @@ function tickStyle(
   hoverPos: number,
   hoverAmount: number,
   scale: number,
+  phone = false,
 ) {
   const major = i % STEP === 0;
   const scrollPull = Math.max(0, 1 - Math.abs(i - cursor) / REACH);
@@ -92,12 +99,26 @@ function tickStyle(
   const pull = Math.max(scrollPull, hoverPull);
   const width = ((major ? 14 : 9) + pull * 18) * scale;
   return {
-    transform: `scaleX(${width / MAX_TICK})`,
+    // Phones lay the rail along the bottom, so the ticks grow up.
+    transform: `${phone ? "scaleY" : "scaleX"}(${width / MAX_TICK})`,
     opacity: (major ? 0.45 : 0.22) + pull * 0.55,
   };
 }
 
 type RailCopy = PortfolioCopy["rail"];
+
+const PHONE = "(max-width: 767px)";
+function usePhone() {
+  return useSyncExternalStore(
+    (cb) => {
+      const m = window.matchMedia(PHONE);
+      m.addEventListener("change", cb);
+      return () => m.removeEventListener("change", cb);
+    },
+    () => window.matchMedia(PHONE).matches,
+    () => false,
+  );
+}
 
 const row =
   "text-muted-foreground hover:text-foreground hover:bg-muted aria-[current=page]:text-foreground flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2 py-1.5 text-xs transition-colors";
@@ -169,10 +190,12 @@ function Menu({
   copy,
   locale,
   path,
+  phone,
 }: {
   copy: RailCopy;
   locale: Locale;
   path: string;
+  phone: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const base = locale === "id" ? "/id" : "";
@@ -189,15 +212,15 @@ function Menu({
           aria-label={copy.pages.menu}
           aria-expanded={open}
           onClick={() => setOpen((o) => !o)}
-          className={`ring-border data-[state=open]:ring-foreground/40 hover:ring-foreground/40 relative mt-6 -ml-1 block size-6 cursor-pointer overflow-hidden rounded-full ring-1 transition-[box-shadow,scale] duration-150 active:scale-90`}
+          className={`ring-border data-[state=open]:ring-foreground/40 hover:ring-foreground/40 relative block size-6 cursor-pointer overflow-hidden rounded-full ring-1 transition-[box-shadow,scale] duration-150 active:scale-90 md:mt-6 md:-ml-1`}
         >
           <Image src="/avatar.png" alt="" width={24} height={24} />
         </button>
       </HoverCardTrigger>
       <HoverCardContent
-        side="right"
+        side={phone ? "top" : "right"}
         align="end"
-        sideOffset={24}
+        sideOffset={phone ? 16 : 24}
         className="bg-popover/95 border-border/80 w-44 rounded-xl p-1 shadow-xl backdrop-blur-md"
       >
         <nav aria-label={copy.pages.menu} className="flex flex-col">
@@ -264,6 +287,7 @@ export function RailNav({
   // Touch: press and slide along the rail to pick a section, release to go.
   const [scrubbing, setScrubbing] = useState(false);
   const railRef = useRef<HTMLDivElement>(null);
+  const phone = usePhone();
   const tickRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   // Animation state lives outside React so the ticks can update every frame
@@ -286,7 +310,7 @@ export function RailNav({
   useEffect(() => {
     const a = anim.current;
     const idList = ids.split(" ");
-    const phone = window.matchMedia("(max-width: 767px)");
+    const phone = window.matchMedia(PHONE);
 
     const paint = () => {
       tickRefs.current.forEach((el, i) => {
@@ -297,6 +321,7 @@ export function RailNav({
           a.hoverPos,
           a.hoverAmount,
           a.scale,
+          phone.matches,
         );
         el.style.transform = transform;
         el.style.opacity = `${opacity}`;
@@ -379,9 +404,11 @@ export function RailNav({
     kickRef.current();
   }
 
-  function sectionAt(clientY: number): number {
+  function sectionAt(e: PointerEvent<HTMLDivElement>): number {
     const rect = railRef.current!.getBoundingClientRect();
-    const index = Math.round((clientY - rect.top - 1) / BAND);
+    const index = Math.round(
+      (phone ? e.clientX - rect.left - 1 : e.clientY - rect.top - 1) / BAND,
+    );
     return Math.min(Math.max(index, 0), sections.length - 1);
   }
 
@@ -389,16 +416,16 @@ export function RailNav({
     if (e.pointerType === "mouse") return;
     e.currentTarget.setPointerCapture(e.pointerId);
     setScrubbing(true);
-    hover(sectionAt(e.clientY));
+    hover(sectionAt(e));
   }
 
   function onPointerMove(e: PointerEvent<HTMLDivElement>) {
-    if (scrubbing) hover(sectionAt(e.clientY));
+    if (scrubbing) hover(sectionAt(e));
   }
 
   function onPointerUp(e: PointerEvent<HTMLDivElement>) {
     if (!scrubbing) return;
-    const target = document.getElementById(sections[sectionAt(e.clientY)].id);
+    const target = document.getElementById(sections[sectionAt(e)].id);
     if (target)
       smoothScrollTo(target.getBoundingClientRect().top + window.scrollY);
     setScrubbing(false);
@@ -408,8 +435,9 @@ export function RailNav({
   return (
     <nav
       aria-label={copy.navigation}
-      // Anchored at the avatar, so it stays put and the rail grows upward.
-      className="fixed bottom-[calc(50%-7rem)] left-3 z-50 flex flex-col items-start md:left-8"
+      // Phones: a pill along the bottom. Desktop: anchored at the avatar, so
+      // it stays put and the rail grows upward.
+      className="bg-background/85 border-border/80 fixed bottom-3 left-1/2 z-50 flex -translate-x-1/2 items-center gap-4 rounded-full border px-4 py-2 backdrop-blur-md md:bottom-[calc(50%-7rem)] md:left-8 md:translate-x-0 md:flex-col md:items-start md:gap-0 md:rounded-none md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none"
     >
       <div
         ref={railRef}
@@ -424,14 +452,17 @@ export function RailNav({
         className="group/rail relative touch-none"
       >
         {/* Ticks (visual only, sized every frame by the effect above) */}
-        <div aria-hidden className="flex flex-col gap-[7px]">
+        <div
+          aria-hidden
+          className="flex h-6 items-end gap-[7px] md:h-auto md:flex-col"
+        >
           {Array.from({ length: ticks }, (_, i) => (
             <span
               key={i}
               ref={(el) => {
                 tickRefs.current[i] = el;
               }}
-              className="bg-foreground block h-0.5 w-8 origin-left rounded-full"
+              className="bg-foreground block h-8 w-0.5 shrink-0 origin-bottom rounded-full md:h-0.5 md:w-8 md:origin-left"
               style={tickStyle(i, 0, 0, 0, 1)}
             />
           ))}
@@ -452,13 +483,21 @@ export function RailNav({
               onPointerEnter={(e) => e.pointerType === "mouse" && hover(index)}
               onFocus={() => hover(index)}
               onBlur={() => hover(null)}
-              className={`absolute -left-3 flex items-center outline-none group-focus-within/rail:w-44 group-hover/rail:w-44 ${
-                scrubbing ? "w-44" : "w-10 md:w-14"
-              }`}
-              style={{ top: center - BAND / 2, height: BAND }}
+              className={
+                phone
+                  ? "absolute -top-2 -bottom-2 flex justify-center outline-none"
+                  : `absolute -left-3 flex items-center outline-none group-focus-within/rail:w-44 group-hover/rail:w-44 ${
+                      scrubbing ? "w-44" : "w-14"
+                    }`
+              }
+              style={
+                phone
+                  ? { left: center - BAND / 2, width: BAND }
+                  : { top: center - BAND / 2, height: BAND }
+              }
             >
               <span
-                className={`absolute left-9 rounded-md px-1.5 py-0.5 text-xs whitespace-nowrap backdrop-blur-sm transition-[opacity,color,background-color] duration-150 md:left-11 ${
+                className={`absolute bottom-full mb-2 rounded-md px-1.5 py-0.5 text-xs whitespace-nowrap backdrop-blur-sm transition-[opacity,color,background-color] duration-150 md:bottom-auto md:left-11 md:mb-0 ${
                   isHovered
                     ? "bg-muted text-foreground font-medium opacity-100"
                     : `bg-background/95 shadow-xs ${
@@ -481,7 +520,7 @@ export function RailNav({
         })}
       </div>
 
-      <Menu copy={copy} locale={locale} path={path} />
+      <Menu copy={copy} locale={locale} path={path} phone={phone} />
     </nav>
   );
 }
