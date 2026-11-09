@@ -292,6 +292,13 @@ function useBeat(p: P, on: (v: number) => boolean, s = pop) {
 }
 
 type Box = { x: number; y: number; w: number; h: number };
+/** Box inside `root` as painted, with transforms. */
+function rectIn(el: HTMLElement | null, root: HTMLElement): Box | null {
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  const o = root.getBoundingClientRect();
+  return { x: r.left - o.left, y: r.top - o.top, w: r.width, h: r.height };
+}
 /** Layout box inside `root`, ignoring transforms (so mid-animation is fine). */
 function offsetIn(el: HTMLElement | null, root: HTMLElement): Box | null {
   if (!el) return null;
@@ -1059,8 +1066,10 @@ function Answer({
   const chat = useRef<HTMLDivElement>(null);
   const bubble = useRef<HTMLParagraphElement>(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
-  // Height left for the preview card under the chat, 0 when unconstrained.
-  const [room, setRoom] = useState(0);
+  // The answer's height, and what the chat and the comment count take of it;
+  // box 0 when unconstrained.
+  const [space, setSpace] = useState({ box: 0, chat: 0, row: 0 });
+  const row = useRef<HTMLDivElement>(null);
   const [cap, setCap] = useState(PREVIEW);
   // Sent: your prompt rises straight up from where you typed it.
   useLayoutEffect(() => {
@@ -1079,7 +1088,11 @@ function Answer({
     const c = chat.current;
     const ro = new ResizeObserver(() => {
       setSize({ w: r.offsetWidth, h: d.offsetHeight });
-      setRoom(fit && box && c ? box.clientHeight - c.offsetHeight : 0);
+      setSpace({
+        box: fit && box ? box.clientHeight : 0,
+        chat: c?.offsetHeight ?? 0,
+        row: row.current?.offsetHeight ?? 0,
+      });
       setCap(matchMedia(TABLET).matches ? PREVIEW_TABLET : PREVIEW);
     });
     ro.observe(r);
@@ -1150,15 +1163,30 @@ function Answer({
   // The small preview card zooms into the full dashboard. On a short screen
   // it shrinks further, so it never runs into the composer below.
   const preview =
-    room > 0 && size.h
-      ? Math.min(cap, Math.max(0.3, (room - 2 * PAD) / size.h))
+    space.box && size.h
+      ? Math.min(
+          cap,
+          Math.max(0.3, (space.box - space.chat - 2 * PAD) / size.h),
+        )
       : PREVIEW;
+  // In focus the full dashboard gets the whole answer, but it shrinks (and
+  // centers) when it is taller than that: wrapped text, a big system font.
+  const full =
+    space.box && size.h
+      ? Math.min(1, Math.max(0.5, (space.box - space.row) / size.h))
+      : 1;
   const card = focus
-    ? { width: size.w, height: "auto", padding: 0 }
+    ? {
+        width: size.w * full,
+        height: full < 1 ? size.h * full : "auto",
+        padding: 0,
+        marginLeft: (size.w * (1 - full)) / 2,
+      }
     : {
         width: size.w * preview + 2 * PAD,
         height: size.h * preview + 2 * PAD,
         padding: PAD,
+        marginLeft: 0,
       };
 
   return (
@@ -1221,7 +1249,10 @@ function Answer({
         animate={{ height: focus ? "auto" : 0 }}
         transition={fold}
       >
-        <div className="text-muted-foreground flex justify-end pb-2 text-xs">
+        <div
+          ref={row}
+          className="text-muted-foreground flex justify-end pb-2 text-xs"
+        >
           <m.span
             className="inline-flex items-center gap-1.5"
             style={{ opacity: commenting }}
@@ -1248,7 +1279,7 @@ function Answer({
         >
           <m.div
             initial={false}
-            animate={{ scale: focus ? 1 : preview }}
+            animate={{ scale: focus ? full : preview }}
             transition={fold}
             style={{ width: size.w || "100%", originX: 0, originY: 0 }}
           >
@@ -1315,14 +1346,14 @@ function Stage({
     const measure = () => {
       const top = offsetIn(s, pin)?.y ?? 0;
       const base = s.offsetHeight - reachNow.current;
-      // The bar's own top edge, safe-area inset included.
+      // Down to the bar's top edge (safe-area inset included). The pin
+      // sticks at the viewport's top, so the bar's viewport position is its
+      // position in the pin, whatever Safari's toolbar does to innerHeight.
       const bar = document.querySelector("[data-bottom-bar]");
-      const room = bar
-        ? innerHeight - bar.getBoundingClientRect().top + BAR_GAP
-        : 0;
+      const floor = bar ? bar.getBoundingClientRect().top - BAR_GAP : 0;
       const next =
-        touch.matches && mode === "dock" && room
-          ? Math.max(0, Math.round(pin.offsetHeight - room - top - base))
+        touch.matches && mode === "dock" && floor > 0
+          ? Math.max(0, Math.round(floor - top - base))
           : 0;
       reachNow.current = next;
       setReach(next);
@@ -1331,9 +1362,12 @@ function Stage({
     const ro = new ResizeObserver(measure);
     ro.observe(pin);
     touch.addEventListener("change", measure);
+    // Safari's toolbar coming and going moves the bar, not the pin.
+    addEventListener("resize", measure);
     return () => {
       ro.disconnect();
       touch.removeEventListener("change", measure);
+      removeEventListener("resize", measure);
     };
   }, [mode, still]);
 
@@ -1343,8 +1377,10 @@ function Stage({
   useLayoutEffect(() => {
     const root = stage.current;
     if (!root) return;
+    // As shown, transforms included: the dashboard may be scaled to fit.
+    // Measured once things settle (tick), so no animation is mid-way.
     const find = (q: string) =>
-      offsetIn(root.querySelector<HTMLElement>(q), root);
+      rectIn(root.querySelector<HTMLElement>(q), root);
     setBox({
       pin: find(`[data-n="${act <= -2 ? "ask" : act}"]`),
       dash: find(".dash"),
