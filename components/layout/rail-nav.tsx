@@ -635,17 +635,16 @@ export function RailNav({
   return (
     <nav
       aria-label={copy.navigation}
-      data-bottom-bar
-      // Touch: a bottom bar of sections, where you are and the avatar, clear
-      // of the home indicator. Mouse: anchored at the avatar, so it stays put
-      // and the rail grows upward.
-      className="side:inset-x-auto side:bottom-[calc(50%-7rem)] side:left-8 side:flex-col side:items-start pointer-events-none fixed inset-x-4 bottom-[max(env(safe-area-inset-bottom),12px)] z-50 flex items-center justify-between"
+      // Touch: a top bar of sections, where you are and the avatar, under
+      // the status bar, so the bottom stays the composer's. Mouse: anchored
+      // at the avatar, so it stays put and the rail grows upward.
+      className="side:inset-x-auto side:top-auto side:bottom-[calc(50%-7rem)] side:left-8 side:flex-col side:items-start pointer-events-none fixed inset-x-4 top-[max(env(safe-area-inset-top),12px)] z-50 flex items-center justify-between"
     >
-      {/* Touch: the bar's own material, so the page fades out under it
-        instead of running into the labels. */}
+      {/* Touch: the bar's own material: solid behind the buttons, then a
+        short fade, so the page slides under it instead of showing through. */}
       <div
         aria-hidden
-        className="from-background via-background/85 side:hidden pointer-events-none fixed inset-x-0 bottom-0 -z-10 h-[calc(env(safe-area-inset-bottom)+5.5rem)] bg-linear-to-t to-transparent"
+        className="touch-bar-fade side:hidden pointer-events-none fixed inset-x-0 top-0 -z-10"
       />
       {/* Touch: sections button, where you are, then the avatar. One
         section (Contact): nothing to navigate, just the avatar. */}

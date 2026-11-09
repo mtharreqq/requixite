@@ -27,7 +27,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
       <main
         id="main"
         tabIndex={-1}
-        className="tablet:max-w-2xl tablet:px-8 tablet:pb-[calc(6rem+env(safe-area-inset-bottom))] relative flex w-full max-w-lg flex-col items-center gap-y-14 px-4 pt-8 pb-[calc(5rem+env(safe-area-inset-bottom))] outline-none md:max-w-xl md:gap-y-16 md:px-4 md:pt-12 md:pb-0"
+        className="tablet:max-w-2xl tablet:px-8 tablet:pb-[calc(2rem+env(safe-area-inset-bottom))] relative flex w-full max-w-lg flex-col items-center gap-y-14 px-4 pt-8 pb-[calc(2rem+env(safe-area-inset-bottom))] outline-none md:max-w-xl md:gap-y-16 md:px-4 md:pt-12 md:pb-0"
       >
         <ReviewStory
           copy={copy.review}

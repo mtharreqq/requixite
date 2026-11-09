@@ -268,8 +268,6 @@ const country = () => document.cookie.match(/(?:^|; )country=([A-Z]{2})/)?.[1];
 const noop = () => () => {};
 
 const STILL = "(prefers-reduced-motion: reduce), (max-height: 600px)";
-// Gap between the docked composer and the touch bottom bar.
-const BAR_GAP = 24;
 /** Reduced motion or a short screen: show the finished state, unpinned. */
 function useStill() {
   return useSyncExternalStore(
@@ -785,7 +783,7 @@ function FloatBar({ copy, show }: { copy: Copy; show: boolean }) {
     <div
       inert={!show}
       className={cn(
-        "fixed right-4 bottom-3 left-10 z-[45] mx-auto max-w-[34rem] transition-[translate,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:bottom-5 md:left-4",
+        "side:bottom-5 fixed right-4 bottom-[max(env(safe-area-inset-bottom),12px)] left-4 z-[45] mx-auto max-w-[34rem] transition-[translate,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
         !show && "translate-y-[calc(100%+2rem)] opacity-0",
       )}
     >
@@ -1333,10 +1331,16 @@ function Stage({
   useMotionValueEvent(p, "change", read);
   useLayoutEffect(() => read(p.get()));
 
-  // Touch, while docked: the stage reaches down to the bottom bar, so the
+  // Touch, while docked: the stage reaches down to the bottom edge, so the
   // composer sits at the very bottom and the chat gets the room. A matching
   // negative margin keeps the stage's spot, so nothing above it moves.
   const [reach, setReach] = useState(0);
+  // The floor probe is portaled to <body>, which only exists in the browser.
+  const client = useSyncExternalStore(
+    noop,
+    () => true,
+    () => false,
+  );
   const reachNow = useRef(0);
   useLayoutEffect(() => {
     const s = stage.current;
@@ -1346,11 +1350,13 @@ function Stage({
     const measure = () => {
       const top = offsetIn(s, pin)?.y ?? 0;
       const base = s.offsetHeight - reachNow.current;
-      // Down to the bar's top edge (safe-area inset included). The pin
-      // sticks at the viewport's top, so the bar's viewport position is its
-      // position in the pin, whatever Safari's toolbar does to innerHeight.
-      const bar = document.querySelector("[data-bottom-bar]");
-      const floor = bar ? bar.getBoundingClientRect().top - BAR_GAP : 0;
+      // Down to the floor probe: the bottom edge less the home indicator.
+      // The pin sticks at the viewport's top, so the probe's viewport
+      // position is its position in the pin, whatever Safari's toolbar does
+      // to innerHeight.
+      const floor =
+        document.querySelector("[data-dock-floor]")?.getBoundingClientRect()
+          .top ?? 0;
       const next =
         touch.matches && mode === "dock" && floor > 0
           ? Math.max(0, Math.round(floor - top - base))
@@ -1369,7 +1375,7 @@ function Stage({
       touch.removeEventListener("change", measure);
       removeEventListener("resize", measure);
     };
-  }, [mode, still]);
+  }, [mode, still, client]);
 
   const selOn = sel >= 0;
   // The popover sits on its pin and your cursor aims at real elements,
@@ -1459,6 +1465,19 @@ function Stage({
         mode={mode}
         onGone={onGone}
       />
+      {/* Where the docked composer ends: 12px above the bottom edge, or the
+        home indicator. Portaled: the stage's transforms would pin "fixed"
+        to the stage. */}
+      {!still &&
+        client &&
+        createPortal(
+          <span
+            data-dock-floor
+            aria-hidden
+            className="pointer-events-none fixed inset-x-0 bottom-[max(env(safe-area-inset-bottom),12px)] h-0"
+          />,
+          document.body,
+        )}
       {!still && (
         <>
           <AnimatePresence>
@@ -1698,7 +1717,8 @@ function AutoPill({
       {show && (
         <m.div
           data-autopill
-          className="fixed top-4 right-4 z-50"
+          // Touch: just under the top bar, clear of the avatar.
+          className="bar:top-[calc(max(env(safe-area-inset-top),12px)+3.5rem)] fixed top-4 right-4 z-50"
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
@@ -1875,6 +1895,8 @@ export function ReviewStory({
         className={cn(
           "flex flex-col gap-6",
           !still && "sticky top-0 h-svh justify-center",
+          // Touch: clear of the top bar.
+          !still && "bar:pt-[calc(max(env(safe-area-inset-top),12px)+3rem)]",
         )}
       >
         {!still && <Skip copy={copy} show={hello} />}

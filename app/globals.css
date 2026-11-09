@@ -552,6 +552,17 @@ html {
     scale: 0.92;
   }
 }
+/* Behind the touch top bar: solid down to the buttons' bottom edge (the
+   inset plus 42px), then a 2rem fade. */
+.touch-bar-fade {
+  --bar-bottom: calc(max(env(safe-area-inset-top), 12px) + 42px);
+  height: calc(var(--bar-bottom) + 2rem);
+  background: linear-gradient(
+    to bottom,
+    var(--background) var(--bar-bottom),
+    transparent
+  );
+}
 /* Page links: no outline until hovered. */
 .composer-chip-ghost {
   border-color: transparent;
