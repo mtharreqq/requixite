@@ -52,7 +52,18 @@ function useCopyEmail() {
 
   async function handleCopy() {
     try {
-      await navigator.clipboard.writeText(EMAIL);
+      if (navigator.clipboard) await navigator.clipboard.writeText(EMAIL);
+      else {
+        // Plain http (no secure context) has no Clipboard API.
+        const t = document.createElement("textarea");
+        t.value = EMAIL;
+        t.style.cssText = "position:fixed;opacity:0";
+        document.body.append(t);
+        t.select();
+        const ok = document.execCommand("copy");
+        t.remove();
+        if (!ok) throw new Error("copy");
+      }
     } catch {
       setCopyError(true);
       return;
