@@ -705,7 +705,7 @@ function Composer({
       }}
     >
       {cta && (
-        <div className="-mx-1 mb-1 flex gap-1.5 overflow-x-auto p-1 [scrollbar-width:none]">
+        <div className="-mx-1 mb-1 flex flex-wrap gap-1.5 p-1">
           {offer.plans.map((pl, i) => (
             <PlanChip
               key={pl.name}
@@ -852,7 +852,7 @@ export function AskBox({ locale }: { locale: Locale }) {
   };
   return (
     <div>
-      <div className="-mx-1 mb-1 flex gap-1.5 overflow-x-auto p-1 [scrollbar-width:none]">
+      <div className="-mx-1 mb-1 flex flex-wrap gap-1.5 p-1">
         {offer.plans.map((pl, i) => (
           <PlanChip
             key={pl.name}

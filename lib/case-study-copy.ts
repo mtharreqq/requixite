@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/portfolio-copy";
 // ponytail: one case study, so one copy object. Turn into a list keyed by slug
 // when a second project gets its own page.
 const english = {
-  title: "rantai.dev, from AI-built to finished",
+  title: "rantai.dev, from AI‑built to finished",
   description:
     "How I took RantAI’s AI-built website and turned it into a clear, fast, bilingual site with its own CMS.",
   meta: [
