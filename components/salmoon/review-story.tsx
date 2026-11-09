@@ -1536,7 +1536,7 @@ function Shortcuts({
 }) {
   const base = locale === "id" ? "/id" : "";
   const chip = (label: string, tip: string, el: React.ReactElement) => (
-    <Tooltip key={label}>
+    <Tooltip key={label} delayDuration={500}>
       <TooltipTrigger asChild>{el}</TooltipTrigger>
       <TooltipContent sideOffset={6}>{tip}</TooltipContent>
     </Tooltip>
