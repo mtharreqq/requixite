@@ -136,7 +136,7 @@ function Suggestions({
       <p className="text-muted-foreground text-sm">{skip.next}</p>
       <div className="flex flex-wrap justify-center gap-1.5">
         {pages.map(([p, label, tip]) => (
-          <Tooltip key={p}>
+          <Tooltip key={p} delayDuration={500}>
             <TooltipTrigger asChild>
               <Link
                 href={base + p || "/"}
@@ -174,7 +174,7 @@ export function SubPage({
   const bare = path === "/contact";
   return (
     <PortfolioMotion className="bg-background text-foreground selection:bg-foreground selection:text-background flex min-h-screen w-full justify-center overflow-x-clip">
-      <main className="flex w-full max-w-lg flex-col gap-y-14 px-4 pt-10 md:max-w-xl md:gap-y-16 md:px-4 md:pt-14">
+      <main className="flex w-full max-w-lg flex-col gap-y-14 px-4 pt-10 pb-20 md:max-w-xl md:gap-y-16 md:px-4 md:pt-14 md:pb-0">
         {children}
         {!bare && (
           <>
