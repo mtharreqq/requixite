@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
-import { ConnectSection } from "@/components/salmoon/connect-section";
+import { FooterWordmark } from "@/components/salmoon/footer-wordmark";
 import { RailNav, type RailSection } from "@/components/salmoon/rail-nav";
 import { AskBox } from "@/components/salmoon/review-story";
 import { ChatDialog } from "@/components/salmoon/chat-dialog";
@@ -81,7 +81,12 @@ export function SubPage({
             </SectionReveal>
             {/* Short pages push the footer to the bottom of the screen. */}
             <div className="mt-auto">
-              <ConnectSection copy={copy.contact} />
+              <footer className="relative overflow-hidden">
+                <FooterWordmark
+                  text="Requixite"
+                  className="mb-[-0.2em] text-[clamp(3.5rem,15vw,7.5rem)] leading-[0.85] font-semibold tracking-[-0.06em]"
+                />
+              </footer>
             </div>
           </>
         )}
