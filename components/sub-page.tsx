@@ -17,8 +17,8 @@ import {
   SectionReveal,
 } from "@/components/salmoon/portfolio-motion";
 
-/** The other pages as chips above the closing composer, where the homepage
- * has its plans, starting at the next one. */
+/** The other pages under the closing composer, like the homepage's end:
+ * starting at the next one. */
 function Suggestions({ locale, path }: { locale: Locale; path: string }) {
   const { skip } = getPortfolioCopy(locale).review;
   const base = locale === "id" ? "/id" : "";
@@ -33,17 +33,26 @@ function Suggestions({ locale, path }: { locale: Locale; path: string }) {
   // Start at the next page and wrap, skipping this one.
   const pages = [...all.slice(at + 1), ...all.slice(0, at)];
   return (
-    <nav aria-label={skip.next} className="flex flex-wrap gap-1.5">
-      {pages.map(([p, label, tip]) => (
-        <Tooltip key={p} delayDuration={500}>
-          <TooltipTrigger asChild>
-            <Link href={base + p || "/"} className="composer-chip">
-              {label}
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent sideOffset={6}>{tip}</TooltipContent>
-        </Tooltip>
-      ))}
+    <nav
+      aria-label={skip.next}
+      className="mt-12 flex flex-col items-center gap-3"
+    >
+      <p className="text-muted-foreground text-sm">{skip.more}</p>
+      <div className="flex flex-wrap justify-center gap-1.5">
+        {pages.map(([p, label, tip]) => (
+          <Tooltip key={p} delayDuration={500}>
+            <TooltipTrigger asChild>
+              <Link
+                href={base + p || "/"}
+                className="composer-chip composer-chip-ghost"
+              >
+                {label}
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent sideOffset={6}>{tip}</TooltipContent>
+          </Tooltip>
+        ))}
+      </div>
     </nav>
   );
 }
@@ -81,8 +90,8 @@ export function SubPage({
                   locale={locale}
                   title={ask.title}
                   placeholder={ask.placeholder}
-                  top={<Suggestions locale={locale} path={path} />}
                 />
+                <Suggestions locale={locale} path={path} />
               </section>
             </SectionReveal>
             {/* Short pages push the footer to the bottom of the screen. */}
