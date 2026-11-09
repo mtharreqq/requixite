@@ -18,7 +18,7 @@ import {
 } from "@/components/salmoon/portfolio-motion";
 
 /** The other pages as chips above the closing composer, where the homepage
- * has its plans: the next one first, with an arrow. */
+ * has its plans, starting at the next one. */
 function Suggestions({ locale, path }: { locale: Locale; path: string }) {
   const { skip } = getPortfolioCopy(locale).review;
   const base = locale === "id" ? "/id" : "";
@@ -34,24 +34,11 @@ function Suggestions({ locale, path }: { locale: Locale; path: string }) {
   const pages = [...all.slice(at + 1), ...all.slice(0, at)];
   return (
     <nav aria-label={skip.next} className="flex flex-wrap gap-1.5">
-      {pages.map(([p, label, tip], i) => (
+      {pages.map(([p, label, tip]) => (
         <Tooltip key={p} delayDuration={500}>
           <TooltipTrigger asChild>
-            <Link
-              href={base + p || "/"}
-              className={
-                i === 0
-                  ? "composer-chip group gap-1 font-medium"
-                  : "composer-chip composer-chip-ghost text-muted-foreground hover:text-foreground"
-              }
-            >
+            <Link href={base + p || "/"} className="composer-chip">
               {label}
-              {i === 0 && (
-                <ArrowRight
-                  aria-hidden
-                  className="size-3.5 transition-transform group-hover:translate-x-0.5"
-                />
-              )}
             </Link>
           </TooltipTrigger>
           <TooltipContent sideOffset={6}>{tip}</TooltipContent>
@@ -87,7 +74,7 @@ export function SubPage({
           <>
             <SectionReveal>
               <section id="contact" className="flex flex-col gap-5">
-                <h2 className="text-center text-xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-2xl">
+                <h2 className="text-xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-2xl">
                   {ask.title}
                 </h2>
                 <AskBox
