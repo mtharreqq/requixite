@@ -227,37 +227,46 @@ export function ContactActions({ copy }: { copy: PortfolioCopy["contact"] }) {
   );
 }
 
-/** The contact card and the footer, for the pages without the story. */
-export function ConnectSection({ copy }: { copy: PortfolioCopy["contact"] }) {
+/** The contact card and the footer, for the pages without the story. The
+ * contact page has its own composer, so it keeps only the footer. */
+export function ConnectSection({
+  copy,
+  card = true,
+}: {
+  copy: PortfolioCopy["contact"];
+  card?: boolean;
+}) {
   return (
     <section id="contact" className="w-full space-y-6">
-      <div className="bg-card border-border/80 rounded-[18px] border p-5 shadow-[0_12px_32px_-16px_rgb(0_0_0/0.22)] dark:shadow-[0_12px_32px_-16px_rgb(0_0_0/0.6)]">
-        <div className="flex items-center gap-3">
-          <div className="border-border/80 bg-muted relative size-11 shrink-0 overflow-hidden rounded-full border">
-            <Image
-              src="/avatar.png"
-              alt="Tharreq"
-              width={44}
-              height={44}
-              className="size-full object-cover"
-            />
+      {card && (
+        <div className="bg-card border-border/80 rounded-[18px] border p-5 shadow-[0_12px_32px_-16px_rgb(0_0_0/0.22)] dark:shadow-[0_12px_32px_-16px_rgb(0_0_0/0.6)]">
+          <div className="flex items-center gap-3">
+            <div className="border-border/80 bg-muted relative size-11 shrink-0 overflow-hidden rounded-full border">
+              <Image
+                src="/avatar.png"
+                alt="Tharreq"
+                width={44}
+                height={44}
+                className="size-full object-cover"
+              />
+            </div>
+            <div className="space-y-0.5">
+              <p className="text-foreground text-[15px] leading-tight font-semibold">
+                Tharreq
+              </p>
+              <p className="text-muted-foreground text-[13px] leading-tight">
+                {copy.available}
+              </p>
+            </div>
           </div>
-          <div className="space-y-0.5">
-            <p className="text-foreground text-[15px] leading-tight font-semibold">
-              Tharreq
-            </p>
-            <p className="text-muted-foreground text-[13px] leading-tight">
-              {copy.available}
-            </p>
-          </div>
+
+          <p className="text-foreground my-5 text-[17px] leading-relaxed tracking-[-0.01em]">
+            {copy.invitation}
+          </p>
+
+          <ContactActions copy={copy} />
         </div>
-
-        <p className="text-foreground my-5 text-[17px] leading-relaxed tracking-[-0.01em]">
-          {copy.invitation}
-        </p>
-
-        <ContactActions copy={copy} />
-      </div>
+      )}
 
       {/* One row: brand left, version right. The name opens its meaning. */}
       <footer className="text-muted-foreground text-[11px] leading-relaxed">
