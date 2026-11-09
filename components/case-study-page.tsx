@@ -1,31 +1,23 @@
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { getCaseStudyCopy } from "@/lib/case-study-copy";
-import type { Locale } from "@/lib/portfolio-copy";
-import { LanguageSwitch } from "@/components/language-switch";
+import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
+import { RantaiLive } from "@/components/salmoon/rantai-live";
+import { SubPage } from "@/components/sub-page";
 
 export function CaseStudyPage({ locale }: { locale: Locale }) {
   const copy = getCaseStudyCopy(locale);
-  const home = locale === "id" ? "/id" : "/";
   return (
-    <main className="bg-background text-foreground mx-auto flex min-h-screen w-full max-w-lg flex-col gap-12 px-4 pt-10 pb-20 md:max-w-xl md:pt-14">
-      <nav className="flex items-center justify-between">
-        <Link
-          href={home}
-          className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 text-xs transition-colors"
-        >
-          <ArrowLeft aria-hidden className="size-3.5" />
-          {copy.back}
-        </Link>
-        <LanguageSwitch
-          locale={locale}
-          label={locale === "id" ? "Bahasa" : "Language"}
-          path="/work/rantai"
-        />
-      </nav>
-
-      <header className="flex flex-col gap-3">
+    <SubPage
+      locale={locale}
+      path="/work/rantai"
+      sections={[
+        { id: "intro", label: getPortfolioCopy(locale).rail.intro },
+        ...copy.sections.map((s, i) => ({ id: `part-${i}`, label: s.title })),
+        { id: "stack", label: copy.stackTitle },
+      ]}
+    >
+      <header id="intro" className="flex flex-col gap-3">
         <h1 className="text-2xl font-semibold tracking-tight text-balance md:text-3xl">
           {copy.title}
         </h1>
@@ -56,6 +48,8 @@ export function CaseStudyPage({ locale }: { locale: Locale }) {
         </dl>
       </header>
 
+      <RantaiLive copy={getPortfolioCopy(locale).hero.visual} />
+
       {copy.shots.map((shot) => (
         <figure key={shot.name} className="flex flex-col gap-3">
           <figcaption className="text-sm font-semibold">{shot.name}</figcaption>
@@ -77,8 +71,12 @@ export function CaseStudyPage({ locale }: { locale: Locale }) {
         </figure>
       ))}
 
-      {copy.sections.map((section) => (
-        <section key={section.title} className="flex flex-col gap-3">
+      {copy.sections.map((section, i) => (
+        <section
+          key={section.title}
+          id={`part-${i}`}
+          className="flex flex-col gap-3"
+        >
           <h2 className="text-sm font-bold tracking-wider uppercase">
             {section.title}
           </h2>
@@ -100,7 +98,7 @@ export function CaseStudyPage({ locale }: { locale: Locale }) {
         </section>
       ))}
 
-      <section className="flex flex-col gap-3">
+      <section id="stack" className="flex flex-col gap-3">
         <h2 className="text-sm font-bold tracking-wider uppercase">
           {copy.stackTitle}
         </h2>
@@ -112,17 +110,6 @@ export function CaseStudyPage({ locale }: { locale: Locale }) {
           ))}
         </ul>
       </section>
-
-      <footer className="border-border/60 flex flex-col gap-3 border-t pt-8">
-        <p className="text-lg font-semibold tracking-tight">{copy.cta}</p>
-        <Link
-          href={`${home === "/" ? "" : home}/#contact`}
-          className="bg-foreground text-background hover:bg-foreground/85 inline-flex h-9 w-fit items-center gap-1 rounded-full px-4 text-sm font-medium transition-colors"
-        >
-          {copy.ctaLink}
-          <ArrowUpRight aria-hidden className="size-3.5" />
-        </Link>
-      </footer>
-    </main>
+    </SubPage>
   );
 }

@@ -375,10 +375,14 @@ html {
 .composer-body {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  grid-template-areas: "in in in" "plus . send";
+  grid-template-areas: "in in in" "plus tools send";
   align-items: center;
   gap: 14px 10px;
-  padding: 14px 14px 10px 16px;
+  /* Toolbar hugs the corners; the text keeps its 14px inset via its own padding. */
+  padding: 14px 8px 8px;
+}
+.composer[data-mode="cta"] .composer-body {
+  grid-template-areas: "in in in" "tools tools send";
 }
 .composer[data-mode="dock"] .composer-body,
 .composer[data-mode="float"] .composer-body {
@@ -402,9 +406,11 @@ html {
   line-height: 1.5;
   outline: none;
   background: transparent;
+  padding: 0 6px;
 }
 .composer[data-mode="dock"] .composer-input,
 .composer[data-mode="float"] .composer-input {
+  padding: 0;
   flex: 1;
   min-width: 0;
   min-height: 0;
@@ -462,6 +468,18 @@ html {
 }
 .composer-send:not(:disabled):hover {
   background: color-mix(in oklab, var(--foreground) 80%, transparent);
+}
+/* Email and socials in the last composer's toolbar: quiet like the +. */
+.composer-tool {
+  color: var(--muted-foreground);
+}
+.composer-tool:hover {
+  color: var(--foreground);
+  background: var(--muted);
+}
+.composer-tool svg {
+  width: 15px;
+  height: 15px;
 }
 .composer-icon svg,
 .composer-send svg {

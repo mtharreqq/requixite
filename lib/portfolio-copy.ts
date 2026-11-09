@@ -3,13 +3,43 @@ export type Locale = "en" | "id";
 export const english = {
   metadata:
     "Built your app with Lovable, Bolt, v0, or Cursor? Tharreq polishes vibecoded apps, fixing spacing, type, and interactions so they feel finished.",
-  language: "Language",
   skip: "Skip to content",
+  back: "Back to home",
+  about: {
+    title: "About me",
+    meta: "Who Tharreq is, where he works, and how he got here.",
+    // ponytail: drafted from what's on the site; Tharreq to verify.
+    story: [
+      "I’m Tharreq, a product engineer and designer from Bandung, Indonesia. I make software feel finished: the spacing, the type, the little moments nobody asks for but everyone notices.",
+      "I studied Computer Engineering at Telkom University and spent most of it designing anyway. Between 2022 and 2023 that turned into three UI/UX competition wins.",
+      "Since 2025 I’ve been a frontend developer at Telkomsigma, building internal enterprise apps. On the side, I design and build rantai.dev for RantAI.",
+      "Requixite is my own studio. These days that mostly means taking apps people built fast, often with AI, and polishing them until they don’t look like it.",
+    ],
+  },
+  workPage: {
+    title: "My work",
+    meta: "Projects Tharreq has designed, built, or finished.",
+    intro: "Things I’ve designed, built, or finished.",
+    read: "Read the case study",
+    projects: [
+      {
+        name: "rantai.dev",
+        client: "RantAI",
+        year: "2026",
+        summary:
+          "An AI-built company site, finished into a clear, fast, bilingual one with its own CMS.",
+        image: "/work/rantai/home.jpg",
+        href: "/work/rantai",
+      },
+    ],
+  },
+  contactPage: {
+    title: "Contact me",
+    intro:
+      "Got a vibecoded app that almost works? Send it over. I’ll make it feel finished.",
+    meta: "Send Tharreq your app, prototype, or just a hello.",
+  },
   hero: {
-    work: {
-      title: "Proof, not promises",
-      intro: "rantai.dev was built with AI. Scroll and watch it get finished.",
-    },
     visual: {
       label:
         "rantai.dev, rebuilt live: scrolling turns the AI-built version into the polished one.",
@@ -17,8 +47,6 @@ export const english = {
       after: "Polished",
       visit: "Visit site",
       pages: ["Home", "Products"],
-      caseStudy: "Read the case study",
-      caseStudyHref: "/work/rantai",
     },
     chat: {
       status: "Replies within 2 days",
@@ -83,13 +111,24 @@ export const english = {
     skip: {
       story: "Scroll for the story",
       storyTip: "Or just scroll down",
+      play: "Play it for me",
+      playTip: "Too lazy to scroll? Sit back, it scrolls itself",
+      pause: "Pause",
+      resume: "Play",
+      top: "Back to top",
+      topTip: "Straight back to the hello",
       more: "Or look around first",
       about: "About me",
       aboutTip: "Who I am and where I work",
       work: "See my work",
       workTip: "Skip to the live demo",
       contact: "Contact me",
-      contactTip: "Skip to my contacts",
+      contactTip: "Say hi, or send me your app",
+      next: "Keep looking",
+      home: "The story",
+      homeTip: "Back to the vibecoded app",
+      caseStudy: "Case study",
+      caseStudyTip: "How rantai.dev got finished",
     },
     float: {
       label: "Ask Tharreq anything",
@@ -183,7 +222,10 @@ export const english = {
         time: "2–3 weeks",
       },
     ],
-    note: "Start free. Fixed quote before any paid work.",
+    // A nod to "Claude is AI and can make mistakes."; the tip is the fine print.
+    note: "Tharreq is human and can make mistakes.",
+    noteTip:
+      "So he checks every detail twice and does his best on each one. Start free, fixed quote before any paid work.",
     // Chat draft when a plan is picked; {plan} is its name.
     ask: "I’m interested in {plan}. My app: ",
   },
@@ -232,15 +274,25 @@ export const english = {
   },
   rail: {
     navigation: "Page sections",
-    theme: "Switch color theme",
     review: "Intro",
     vibecoded: "Vibecoded",
     feedback: "Comments",
     handoff: "Handoff",
     offer: "Pricing",
-    experience: "About",
-    work: "Work",
+    intro: "Intro",
+    experience: "Experience",
     contact: "Contact",
+    pages: {
+      menu: "Pages",
+      home: "Home",
+      about: "About me",
+      work: "My work",
+      contact: "Contact me",
+      theme: "Theme",
+      light: "Light",
+      dark: "Dark",
+      system: "Match system",
+    },
   },
 };
 
@@ -249,14 +301,42 @@ export type PortfolioCopy = typeof english;
 export const indonesian: PortfolioCopy = {
   metadata:
     "Bikin aplikasi pakai Lovable, Bolt, v0, atau Cursor? Tharreq merapikan aplikasi hasil vibecoding: jarak, huruf, dan interaksinya, sampai terasa jadi.",
-  language: "Bahasa",
   skip: "Langsung ke konten",
+  back: "Kembali ke beranda",
+  about: {
+    title: "Tentang aku",
+    meta: "Siapa Tharreq, kerja di mana, dan gimana sampai di sini.",
+    story: [
+      "Aku Tharreq, product engineer dan desainer dari Bandung. Kerjaku bikin software terasa jadi: jaraknya, hurufnya, momen-momen kecil yang nggak diminta siapa-siapa tapi semua orang sadar.",
+      "Aku kuliah Teknik Komputer di Telkom University, tapi kebanyakan waktunya malah dipakai buat desain. Antara 2022 dan 2023, itu jadi tiga juara lomba UI/UX.",
+      "Sejak 2025 aku frontend developer di Telkomsigma, bikin aplikasi internal enterprise. Sampingannya, aku mendesain dan membangun rantai.dev buat RantAI.",
+      "Requixite itu studioku sendiri. Sekarang isinya kebanyakan aplikasi yang dibikin cepat, sering pakai AI, terus kupoles sampai nggak kelihatan lagi kalau dibikin cepat.",
+    ],
+  },
+  workPage: {
+    title: "Karyaku",
+    meta: "Project yang didesain, dibangun, atau dirapikan Tharreq.",
+    intro: "Yang pernah aku desain, bangun, atau rapikan.",
+    read: "Baca studi kasusnya",
+    projects: [
+      {
+        name: "rantai.dev",
+        client: "RantAI",
+        year: "2026",
+        summary:
+          "Situs perusahaan buatan AI, dirapikan jadi situs yang jelas, cepat, dua bahasa, dengan CMS sendiri.",
+        image: "/work/rantai/home.jpg",
+        href: "/id/work/rantai",
+      },
+    ],
+  },
+  contactPage: {
+    title: "Hubungi aku",
+    intro:
+      "Punya aplikasi vibecoded yang hampir jadi? Kirim aja. Biar aku bikin terasa beres.",
+    meta: "Kirim aplikasi, prototipe, atau sekadar sapaan ke Tharreq.",
+  },
   hero: {
-    work: {
-      title: "Bukti, bukan janji",
-      intro:
-        "rantai.dev dibangun pakai AI. Scroll, lihat versi rapinya muncul.",
-    },
     visual: {
       label:
         "rantai.dev, dibangun ulang langsung: saat di-scroll, versi buatan AI berubah jadi versi yang sudah dirapikan.",
@@ -264,8 +344,6 @@ export const indonesian: PortfolioCopy = {
       after: "Sudah dirapikan",
       visit: "Buka situsnya",
       pages: ["Beranda", "Produk"],
-      caseStudy: "Baca studi kasusnya",
-      caseStudyHref: "/id/work/rantai",
     },
     chat: {
       status: "Membalas dalam 2 hari",
@@ -326,13 +404,24 @@ export const indonesian: PortfolioCopy = {
     skip: {
       story: "Scroll untuk lihat ceritanya",
       storyTip: "Atau scroll aja ke bawah",
+      play: "Putarin buat aku",
+      playTip: "Malas scroll? Santai, biar jalan sendiri",
+      pause: "Jeda",
+      resume: "Lanjut",
+      top: "Ke atas lagi",
+      topTip: "Langsung balik ke awal",
       more: "Atau lihat-lihat dulu",
       about: "Tentang aku",
       aboutTip: "Siapa aku dan kerja di mana",
       work: "Lihat karyaku",
       workTip: "Langsung ke demo",
       contact: "Hubungi aku",
-      contactTip: "Langsung ke kontak",
+      contactTip: "Sapa aku, atau kirim aplikasimu",
+      next: "Lihat yang lain",
+      home: "Ceritanya",
+      homeTip: "Balik ke aplikasi vibecoded tadi",
+      caseStudy: "Studi kasus",
+      caseStudyTip: "Gimana rantai.dev dirapikan",
     },
     float: {
       label: "Tanya Tharreq apa saja",
@@ -426,7 +515,9 @@ export const indonesian: PortfolioCopy = {
         time: "2–3 minggu",
       },
     ],
-    note: "Mulai gratis. Harga pasti sebelum kerja berbayar.",
+    note: "Tharreq manusia dan bisa salah.",
+    noteTip:
+      "Makanya tiap detail dicek dua kali dan dikerjain sebaik mungkin. Mulai gratis, harga pasti sebelum kerja berbayar.",
     ask: "Saya tertarik dengan {plan}. Aplikasi saya: ",
   },
   experience: {
@@ -474,15 +565,25 @@ export const indonesian: PortfolioCopy = {
   },
   rail: {
     navigation: "Bagian halaman",
-    theme: "Ganti tema warna",
     review: "Intro",
     vibecoded: "Vibecoded",
     feedback: "Komentar",
     handoff: "Serah terima",
     offer: "Harga",
-    experience: "Tentang",
-    work: "Karya",
+    intro: "Intro",
+    experience: "Pengalaman",
     contact: "Kontak",
+    pages: {
+      menu: "Halaman",
+      home: "Beranda",
+      about: "Tentang aku",
+      work: "Karyaku",
+      contact: "Hubungi aku",
+      theme: "Tema",
+      light: "Terang",
+      dark: "Gelap",
+      system: "Ikut sistem",
+    },
   },
 };
 

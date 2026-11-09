@@ -9,6 +9,8 @@ import {
   useSyncExternalStore,
 } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { createPortal } from "react-dom";
 import {
   ArrowDown,
   ArrowUp,
@@ -16,6 +18,8 @@ import {
   LayoutGrid,
   LoaderCircle,
   MessageCircle,
+  Pause,
+  Play,
   Plus,
   Settings,
   Sparkles,
@@ -43,7 +47,13 @@ import {
 import { openChat } from "@/lib/chat-events";
 import { SplitReveal } from "@/components/salmoon/split-reveal";
 import { jumpTo, smoothScrollTo } from "@/components/smooth-scroll";
+import { ContactIcons } from "@/components/salmoon/connect-section";
 import { cn } from "@/lib/utils";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 // One pinned story: you prompt an AI, it hands back a vibecoded dashboard, you
 // ask me for help in a comment, I comment faster than you can fix, then I fix
@@ -54,6 +64,7 @@ import { cn } from "@/lib/utils";
 type P = MotionValue<number>;
 type Copy = PortfolioCopy["review"];
 type Offer = PortfolioCopy["offer"];
+type Contact = PortfolioCopy["contact"];
 
 const ease = cubicBezier(0.22, 1, 0.36, 1);
 const pop = { stiffness: 380, damping: 20 };
@@ -76,7 +87,7 @@ const HELLO_END = -0.055;
 const BRIDGE_END = -0.005;
 const LOGO_AT = 0.015;
 const GROW = [0.035, 0.05];
-const TYPE = [0.05, 0.1] as const;
+const TYPE = [0.05, 0.095] as const;
 const SENT = 0.1;
 const STEP_AT = [0.105, 0.12, 0.135, 0.15];
 const BUILT = 0.165;
@@ -98,6 +109,30 @@ const FIXALL = 0.735;
 const CTA = 0.87;
 // Where the pin lets go.
 const END = 0.92;
+// Pauses: scroll keeps going but the story holds still, so a quick flick
+// can't skip a beat. [story beat, length]. The pin's height pays for them.
+const HOLDS = [
+  [0.097, 0.03], // typed, before it sends
+  [0.101, 0.02], // sent, before the build starts
+  [0.168, 0.015], // built, before the focus
+  [REPLY + 0.002, 0.015], // my reply to your question
+  [GIVE_POP + 0.003, 0.012], // you give up
+  [ONIT + 0.002, 0.012], // I'm on it
+] as const;
+const SPAN = END + INTRO + HOLDS.reduce((t, [, l]) => t + l, 0);
+/** Scroll progress (0–1) to story beat, flat across each hold. */
+function toStory(v: number) {
+  let u = v * SPAN - INTRO;
+  for (const [at, len] of HOLDS) {
+    if (u <= at) return u;
+    if (u <= at + len) return at;
+    u -= len;
+  }
+  return u;
+}
+/** Story beat back to scroll progress, for the rail's chapter anchors. */
+const toScroll = (at: number) =>
+  (at + INTRO + HOLDS.reduce((t, [h, l]) => (h < at ? t + l : t), 0)) / SPAN;
 const CAPTION_AT = [
   0,
   FOCUS,
@@ -396,6 +431,174 @@ function useDraft() {
   return { text, setText, send, onKeyDown };
 }
 
+/** A plan chip; hovering it opens a card that plays what the plan does. */
+function PlanChip({
+  index,
+  plan,
+  price,
+  onPick,
+  enter,
+}: {
+  index: number;
+  plan: Offer["plans"][number];
+  price: string;
+  onPick: () => void;
+  enter: React.ComponentProps<typeof motion.button>;
+}) {
+  const [run, setRun] = useState(0);
+  const Scene = SCENES[index];
+  return (
+    <HoverCard
+      openDelay={150}
+      closeDelay={100}
+      onOpenChange={(o) => o && setRun((r) => r + 1)}
+    >
+      <HoverCardTrigger asChild>
+        <motion.button
+          {...enter}
+          type="button"
+          onClick={onPick}
+          className="composer-chip"
+        >
+          <span className="font-medium">{plan.name}</span>
+          <span className="text-muted-foreground tabular-nums">{price}</span>
+        </motion.button>
+      </HoverCardTrigger>
+      <HoverCardContent
+        side="top"
+        sideOffset={8}
+        className="bg-popover/95 border-border/80 flex w-64 flex-col gap-1.5 rounded-xl p-3 shadow-xl backdrop-blur-md"
+      >
+        <div
+          aria-hidden
+          className="bg-muted mb-1.5 grid h-28 place-items-center overflow-hidden rounded-lg"
+        >
+          <Scene run={run} />
+        </div>
+        <div className="flex items-baseline justify-between gap-3 text-sm">
+          <span className="font-semibold">{plan.name}</span>
+          <span className="text-muted-foreground text-xs tabular-nums">
+            {price}
+          </span>
+        </div>
+        <p className="text-muted-foreground text-xs leading-relaxed">
+          {plan.desc}
+        </p>
+        <p className="text-muted-foreground/80 text-xs">{plan.time}</p>
+      </HoverCardContent>
+    </HoverCard>
+  );
+}
+
+// The plan scenes, from the old offer section. Keyed on `run`: each open
+// remounts them from the "before" pose.
+const bounce = { type: "spring", stiffness: 300, damping: 22 } as const;
+const from = <T,>(run: number, pose: T) => (run ? pose : false);
+
+const Window = ({ children }: { children: React.ReactNode }) => (
+  <div className="bg-background border-border/80 relative h-20 w-28 rounded-md border p-2 shadow-sm">
+    {children}
+  </div>
+);
+const Bar = ({ className = "" }: { className?: string }) => (
+  <span className={`bg-foreground/15 block h-1.5 rounded-full ${className}`} />
+);
+
+/* Honest take: three numbered notes land on the rough spots. */
+function Notes({ run }: { run: number }) {
+  const pins = [
+    ["left-3 top-1", "1"],
+    ["right-2 top-7", "2"],
+    ["left-7 bottom-1", "3"],
+  ];
+  return (
+    <Window>
+      <Bar className="w-10" />
+      <Bar className="mt-2 w-20" />
+      <Bar className="mt-1 w-14" />
+      <span className="border-foreground/15 mt-3 block h-4 w-12 rounded-sm border" />
+      {pins.map(([pos, n], i) => (
+        <motion.span
+          key={`${run}-${n}`}
+          className={`bg-foreground text-background absolute grid size-4 place-items-center rounded-full text-[9px] font-semibold ${pos}`}
+          initial={from(run, { scale: 0, opacity: 0 })}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ ...bounce, delay: 0.15 + i * 0.18 }}
+        >
+          {n}
+        </motion.span>
+      ))}
+    </Window>
+  );
+}
+
+/* Polish sprint: an uneven card snaps onto one edge and one rhythm. */
+function Snap({ run }: { run: number }) {
+  const rows = [
+    { x: 7, w: "w-10", d: 0 },
+    { x: -5, w: "w-20", d: 0.08 },
+    { x: 10, w: "w-14", d: 0.16 },
+  ];
+  return (
+    <Window>
+      {rows.map((r, i) => (
+        <motion.div
+          key={`${run}-${i}`}
+          className={i ? "mt-1.5" : ""}
+          initial={from(run, { x: r.x })}
+          animate={{ x: 0 }}
+          transition={{ ...bounce, delay: 0.2 + r.d }}
+        >
+          <Bar className={r.w} />
+        </motion.div>
+      ))}
+      <motion.span
+        key={`${run}-btn`}
+        className="mt-3 block h-4 w-12"
+        initial={from(run, {
+          x: 6,
+          borderRadius: 0,
+          backgroundColor: "var(--muted)",
+        })}
+        animate={{
+          x: 0,
+          borderRadius: 999,
+          backgroundColor: "var(--foreground)",
+        }}
+        transition={{ duration: 0.5, ease: EASE, delay: 0.45 }}
+      />
+    </Window>
+  );
+}
+
+/* Build from scratch: the page goes up block by block. */
+function Blocks({ run }: { run: number }) {
+  const blocks = [
+    "h-1.5 w-full",
+    "mt-2 h-5 w-full",
+    "mt-1.5 h-4 w-[30%]",
+    "mt-1.5 h-4 w-[30%]",
+    "mt-1.5 h-4 w-[30%]",
+  ];
+  return (
+    <Window>
+      <div className="flex flex-wrap justify-between">
+        {blocks.map((b, i) => (
+          <motion.span
+            key={`${run}-${i}`}
+            className={`bg-foreground/15 block rounded-sm ${b}`}
+            initial={from(run, { opacity: 0, y: 6 })}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: EASE, delay: 0.1 + i * 0.09 }}
+          />
+        ))}
+      </div>
+    </Window>
+  );
+}
+
+const SCENES = [Notes, Snap, Blocks];
+
 function Send({
   label,
   onClick,
@@ -428,6 +631,7 @@ function Send({
 function Composer({
   copy,
   offer,
+  contact,
   locale,
   p,
   mode,
@@ -435,6 +639,7 @@ function Composer({
 }: {
   copy: Copy;
   offer: Offer;
+  contact: Contact;
   locale: Locale;
   p: P;
   mode: Mode;
@@ -498,24 +703,14 @@ function Composer({
       {cta && (
         <div className="-mx-1 mb-1 flex gap-1.5 overflow-x-auto p-1 [scrollbar-width:none]">
           {offer.plans.map((pl, i) => (
-            <Tooltip key={pl.name}>
-              <TooltipTrigger asChild>
-                <motion.button
-                  {...later(0.6 + i * 0.08)}
-                  type="button"
-                  onClick={() => pick(pl.name)}
-                  className="composer-chip"
-                >
-                  <span className="font-medium">{pl.name}</span>
-                  <span className="text-muted-foreground tabular-nums">
-                    {prices[i] ? `${offer.from} ${prices[i]}` : offer.free}
-                  </span>
-                </motion.button>
-              </TooltipTrigger>
-              <TooltipContent sideOffset={6}>
-                {pl.desc} · {pl.time}
-              </TooltipContent>
-            </Tooltip>
+            <PlanChip
+              key={pl.name}
+              index={i}
+              plan={pl}
+              price={prices[i] ? `${offer.from} ${prices[i]}` : offer.free}
+              onPick={() => pick(pl.name)}
+              enter={later(0.6 + i * 0.08)}
+            />
           ))}
         </div>
       )}
@@ -565,14 +760,26 @@ function Composer({
               )}
             </motion.p>
           )}
-          <motion.span
-            layout="position"
-            transition={morph}
-            aria-hidden
-            className="composer-icon"
-          >
-            <Plus />
-          </motion.span>
+          {/* The + only dresses the story's AI chat; the real one has none. */}
+          {!cta && (
+            <motion.span
+              layout="position"
+              transition={morph}
+              aria-hidden
+              className="composer-icon"
+            >
+              <Plus />
+            </motion.span>
+          )}
+          {cta && (
+            // Rather email or DM? Same toolbar as the + and send.
+            <motion.div
+              {...later(1)}
+              className="flex min-w-0 items-center [grid-area:tools]"
+            >
+              <ContactIcons copy={contact} />
+            </motion.div>
+          )}
           <motion.span
             layout="position"
             transition={morph}
@@ -588,11 +795,20 @@ function Composer({
         </div>
       </motion.div>
       {cta && (
-        <motion.p
-          {...later(0.9)}
-          className="text-muted-foreground mt-2 px-1 text-xs"
-        >
-          {offer.note}
+        <motion.p {...later(0.9)} className="mt-2 px-1 text-xs">
+          <Tooltip delayDuration={600}>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                className="text-muted-foreground hover:text-foreground cursor-help decoration-dotted underline-offset-4 transition-colors hover:underline focus-visible:underline"
+              >
+                {offer.note}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent sideOffset={6} className="max-w-64 text-balance">
+              {offer.noteTip}
+            </TooltipContent>
+          </Tooltip>
         </motion.p>
       )}
       {cta && (
@@ -602,7 +818,7 @@ function Composer({
           className="mt-12 flex flex-col items-center gap-3"
         >
           <p className="text-muted-foreground text-sm">{copy.skip.more}</p>
-          <Shortcuts copy={copy} />
+          <Shortcuts copy={copy} locale={locale} />
         </motion.div>
       )}
     </motion.div>
@@ -1080,6 +1296,7 @@ function Answer({
 function Stage({
   copy,
   offer,
+  contact,
   locale,
   p,
   still,
@@ -1087,6 +1304,7 @@ function Stage({
 }: {
   copy: Copy;
   offer: Offer;
+  contact: Contact;
   locale: Locale;
   p: P;
   still: boolean;
@@ -1184,6 +1402,7 @@ function Stage({
       <Composer
         copy={copy}
         offer={offer}
+        contact={contact}
         locale={locale}
         p={p}
         mode={mode}
@@ -1256,57 +1475,212 @@ function Stage({
 }
 
 /** Straight to the rest of the page, no story in between. */
-function Shortcuts({ copy }: { copy: Copy }) {
-  // offsetTop ignores the reveal's translate. Landing ends the story, which
-  // resizes its slack and moves the target, so keep landing for a few frames.
-  const go = (id: string) => {
-    let n = 0;
-    const at = () => {
-      let y = -24;
-      for (
-        let e = document.getElementById(id);
-        e;
-        e = e.offsetParent as HTMLElement | null
-      )
-        y += e.offsetTop;
-      jumpTo(y);
-      if (++n < 20) requestAnimationFrame(at);
-    };
-    at();
-  };
+function Shortcuts({
+  copy,
+  locale,
+  onPlay,
+  className,
+}: {
+  copy: Copy;
+  locale: Locale;
+  onPlay?: () => void;
+  className?: string;
+}) {
+  const base = locale === "id" ? "/id" : "";
+  const chip = (label: string, tip: string, el: React.ReactElement) => (
+    <Tooltip key={label}>
+      <TooltipTrigger asChild>{el}</TooltipTrigger>
+      <TooltipContent sideOffset={6}>{tip}</TooltipContent>
+    </Tooltip>
+  );
   return (
-    <div className="flex flex-wrap justify-center gap-1.5">
-      {(
-        [
-          ["experience", copy.skip.about, copy.skip.aboutTip],
-          ["work", copy.skip.work, copy.skip.workTip],
-          ["contact", copy.skip.contact, copy.skip.contactTip],
-        ] as const
-      ).map(([id, label, tip]) => (
-        <Tooltip key={id}>
-          <TooltipTrigger asChild>
-            <button
-              type="button"
-              onClick={() => go(id)}
-              className="composer-chip"
-            >
-              {label}
-            </button>
-          </TooltipTrigger>
-          <TooltipContent sideOffset={6}>{tip}</TooltipContent>
-        </Tooltip>
-      ))}
+    <div className={cn("flex flex-wrap justify-center gap-1.5", className)}>
+      {onPlay &&
+        chip(
+          copy.skip.play,
+          copy.skip.playTip,
+          <button
+            type="button"
+            onClick={onPlay}
+            className="composer-chip inline-flex items-center gap-1.5"
+          >
+            <Play aria-hidden className="size-3 fill-current" />
+            {copy.skip.play}
+          </button>,
+        )}
+      {!onPlay &&
+        chip(
+          copy.skip.top,
+          copy.skip.topTip,
+          <button
+            type="button"
+            onClick={() => jumpTo(0)}
+            className="composer-chip inline-flex items-center gap-1.5"
+          >
+            <ArrowUp aria-hidden className="size-3" />
+            {copy.skip.top}
+          </button>,
+        )}
+      {chip(
+        copy.skip.about,
+        copy.skip.aboutTip,
+        <Link href={`${base}/about`} className="composer-chip">
+          {copy.skip.about}
+        </Link>,
+      )}
+      {chip(
+        copy.skip.work,
+        copy.skip.workTip,
+        <Link href={`${base}/work`} className="composer-chip">
+          {copy.skip.work}
+        </Link>,
+      )}
+      {/* At the story's end the contacts are right above. */}
+      {onPlay &&
+        chip(
+          copy.skip.contact,
+          copy.skip.contactTip,
+          <Link href={`${base}/contact`} className="composer-chip">
+            {copy.skip.contact}
+          </Link>,
+        )}
     </div>
   );
 }
 
-/** Under the hello: the story is a scroll away, or skip straight on. */
+// Autoplay: the whole pin in about 40s, at an even pace, so the holds play
+// as pauses. Your own scroll, a scroll key, or any other jump pauses it.
+const PLAY_MS = 40000;
+const SCROLL_KEYS = new Set([
+  "ArrowUp",
+  "ArrowDown",
+  "PageUp",
+  "PageDown",
+  "Home",
+  "End",
+  " ",
+]);
+type Auto = "off" | "on" | "paused";
+
+function useAutoplay(ref: React.RefObject<HTMLElement | null>) {
+  const [auto, setAuto] = useState<Auto>("off");
+  useEffect(() => {
+    const el = ref.current;
+    if (auto !== "on" || !el) return;
+    const run = el.offsetHeight - innerHeight;
+    const to = el.getBoundingClientRect().top + scrollY + run;
+    const speed = run / PLAY_MS;
+    const start = performance.now();
+    let last = start;
+    let y = scrollY;
+    let raf = 0;
+    const pause = () => setAuto("paused");
+    // Clicking anything but the pill (rail, a link) is taking over too.
+    const onDown = (e: PointerEvent) => {
+      if (!(e.target as HTMLElement).closest("[data-autopill]")) pause();
+    };
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement;
+      if (SCROLL_KEYS.has(e.key) && !t.closest("button,a,input,textarea"))
+        pause();
+    };
+    const tick = (now: number) => {
+      // Something else moved the page (rail, link, Lenis): let it win.
+      if (Math.abs(scrollY - y) > 40) return pause();
+      // Eases in over 0.6s and out over the last 0.6s of travel.
+      const pace = Math.min(
+        1,
+        (now - start) / 600,
+        Math.max(0.15, (to - y) / (speed * 600)),
+      );
+      y = Math.min(to, y + speed * pace * Math.min(50, now - last));
+      last = now;
+      jumpTo(y);
+      if (y >= to - 0.5) return setAuto("off");
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    addEventListener("wheel", pause, { passive: true });
+    addEventListener("touchmove", pause, { passive: true });
+    addEventListener("keydown", onKey);
+    addEventListener("pointerdown", onDown);
+    return () => {
+      removeEventListener("pointerdown", onDown);
+      cancelAnimationFrame(raf);
+      removeEventListener("wheel", pause);
+      removeEventListener("touchmove", pause);
+      removeEventListener("keydown", onKey);
+    };
+  }, [auto, ref]);
+  return [auto, setAuto] as const;
+}
+
+/** Pause or resume the autoplay, with how far the story has got. */
+function AutoPill({
+  copy,
+  auto,
+  show,
+  p,
+  onToggle,
+}: {
+  copy: Copy;
+  auto: Auto;
+  show: boolean;
+  p: P;
+  onToggle: () => void;
+}) {
+  const done = useTransform(p, [-INTRO, END], [0, 1]);
+  const on = auto === "on";
+  const label = on ? copy.skip.pause : copy.skip.resume;
+  // A portal: the stage's transforms would pin "fixed" to the stage.
+  return createPortal(
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          data-autopill
+          className="fixed top-4 right-4 z-50"
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.3, ease: EASE }}
+        >
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={onToggle}
+                aria-pressed={!on}
+                className="bg-background/80 border-border/80 text-muted-foreground hover:text-foreground relative inline-flex h-8 cursor-pointer items-center gap-1.5 overflow-hidden rounded-full border px-3 text-xs font-medium backdrop-blur-md transition-colors"
+              >
+                {on ? (
+                  <Pause aria-hidden className="size-3 fill-current" />
+                ) : (
+                  <Play aria-hidden className="size-3 fill-current" />
+                )}
+                {label}
+                <motion.span
+                  aria-hidden
+                  style={{ scaleX: done }}
+                  className="bg-foreground/30 absolute inset-x-3 bottom-1 h-px origin-left"
+                />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent sideOffset={6}>{copy.skip.playTip}</TooltipContent>
+          </Tooltip>
+        </motion.div>
+      )}
+    </AnimatePresence>,
+    document.body,
+  );
+}
+
+/** Under the hello: the story is a scroll away. */
 function Skip({ copy, show }: { copy: Copy; show: boolean }) {
   return (
     <AnimatePresence>
       {show && (
         <motion.div
-          className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-3 md:bottom-12"
+          className="absolute inset-x-0 bottom-8 flex flex-col items-center md:bottom-12"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, transition: { duration: 0.2 } }}
@@ -1325,7 +1699,6 @@ function Skip({ copy, show }: { copy: Copy; show: boolean }) {
             </TooltipTrigger>
             <TooltipContent sideOffset={6}>{copy.skip.storyTip}</TooltipContent>
           </Tooltip>
-          <Shortcuts copy={copy} />
         </motion.div>
       )}
     </AnimatePresence>
@@ -1335,10 +1708,12 @@ function Skip({ copy, show }: { copy: Copy; show: boolean }) {
 export function ReviewStory({
   copy,
   offer,
+  contact,
   locale,
 }: {
   copy: Copy;
   offer: Offer;
+  contact: Contact;
   locale: Locale;
 }) {
   const ref = useRef<HTMLElement>(null);
@@ -1350,7 +1725,6 @@ export function ReviewStory({
   // A JS copy: native scroll timelines can mismeasure sticky targets.
   // Starts on the hello, so the server render opens on it too.
   const p = useMotionValue(-INTRO);
-  const toStory = (v: number) => v * (END + INTRO) - INTRO;
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     if (!still) p.set(toStory(v));
   });
@@ -1371,7 +1745,12 @@ export function ReviewStory({
   }, []);
   // The hello plays again whenever you scroll back up to it.
   const [hello, setHello] = useState(true);
-  useMotionValueEvent(p, "change", (v) => setHello(v < HELLO_END - 0.02));
+  useMotionValueEvent(p, "change", (v) => {
+    setHello(v < HELLO_END - 0.02);
+    setEnded(v >= END - 0.002);
+  });
+  const [ended, setEnded] = useState(false);
+  const [auto, setAuto] = useAutoplay(ref);
   // At the end, the blank under the centered pricing is pulled back so the
   // next section rises right after it.
   const content = useRef<HTMLDivElement>(null);
@@ -1406,7 +1785,7 @@ export function ReviewStory({
       // nothing slides when you scroll back up.
       className={cn(
         "relative w-full",
-        !still && "-mt-8 h-[1120svh] md:-mt-12 md:h-[1320svh]",
+        !still && "-mt-8 h-[1225svh] md:-mt-12 md:h-[1445svh]",
       )}
       style={{ marginBottom: still ? 0 : -slack }}
     >
@@ -1419,7 +1798,7 @@ export function ReviewStory({
             aria-hidden
             className="pointer-events-none absolute inset-x-0"
             style={{
-              top: `calc((100% - 100svh) * ${(at + INTRO) / (END + INTRO)})`,
+              top: `calc((100% - 100svh) * ${toScroll(at)})`,
             }}
           />
         ))}
@@ -1439,6 +1818,15 @@ export function ReviewStory({
         )}
       >
         {!still && <Skip copy={copy} show={hello} />}
+        {!still && auto !== "off" && (
+          <AutoPill
+            copy={copy}
+            auto={auto}
+            show={!hello && !ended}
+            p={p}
+            onToggle={() => setAuto(auto === "on" ? "paused" : "on")}
+          />
+        )}
         <div ref={content} className="flex flex-col gap-6">
           <h1 id="review-heading" className="sr-only">
             {copy.title}
@@ -1451,89 +1839,118 @@ export function ReviewStory({
           ) : (
             // Layout glide outside, scroll offset inside: a layout
             // animation would otherwise wipe the offset.
-            <motion.div aria-hidden layout="position" transition={morph}>
-              <motion.div
-                style={{ y: captionY }}
-                className="grid grid-cols-1 text-[clamp(24px,4.8vw,36px)] leading-tight font-medium tracking-[-0.04em]"
-              >
-                <Caption from={-1} to={HELLO_END} p={p}>
-                  {/* First visit: the avatar pops, then the words rise in
+            // Above the stage: on the hello the caption sits over its blank
+            // middle, and the chips under it must stay clickable.
+            <motion.div
+              layout="position"
+              transition={morph}
+              className="relative z-10"
+            >
+              <motion.div style={{ y: captionY }} className="relative">
+                <div
+                  aria-hidden
+                  className="grid grid-cols-1 text-[clamp(24px,4.8vw,36px)] leading-tight font-medium tracking-[-0.04em]"
+                >
+                  <Caption from={-1} to={HELLO_END} p={p}>
+                    {/* First visit: the avatar pops, then the words rise in
                       (RantAI hero timing). From 1%, so it still counts for LCP. */}
-                  <motion.span
-                    className="mr-[0.25em] inline-block align-[-0.15em]"
-                    initial={{ opacity: 0.01, scale: 0.6 }}
-                    animate={
-                      hello
-                        ? { opacity: 1, scale: 1 }
-                        : { opacity: 0.01, scale: 0.6 }
-                    }
-                    transition={{ type: "spring", ...pop, delay: 0.1 }}
-                  >
-                    <Image
-                      src="/avatar.png"
-                      alt=""
-                      width={40}
-                      height={40}
-                      priority
-                      className="block size-[1em] rounded-full"
+                    <motion.span
+                      className="mr-[0.25em] inline-block align-[-0.15em]"
+                      initial={{ opacity: 0.01, scale: 0.6 }}
+                      animate={
+                        hello
+                          ? { opacity: 1, scale: 1 }
+                          : { opacity: 0.01, scale: 0.6 }
+                      }
+                      transition={{ type: "spring", ...pop, delay: 0.1 }}
+                    >
+                      <Image
+                        src="/avatar.png"
+                        alt=""
+                        width={40}
+                        height={40}
+                        priority
+                        className="block size-[1em] rounded-full"
+                      />
+                    </motion.span>
+                    <SplitReveal
+                      as="span"
+                      trigger="mount"
+                      text={copy.hello[0]}
+                      play={hello}
+                      delay={0.2}
+                      from={0.01}
                     />
-                  </motion.span>
-                  <SplitReveal
-                    as="span"
-                    trigger="mount"
-                    text={copy.hello[0]}
-                    play={hello}
-                    delay={0.2}
-                    from={0.01}
-                  />
-                  <br />
-                  <SplitReveal
-                    as="span"
-                    trigger="mount"
-                    text={copy.hello[1]}
-                    play={hello}
-                    delay={0.45}
-                    from={0.01}
-                    className="text-muted-foreground"
-                  />
-                </Caption>
-                <Caption from={HELLO_END} to={BRIDGE_END} p={p}>
-                  {copy.bridge}
-                </Caption>
-                <Caption from={BRIDGE_END} to={CAPTION_AT[1]} p={p}>
-                  {copy.intro}{" "}
-                  <span className="inline-flex align-[0.02em]">
-                    {LOGOS.map(([name, r], i) => (
-                      <Tile key={name} name={name} rotate={r} i={i} p={p} />
-                    ))}
-                  </span>
-                </Caption>
-                <Caption from={CAPTION_AT[1]} to={CAPTION_AT[2]} p={p}>
-                  {copy.vibe.map((part, i) => (
-                    <Fragment key={part}>
-                      {i > 0 && " "}
-                      <Part at={FOCUS + i * VIBE_STEP} p={p}>
-                        {part}
-                      </Part>
-                    </Fragment>
-                  ))}
-                </Caption>
-                {[...copy.captions, copy.cta.title].map((text, i) => (
-                  <Caption
-                    key={text}
-                    from={CAPTION_AT[i + 2]}
-                    to={CAPTION_AT[i + 3]}
-                    p={p}
-                  >
-                    {text}
+                    <br />
+                    <SplitReveal
+                      as="span"
+                      trigger="mount"
+                      text={copy.hello[1]}
+                      play={hello}
+                      delay={0.45}
+                      from={0.01}
+                      className="text-muted-foreground"
+                    />
                   </Caption>
-                ))}
+                  <Caption from={HELLO_END} to={BRIDGE_END} p={p}>
+                    {copy.bridge}
+                  </Caption>
+                  <Caption from={BRIDGE_END} to={CAPTION_AT[1]} p={p}>
+                    {copy.intro}{" "}
+                    <span className="inline-flex align-[0.02em]">
+                      {LOGOS.map(([name, r], i) => (
+                        <Tile key={name} name={name} rotate={r} i={i} p={p} />
+                      ))}
+                    </span>
+                  </Caption>
+                  <Caption from={CAPTION_AT[1]} to={CAPTION_AT[2]} p={p}>
+                    {copy.vibe.map((part, i) => (
+                      <Fragment key={part}>
+                        {i > 0 && " "}
+                        <Part at={FOCUS + i * VIBE_STEP} p={p}>
+                          {part}
+                        </Part>
+                      </Fragment>
+                    ))}
+                  </Caption>
+                  {[...copy.captions, copy.cta.title].map((text, i) => (
+                    <Caption
+                      key={text}
+                      from={CAPTION_AT[i + 2]}
+                      to={CAPTION_AT[i + 3]}
+                      p={p}
+                    >
+                      {text}
+                    </Caption>
+                  ))}
+                </div>
+                {/* Ways on, right under the hello; out of flow so the
+                  composer keeps its spot. */}
+                <AnimatePresence>
+                  {hello && (
+                    <motion.div
+                      className="absolute inset-x-0 top-full mt-6"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, transition: { duration: 0.2 } }}
+                      transition={{ duration: 0.6, ease: EASE, delay: 0.8 }}
+                    >
+                      <Shortcuts
+                        copy={copy}
+                        locale={locale}
+                        onPlay={() => setAuto("on")}
+                        className="justify-start"
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             </motion.div>
           )}
           <Stage
             copy={copy}
             offer={offer}
+            contact={contact}
             locale={locale}
             p={p}
             still={still}

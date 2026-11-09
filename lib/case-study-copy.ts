@@ -6,7 +6,6 @@ const english = {
   title: "rantai.dev, from AI-built to finished",
   description:
     "How I took RantAI’s AI-built website and turned it into a clear, fast, bilingual site with its own CMS.",
-  back: "Back to home",
   meta: [
     ["Client", "RantAI"],
     ["Role", "Design and development"],
@@ -79,8 +78,6 @@ const english = {
     "Tiptap",
     "Vercel",
   ],
-  cta: "Want this for your app?",
-  ctaLink: "Get a free honest take",
 };
 
 export type CaseStudyCopy = typeof english;
@@ -89,7 +86,6 @@ const indonesian: CaseStudyCopy = {
   title: "rantai.dev, dari buatan AI jadi rapi",
   description:
     "Bagaimana saya mengubah website RantAI yang dibuat dengan AI jadi situs yang jelas, cepat, dua bahasa, dan punya CMS sendiri.",
-  back: "Kembali ke beranda",
   meta: [
     ["Klien", "RantAI"],
     ["Peran", "Desain dan pengembangan"],
@@ -152,8 +148,6 @@ const indonesian: CaseStudyCopy = {
   ],
   stackTitle: "Dibangun dengan",
   stack: english.stack,
-  cta: "Mau aplikasimu dirapikan juga?",
-  ctaLink: "Minta review jujur gratis",
 };
 
 export function getCaseStudyCopy(locale: Locale): CaseStudyCopy {
