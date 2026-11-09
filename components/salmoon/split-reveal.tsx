@@ -28,6 +28,7 @@ export function SplitReveal({
   text,
   as = "h2",
   trigger = "view",
+  play = true,
   delay = 0,
   stagger = 0.06,
   from = 0,
@@ -37,6 +38,8 @@ export function SplitReveal({
   text: string;
   as?: Tag;
   trigger?: "view" | "mount";
+  /** With trigger "mount": false hides the words again, true replays them. */
+  play?: boolean;
   delay?: number;
   stagger?: number;
   /** Starting opacity. The hero uses 0.01: fully transparent text does not count for LCP. */
@@ -67,7 +70,7 @@ export function SplitReveal({
       initial={reduce ? false : "hidden"}
       exit={reduce ? undefined : "exit"}
       {...(trigger === "mount"
-        ? { animate: "shown" }
+        ? { animate: play ? "shown" : "hidden" }
         : { whileInView: "shown", viewport: { once: true, amount: 0.4 } })}
     >
       {/* The whole sentence for screen readers; the animated words below

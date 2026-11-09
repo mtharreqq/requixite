@@ -52,6 +52,13 @@ export function smoothScrollTo(y: number, duration = 0.9) {
   else glideTo(y, duration);
 }
 
+/** Jumps straight to `y`, no glide. */
+export function jumpTo(y: number) {
+  cancelAnimationFrame(glide);
+  if (activeLenis) activeLenis.scrollTo(y, { immediate: true, force: true });
+  else window.scrollTo({ top: y, behavior: "instant" });
+}
+
 /** Enhanced scrolling is for mouse/trackpad desktops; touch keeps native inertia. */
 export function useDesktopMotion() {
   return useSyncExternalStore(

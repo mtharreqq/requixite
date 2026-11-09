@@ -6,10 +6,10 @@ export const english = {
   language: "Language",
   skip: "Skip to content",
   hero: {
-    headline: ["Vibecoded it?", "I’ll make it feel finished."],
-    summary:
-      "I’m Tharreq, a product engineer and designer in Bandung. You built the app with AI. I fix the spacing, type, and interactions so it feels made with care.",
-    shortcuts: "Jump to",
+    work: {
+      title: "Proof, not promises",
+      intro: "rantai.dev was built with AI. Scroll and watch it get finished.",
+    },
     visual: {
       label:
         "rantai.dev, rebuilt live: scrolling turns the AI-built version into the polished one.",
@@ -21,7 +21,6 @@ export const english = {
       caseStudyHref: "/work/rantai",
     },
     chat: {
-      open: "Message",
       status: "Replies within 2 days",
       typing: "Tharreq is typing",
       greeting: [
@@ -36,14 +35,12 @@ export const english = {
       copied: "Message copied. Paste it into the DM.",
       close: "Close",
     },
-    profile:
-      "Product engineer and designer in Bandung. Frontend at Telkomsigma, building rantai.dev on the side.",
-    available: "Open to projects",
-    role: "Product Engineer & Designer",
   },
   review: {
     title: "From vibecoded to polished",
-    sr: "It’s now ridiculously easy to build an app with AI. You asked for a dashboard and got one. It works, but it looks vibecoded, so you asked me for help. I left comments and you fixed them, but every fix turned up three more, so you handed it all to me and I fixed everything. Your turn: tell me what needs fixing.",
+    sr: "Hi, I’m Tharreq, a product engineer and designer. Lately, I keep seeing the same thing. It’s now ridiculously easy to build an app with AI. You asked for a dashboard and got one. It works, but it looks vibecoded, so you asked me for help. I left comments and you fixed them, but every fix turned up three more, so you handed it all to me and I fixed everything. Your turn: tell me what needs fixing.",
+    hello: ["Hi, I’m Tharreq.", "Product engineer & designer."],
+    bridge: "Lately, I keep seeing the same thing.",
     intro: "It’s now ridiculously easy to build an app with AI",
     prompt: "Build me a clean analytics dashboard for my SaaS",
     building: "Building your dashboard…",
@@ -62,6 +59,15 @@ export const english = {
       giveup: "Okay, I give up 😩 Can you just fix all of it?",
       onit: "On it 🫡",
     },
+    replies: [
+      "Done ✅",
+      "Toned it down. Better?",
+      "Less bold. Good?",
+      "Lined up 👍",
+      "Ok fixed",
+      "fixed",
+      "ok…",
+    ],
     vibe: ["It works.", "It just looks…", "vibecoded."],
     captions: [
       "So you asked me for help.",
@@ -74,6 +80,17 @@ export const english = {
       placeholder: "Paste your app’s link, or tell me what feels off…",
       send: "Send",
     },
+    skip: {
+      story: "Scroll for the story",
+      storyTip: "Or just scroll down",
+      more: "Or look around first",
+      about: "About me",
+      aboutTip: "Who I am and where I work",
+      work: "See my work",
+      workTip: "Skip to the live demo",
+      contact: "Contact me",
+      contactTip: "Skip to my contacts",
+    },
     float: {
       label: "Ask Tharreq anything",
       placeholder: "Ask me anything: projects, process, pricing…",
@@ -84,8 +101,8 @@ export const english = {
     now: "just now",
     comments: [
       "Fix this padding. Everything is touching.",
-      "Why is everything glowing?",
-      "Too much bold. Nothing stands out.",
+      "Why is everything purple?",
+      "Too many fonts, too much bold.",
       "These numbers don’t line up.",
     ],
     pile: [
@@ -114,7 +131,7 @@ export const english = {
       "Long names break it.",
       "404 page?",
       "Spacing is off again.",
-      "Why is this purple?",
+      "Why so many borders?",
       "Make this sticky.",
       "Tooltip?",
       "Too many fonts.",
@@ -127,8 +144,11 @@ export const english = {
       "Who approved this gradient?",
     ],
     dash: {
+      eyebrow: "✦ AI-powered insights",
       title: "Overview",
+      blurb: "Real-time metrics to supercharge your growth 🚀",
       range: "Last 30 days",
+      note: "vs. previous period",
       action: "New report",
       stats: [
         ["Revenue", "$42.8k", "+14%"],
@@ -213,10 +233,13 @@ export const english = {
   rail: {
     navigation: "Page sections",
     theme: "Switch color theme",
-    home: "Intro",
-    review: "Problem",
+    review: "Intro",
+    vibecoded: "Vibecoded",
+    feedback: "Comments",
+    handoff: "Handoff",
     offer: "Pricing",
     experience: "About",
+    work: "Work",
     contact: "Contact",
   },
 };
@@ -229,10 +252,11 @@ export const indonesian: PortfolioCopy = {
   language: "Bahasa",
   skip: "Langsung ke konten",
   hero: {
-    headline: ["Udah di-vibecode?", "Saya rapikan sampai terasa jadi."],
-    summary:
-      "Saya Tharreq, product engineer dan designer dari Bandung. Aplikasimu dibangun dengan AI, saya rapikan jarak, huruf, dan interaksinya supaya terasa dibuat dengan serius.",
-    shortcuts: "Langsung ke",
+    work: {
+      title: "Bukti, bukan janji",
+      intro:
+        "rantai.dev dibangun pakai AI. Scroll, lihat versi rapinya muncul.",
+    },
     visual: {
       label:
         "rantai.dev, dibangun ulang langsung: saat di-scroll, versi buatan AI berubah jadi versi yang sudah dirapikan.",
@@ -244,7 +268,6 @@ export const indonesian: PortfolioCopy = {
       caseStudyHref: "/id/work/rantai",
     },
     chat: {
-      open: "Chat",
       status: "Membalas dalam 2 hari",
       typing: "Tharreq sedang mengetik",
       greeting: [
@@ -259,14 +282,12 @@ export const indonesian: PortfolioCopy = {
       copied: "Pesan sudah disalin. Tempel di DM, ya.",
       close: "Tutup",
     },
-    profile:
-      "Saya merancang dan membangun produk digital dari Bandung. Bekerja sebagai frontend developer di Telkomsigma, juga mengembangkan rantai.dev.",
-    available: "Terbuka untuk proyek baru",
-    role: "Product Engineer & Designer",
   },
   review: {
     title: "Dari vibecoded jadi rapi",
-    sr: "Sekarang kamu gampang banget bikin aplikasi pakai AI. Kamu minta dashboard dan jadi. Berfungsi, tapi kelihatan vibecoded, jadi kamu minta tolong aku. Aku kasih komentar dan kamu perbaiki, tapi tiap perbaikan memunculkan tiga masalah baru, jadi kamu serahkan semuanya ke aku dan aku beresin semuanya. Giliranmu: ceritakan apa yang perlu dibenahi.",
+    sr: "Halo, aku Tharreq, product engineer dan designer. Belakangan, aku sering lihat hal yang sama. Sekarang kamu gampang banget bikin aplikasi pakai AI. Kamu minta dashboard dan jadi. Berfungsi, tapi kelihatan vibecoded, jadi kamu minta tolong aku. Aku kasih komentar dan kamu perbaiki, tapi tiap perbaikan memunculkan tiga masalah baru, jadi kamu serahkan semuanya ke aku dan aku beresin semuanya. Giliranmu: ceritakan apa yang perlu dibenahi.",
+    hello: ["Halo, aku Tharreq.", "Product engineer & designer."],
+    bridge: "Belakangan, aku sering lihat hal yang sama.",
     intro: "Sekarang kamu gampang banget bikin aplikasi pakai AI",
     prompt: "Bikinin dashboard analitik yang rapi buat SaaS-ku",
     building: "Lagi bikin dashboard…",
@@ -280,6 +301,15 @@ export const indonesian: PortfolioCopy = {
       giveup: "Oke, nyerah 😩 Kamu aja deh yang beresin semuanya?",
       onit: "Siap 🫡",
     },
+    replies: [
+      "Beres ✅",
+      "Udah kukalemin. Mendingan?",
+      "Bold-nya kukurangin. Oke?",
+      "Udah lurus 👍",
+      "Oke, udah",
+      "udah",
+      "ok…",
+    ],
     vibe: ["Jalan sih.", "Cuma kelihatan…", "vibecoded."],
     captions: [
       "Jadi kamu minta tolong aku.",
@@ -293,6 +323,17 @@ export const indonesian: PortfolioCopy = {
         "Tempel link aplikasimu, atau ceritakan apa yang terasa aneh…",
       send: "Kirim",
     },
+    skip: {
+      story: "Scroll untuk lihat ceritanya",
+      storyTip: "Atau scroll aja ke bawah",
+      more: "Atau lihat-lihat dulu",
+      about: "Tentang aku",
+      aboutTip: "Siapa aku dan kerja di mana",
+      work: "Lihat karyaku",
+      workTip: "Langsung ke demo",
+      contact: "Hubungi aku",
+      contactTip: "Langsung ke kontak",
+    },
     float: {
       label: "Tanya Tharreq apa saja",
       placeholder: "Tanya apa saja: project, proses, harga…",
@@ -303,8 +344,8 @@ export const indonesian: PortfolioCopy = {
     now: "baru saja",
     comments: [
       "Padding-nya benerin. Semuanya nempel.",
-      "Kenapa semuanya nyala?",
-      "Kebanyakan bold. Nggak ada yang menonjol.",
+      "Kenapa semuanya ungu?",
+      "Kebanyakan font, kebanyakan bold.",
       "Angkanya nggak lurus.",
     ],
     pile: [
@@ -333,7 +374,7 @@ export const indonesian: PortfolioCopy = {
       "Nama panjang bikin rusak.",
       "Halaman 404?",
       "Jaraknya berantakan lagi.",
-      "Kenapa ungu?",
+      "Kenapa banyak banget border?",
       "Bikin sticky.",
       "Tooltip-nya?",
       "Kebanyakan font.",
@@ -346,8 +387,11 @@ export const indonesian: PortfolioCopy = {
       "Siapa yang setuju gradien ini?",
     ],
     dash: {
+      eyebrow: "✦ Insight bertenaga AI",
       title: "Ringkasan",
+      blurb: "Metrik real-time untuk melejitkan pertumbuhanmu 🚀",
       range: "30 hari terakhir",
+      note: "vs. periode sebelumnya",
       action: "Laporan baru",
       stats: [
         ["Pendapatan", "$42,8rb", "+14%"],
@@ -431,10 +475,13 @@ export const indonesian: PortfolioCopy = {
   rail: {
     navigation: "Bagian halaman",
     theme: "Ganti tema warna",
-    home: "Halo",
-    review: "Masalah",
+    review: "Intro",
+    vibecoded: "Vibecoded",
+    feedback: "Komentar",
+    handoff: "Serah terima",
     offer: "Harga",
     experience: "Tentang",
+    work: "Karya",
     contact: "Kontak",
   },
 };
