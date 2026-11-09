@@ -301,9 +301,6 @@ export function ChatDialog({ copy }: { copy: ChatCopy }) {
         if (!next) setIntroPlayed(true);
       }}
     >
-      <Dialog.Trigger className="tactile-control bg-foreground text-background ml-auto shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold transition-opacity hover:opacity-85">
-        {copy.open}
-      </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/30 backdrop-blur-[2px]" />
         <Dialog.Content className="bg-popover text-popover-foreground border-border/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 fixed top-1/2 left-1/2 z-50 flex max-h-[min(36rem,calc(100svh-2rem))] w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[22px] border shadow-2xl">

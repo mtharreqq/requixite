@@ -13,17 +13,24 @@ import { Moon, Sun } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { smoothScrollTo } from "@/components/smooth-scroll";
 
+// The review story's chapters get their own ticks, so the rail keeps
+// moving (and naming where you are) through the long pin.
 const SECTIONS = [
-  { id: "home" },
   { id: "review" },
+  { id: "vibecoded" },
+  { id: "feedback" },
+  { id: "handoff" },
   { id: "offer" },
   { id: "experience" },
+  { id: "work" },
   { id: "contact" },
 ];
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const; // matches --ease-out token
 
-const MINOR_PER_SECTION = 3;
+const MINOR_PER_SECTION = 2;
+// Up to here, the active label stays up: you're still in the story.
+const STORY_END = SECTIONS.findIndex((s) => s.id === "offer");
 const STEP = MINOR_PER_SECTION + 1;
 const TICKS = (SECTIONS.length - 1) * STEP + 1;
 // The point of the viewport (from the top) that counts as "currently reading".
@@ -311,7 +318,11 @@ export function RailNav({
                           ? "opacity-100"
                           : isActive && flash
                             ? "opacity-100"
-                            : "opacity-0 group-focus-within/rail:opacity-100 group-hover/rail:opacity-100"
+                            : // Phones: the rail sits over the story, so
+                              // only the flash.
+                              isActive && active < STORY_END
+                              ? "opacity-0 group-focus-within/rail:opacity-100 group-hover/rail:opacity-100 md:opacity-100"
+                              : "opacity-0 group-focus-within/rail:opacity-100 group-hover/rail:opacity-100"
                       } ${isActive ? "text-foreground" : "text-muted-foreground"}`
                 }`}
               >
