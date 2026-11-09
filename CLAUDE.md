@@ -1,47 +1,32 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code and other AI coding assistants working in this repository.
+Guidance for AI coding assistants in this repo. Also read `AGENTS.md` (motion standard, no monospace).
 
 ## Commands
 
-- `npm run dev` — Next.js dev server (Turbopack)
-- `npm run build` — production static build (Turbopack)
-- `npm run start` — serve the production build
-- `npm run lint` — ESLint (config: `eslint.config.mjs`, extends `eslint-config-next`)
-
-Formatting uses Prettier (`.prettierrc`) with `prettier-plugin-tailwindcss`.
+- `npm run dev` / `npm run build` / `npm run start` / `npm run lint`
+- Prettier (`.prettierrc`, with `prettier-plugin-tailwindcss`); check types with `npx tsc --noEmit -p .`
+- Lighthouse CI (`lighthouserc.json`) runs on every PR: mobile, performance and accessibility on one page of each kind.
 
 ## Architecture
 
-Next.js 16 App Router + React 19 + Tailwind v4 + Framer Motion.
-Zero database, zero external CMS, and zero server-side auth. The entire site is prerendered as a blazing-fast, intimate, story-driven portfolio inspired by Salmoon (`msafdev`).
+Next.js 16 App Router, React 19, Tailwind v4, Framer Motion, Lenis. Fully static: no database, CMS or auth. Path alias `@/*` is the repo root.
 
-TypeScript path alias `@/*` maps to the repository root.
+The site sells polishing vibecoded apps. English lives at `/`, Indonesian at `/id`, as two route groups (`app/(english)`, `app/(indonesian)`) with their own root layouts; `components/site-layout.tsx` holds the shared shell and metadata. `proxy.ts` passes the Vercel country to a cookie for IDR/USD pricing.
 
-### Core Narrative & Section Layout
+- **Home** (`components/portfolio-page.tsx`): `ReviewStory` (`components/salmoon/review-story.tsx`), one pinned scroll story: hello, a vibecoded dashboard, feedback, handoff, then a composer with geo-priced plans. `ChatDialog` opens from any composer.
+- **Sub-pages** (`components/sub-page.tsx`): `/about`, `/work`, `/contact` and the case study `/work/rantai` (`components/case-study-page.tsx`, with the live before/after demo in `rantai-live.tsx` and `rantai-panorama.tsx`). Each ends with a composer (`AskBox`), "Or look around first" links and the wordmark footer; Contact is just the composer.
+- **Rail** (`components/salmoon/rail-nav.tsx`): navigation on every page, one tick per section; the avatar opens pages, theme and language.
 
-The page communicates the studio thesis:
-*AI builds apps in minutes. We make them feel human.*
-Centered on an intimate column (`w-full max-w-lg md:max-w-xl mx-auto`) with uppercase tracked headers and generous vertical rhythm:
+## Content
 
-1. **Hero & Polaroid Stack** (`components/salmoon/hero-section.tsx`): Name (Tharreq) with verified blue checkmark badge, craft bio, and tilted polaroid cards (`Cashava`, `Token Tea`, `Ruruuharaa`) with handwritten-style labels.
-2. **The Dilemma** (`components/salmoon/dilemma-section.tsx`): Editorial narrative exploring the explosion of AI-generated code vs. the epidemic of generic "AI Slop" and why sub-pixel polish builds trust.
-3. **The Proof** (`components/salmoon/proof-section.tsx`): Real-time interactive inspection card comparing raw AI prototype defects against Requixite-refined geometry and typography with clickable inspection pins.
-4. **My Process** (`components/salmoon/process-section.tsx`): 4-step refinement methodology with numbered square badges (De-slop, Harmonize, Ergonomics, Ship).
-5. **Selected Work** (`components/salmoon/work-section.tsx`): 2-column card grid with 16:9 previews, subtle hover zoom, category tags, and direct links to Cashava, Token Tea, Ruruuharaa, and Sprout UI.
-6. **Let's Connect** (`components/salmoon/connect-section.tsx`): Availability indicator and button grid (Copy Email, Send Mailto, X, GitHub, LinkedIn).
-7. **Floating Dock** (`components/salmoon/floating-dock.tsx`): Compact bottom pill dock with quick-anchor links and theme toggle.
+All copy is typed TypeScript, one object per language with the same facts:
 
-### Content & Data Layer
+- `lib/portfolio-copy.ts`: home, sub-pages, pricing, contact, work list.
+- `lib/case-study-copy.ts`: case studies.
 
-All portfolio content is maintained directly in static TypeScript data files:
+Add a page in both route groups, then add it to `app/sitemap.ts`, `Suggestions` in `sub-page.tsx` and the rail menu.
 
-- **Projects**: `data/projects.ts` (`PROJECTS` array typed by `types/project.ts`).
-  - Add, reorder, or edit projects by modifying the array.
-  - Supports `title`, `slug`, `description`, `category`, `color`, `art`, `tags`, `highlights`, `liveUrl`, `repoUrl`, `status`, and `published`.
+## Brand
 
-### Brand Alignment (from Mori)
-
-- Name: **Requixite**
-- Tagline: **Precise. Exquisite. Requisite.**
-- Descriptor: **Independent product and web studio by Tharreq**
+Requixite: **Precise. Exquisite. Requisite.** Independent product and web studio by Tharreq.

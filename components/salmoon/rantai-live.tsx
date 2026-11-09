@@ -123,7 +123,9 @@ function OldSite() {
               src={`${live}/${SLIDES[slide].bg}.jpg`}
               alt=""
               fill
-              sizes="56rem"
+              // The first backdrop is the case study's LCP.
+              preload={slide === 1}
+              sizes="(min-width: 1024px) 56rem, 100vw"
               className="object-cover"
             />
           </motion.div>
@@ -272,7 +274,7 @@ function NewNav({ active = -1 }: { active?: number }) {
       </span>
       <span className="ml-auto flex rounded-full bg-neutral-100 p-0.5 text-[11px] font-medium">
         <span className="rounded-full bg-white px-2.5 py-1 shadow-sm">EN</span>
-        <span className="px-2.5 py-1 text-neutral-400">ID</span>
+        <span className="px-2.5 py-1 text-neutral-500">ID</span>
       </span>
       <span className="ml-2 flex h-9 items-center gap-2 rounded-full bg-black px-4 text-[13px] font-medium text-white">
         Contact us
@@ -621,15 +623,19 @@ export function RantaiLive({
               <div
                 ref={box}
                 aria-hidden
-                className={`relative aspect-[8/5] w-full overflow-hidden ${polished ? "bg-white" : "bg-[#0a0b10]"}`}
+                className={`[container-type:inline-size] relative aspect-[8/5] w-full overflow-hidden ${polished ? "bg-white" : "bg-[#0a0b10]"}`}
               >
+                {/* CSS scales it before hydration (the first backdrop is the
+                  LCP); browsers without length division wait for the JS. */}
                 <div
-                  className="absolute top-0 left-0 origin-top-left"
+                  className="invisible absolute top-0 left-0 origin-top-left [transform:scale(calc(100cqw/1200px))] supports-[scale:calc(1px/1px)]:visible"
                   style={{
                     width: W,
                     height: H,
-                    transform: `scale(${scale})`,
-                    visibility: scale ? "visible" : "hidden",
+                    ...(scale && {
+                      transform: `scale(${scale})`,
+                      visibility: "visible",
+                    }),
                   }}
                 >
                   {page ? <OldProducts /> : <OldSite />}

@@ -19,6 +19,6 @@ jobs:
       - name: Chrome
         run: google-chrome --version
       # Accessibility category is axe-core via Lighthouse, so there is no second scanner.
-      # The site is a single English page at /. /en and /id are not routes.
+      # Every page shape once; /id stands in for the Indonesian copies.
       - name: Lighthouse
         run: npx --yes @lhci/cli@0.15.1 autorun
