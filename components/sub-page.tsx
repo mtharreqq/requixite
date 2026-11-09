@@ -17,8 +17,8 @@ import {
   SectionReveal,
 } from "@/components/salmoon/portfolio-motion";
 
-/** The other pages as chips inside the closing composer: the next one
- * first, with an arrow. */
+/** The other pages as chips above the closing composer, where the homepage
+ * has its plans: the next one first, with an arrow. */
 function Suggestions({ locale, path }: { locale: Locale; path: string }) {
   const { skip } = getPortfolioCopy(locale).review;
   const base = locale === "id" ? "/id" : "";
