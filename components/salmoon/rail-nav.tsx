@@ -437,7 +437,7 @@ export function RailNav({
       aria-label={copy.navigation}
       // Phones: a pill along the bottom. Desktop: anchored at the avatar, so
       // it stays put and the rail grows upward.
-      className="bg-background/85 border-border/80 fixed bottom-3 left-1/2 z-50 flex -translate-x-1/2 items-center gap-4 rounded-full border px-4 py-2 backdrop-blur-md md:bottom-[calc(50%-7rem)] md:left-8 md:translate-x-0 md:flex-col md:items-start md:gap-0 md:rounded-none md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none"
+      className="bg-background/85 border-border/80 fixed bottom-3 left-1/2 z-50 flex -translate-x-1/2 items-center gap-4 rounded-full border py-2 pr-2 pl-4 backdrop-blur-md md:bottom-[calc(50%-7rem)] md:left-8 md:translate-x-0 md:flex-col md:items-start md:gap-0 md:rounded-none md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none"
     >
       <div
         ref={railRef}
