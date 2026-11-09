@@ -127,8 +127,12 @@ export function ContactPage({ locale }: { locale: Locale }) {
       sections={[{ id: "intro", label: copy.rail.intro }]}
     >
       {/* Same ask as the story's end: the page leads with the composer. */}
-      <section id="intro" className="flex flex-col gap-8 md:pt-[12svh]">
-        <header className="flex flex-col gap-3">
+      {/* Fills the first screen (minus main's top padding), centered. */}
+      <section
+        id="intro"
+        className="flex min-h-[calc(100svh-2.5rem)] flex-col justify-center gap-8 md:min-h-[calc(100svh-3.5rem)]"
+      >
+        <header className="flex flex-col gap-3 text-center text-balance">
           <h1 className="text-[clamp(24px,4.8vw,36px)] leading-tight font-medium tracking-[-0.04em]">
             {copy.review.cta.title}
           </h1>

@@ -852,7 +852,7 @@ export function AskBox({ locale }: { locale: Locale }) {
   };
   return (
     <div>
-      <div className="-mx-1 mb-1 flex flex-wrap gap-1.5 p-1">
+      <div className="-mx-1 mb-1 flex flex-wrap justify-center gap-1.5 p-1">
         {offer.plans.map((pl, i) => (
           <PlanChip
             key={pl.name}
@@ -887,7 +887,7 @@ export function AskBox({ locale }: { locale: Locale }) {
           </span>
         </div>
       </div>
-      <p className="mt-2 px-1 text-xs">
+      <p className="mt-2 px-1 text-center text-xs">
         <Note offer={offer} />
       </p>
     </div>
