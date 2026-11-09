@@ -8,12 +8,17 @@ import { ExperienceSection } from "@/components/salmoon/experience-section";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   PortfolioMotion,
   SectionReveal,
 } from "@/components/salmoon/portfolio-motion";
 
-/** The next page as one card, the rest as small links, before the closing
- * composer. */
+/** The other pages as chips inside the closing composer: the next one
+ * first, with an arrow. */
 function Suggestions({ locale, path }: { locale: Locale; path: string }) {
   const { skip } = getPortfolioCopy(locale).review;
   const base = locale === "id" ? "/id" : "";
@@ -24,40 +29,34 @@ function Suggestions({ locale, path }: { locale: Locale; path: string }) {
     ["/work/rantai", skip.caseStudy, skip.caseStudyTip],
     ["/contact", skip.contact, skip.contactTip],
   ];
-  const href = (p: string) => base + p || "/";
   const at = all.findIndex(([p]) => p === path);
-  const [np, nLabel, nTip] = all[(at + 1) % all.length];
+  // Start at the next page and wrap, skipping this one.
+  const pages = [...all.slice(at + 1), ...all.slice(0, at)];
   return (
-    <nav className="flex flex-col gap-4">
-      <Link
-        href={href(np)}
-        className="group bg-card border-border/80 hover:bg-muted flex items-center gap-4 rounded-2xl border p-5 transition-colors"
-      >
-        <span className="flex flex-col gap-1">
-          <span className="text-muted-foreground text-xs">{skip.next}</span>
-          <span className="text-xl font-medium tracking-[-0.03em]">
-            {nLabel}
-          </span>
-          <span className="text-muted-foreground text-sm">{nTip}</span>
-        </span>
-        <ArrowRight
-          aria-hidden
-          className="ml-auto size-5 shrink-0 transition-transform group-hover:translate-x-1"
-        />
-      </Link>
-      <div className="text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 px-1 text-sm">
-        {all
-          .filter(([p]) => p !== path && p !== np)
-          .map(([p, label]) => (
+    <nav aria-label={skip.next} className="flex flex-wrap gap-1.5">
+      {pages.map(([p, label, tip], i) => (
+        <Tooltip key={p} delayDuration={500}>
+          <TooltipTrigger asChild>
             <Link
-              key={p}
-              href={href(p)}
-              className="hover:text-foreground transition-colors"
+              href={base + p || "/"}
+              className={
+                i === 0
+                  ? "composer-chip group gap-1 font-medium"
+                  : "composer-chip composer-chip-ghost text-muted-foreground hover:text-foreground"
+              }
             >
               {label}
+              {i === 0 && (
+                <ArrowRight
+                  aria-hidden
+                  className="size-3.5 transition-transform group-hover:translate-x-0.5"
+                />
+              )}
             </Link>
-          ))}
-      </div>
+          </TooltipTrigger>
+          <TooltipContent sideOffset={6}>{tip}</TooltipContent>
+        </Tooltip>
+      ))}
     </nav>
   );
 }
@@ -86,7 +85,6 @@ export function SubPage({
         {children}
         {!bare && (
           <>
-            <Suggestions locale={locale} path={path} />
             <SectionReveal>
               <section id="contact" className="flex flex-col gap-5">
                 <h2 className="text-center text-xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-2xl">
@@ -96,6 +94,7 @@ export function SubPage({
                   locale={locale}
                   title={ask.title}
                   placeholder={ask.placeholder}
+                  top={<Suggestions locale={locale} path={path} />}
                 />
               </section>
             </SectionReveal>

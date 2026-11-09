@@ -842,16 +842,20 @@ export function AskBox({
   locale,
   title,
   placeholder,
+  top,
 }: {
   locale: Locale;
   title?: string;
   placeholder?: string;
+  /** Shown inside the composer, above the text field. */
+  top?: React.ReactNode;
 }) {
   const { review: copy, offer, contact } = getPortfolioCopy(locale);
   const { text, setText, send, onKeyDown } = useDraft();
   return (
     <div>
       <div className="composer" data-mode="cta" style={{ borderRadius: 22 }}>
+        {top && <div className="px-2 pt-2">{top}</div>}
         <div className="composer-body">
           <label htmlFor="contact-ask" className="sr-only">
             {title ?? copy.cta.title}
