@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/hover-card";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Check, Copy, Mail } from "lucide-react";
+import { Check, Copy, Mail } from "lucide-react";
 import {
   GithubSvg,
   InstagramSvg,
@@ -24,6 +24,9 @@ import {
 const EMAIL = "mtharreq@gmail.com";
 const REPO = "https://github.com/mtharreqq/requixite";
 const updated = process.env.NEXT_PUBLIC_UPDATED_AT;
+/** Midnight of the date in Jakarta, so "3 days ago" counts calendar days. */
+const jakartaDay = (d: Date) =>
+  Date.parse(d.toLocaleDateString("en-CA", { timeZone: "Asia/Jakarta" }));
 
 const SOCIALS = [
   { label: "X", href: "https://x.com/tooreeq", Icon: XSvg },
@@ -168,16 +171,20 @@ export function FooterMeta({ copy }: { copy: PortfolioCopy["contact"] }) {
           side="top"
           align="end"
           sideOffset={8}
-          className={`${card} flex w-56 flex-col gap-2`}
+          className={`${card} flex w-auto items-center gap-3 py-2.5 pr-2.5`}
         >
+          {/* Only mounts when open, so "now" is the reader's, not the build's. */}
           {updated && (
             <p>
               {copy.updated}{" "}
               <span className="text-foreground">
-                {new Intl.DateTimeFormat(copy.dateLocale, {
-                  dateStyle: "long",
-                  timeZone: "Asia/Jakarta",
-                }).format(new Date(updated))}
+                {new Intl.RelativeTimeFormat(copy.dateLocale, {
+                  numeric: "auto",
+                }).format(
+                  (jakartaDay(new Date(updated)) - jakartaDay(new Date())) /
+                    86_400_000,
+                  "day",
+                )}
               </span>
             </p>
           )}
@@ -185,10 +192,11 @@ export function FooterMeta({ copy }: { copy: PortfolioCopy["contact"] }) {
             href={REPO}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-foreground inline-flex items-center gap-1 hover:underline"
+            aria-label={copy.source}
+            title={copy.source}
+            className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-md p-1.5 transition-colors"
           >
-            {copy.source}
-            <ArrowUpRight aria-hidden className="size-3" />
+            <GithubSvg className="size-4" />
           </a>
         </HoverCardContent>
       </HoverCard>

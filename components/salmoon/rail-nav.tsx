@@ -408,7 +408,8 @@ export function RailNav({
   return (
     <nav
       aria-label={copy.navigation}
-      className="fixed top-1/2 left-3 z-50 flex -translate-y-1/2 flex-col items-start md:left-8"
+      // Anchored at the avatar, so it stays put and the rail grows upward.
+      className="fixed bottom-[calc(50%-7rem)] left-3 z-50 flex flex-col items-start md:left-8"
     >
       <div
         ref={railRef}

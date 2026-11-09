@@ -1572,14 +1572,20 @@ function Shortcuts({
       {chip(
         copy.skip.about,
         copy.skip.aboutTip,
-        <Link href={`${base}/about`} className="composer-chip">
+        <Link
+          href={`${base}/about`}
+          className="composer-chip composer-chip-ghost"
+        >
           {copy.skip.about}
         </Link>,
       )}
       {chip(
         copy.skip.work,
         copy.skip.workTip,
-        <Link href={`${base}/work`} className="composer-chip">
+        <Link
+          href={`${base}/work`}
+          className="composer-chip composer-chip-ghost"
+        >
           {copy.skip.work}
         </Link>,
       )}
@@ -1588,7 +1594,10 @@ function Shortcuts({
         chip(
           copy.skip.contact,
           copy.skip.contactTip,
-          <Link href={`${base}/contact`} className="composer-chip">
+          <Link
+            href={`${base}/contact`}
+            className="composer-chip composer-chip-ghost"
+          >
             {copy.skip.contact}
           </Link>,
         )}

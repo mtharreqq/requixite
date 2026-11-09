@@ -35,7 +35,10 @@ function Suggestions({ locale, path }: { locale: Locale; path: string }) {
         {pages.map(([p, label, tip]) => (
           <Tooltip key={p}>
             <TooltipTrigger asChild>
-              <Link href={base + p || "/"} className="composer-chip">
+              <Link
+                href={base + p || "/"}
+                className="composer-chip composer-chip-ghost"
+              >
                 {label}
               </Link>
             </TooltipTrigger>
