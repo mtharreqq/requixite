@@ -3,7 +3,7 @@
 // Copied from rant-ai-landing-page (home/hero-panorama.tsx) so the hero can
 // show the live rantai.dev hero instead of a screenshot.
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Hero background: a panorama ring of product screens seen from inside a
 // cylinder (centre card smallest, edges curving toward you), with the large
@@ -311,6 +311,14 @@ export function RantaiPanorama() {
   const sceneRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const earthRef = useRef<HTMLCanvasElement>(null);
+  // Screenshots wait for the page load, so they don't race the LCP image.
+  const [shots, setShots] = useState(false);
+  useEffect(() => {
+    const show = () => setShots(true);
+    if (document.readyState === "complete") show();
+    else window.addEventListener("load", show, { once: true });
+    return () => window.removeEventListener("load", show);
+  }, []);
 
   useEffect(() => {
     const scene = sceneRef.current;
@@ -658,7 +666,11 @@ export function RantaiPanorama() {
                 data-card={card}
                 data-strip={i}
                 className="absolute top-0 left-0 bg-neutral-900 bg-no-repeat [backface-visibility:hidden]"
-                style={{ backgroundImage: `url(${item.shot.src})` }}
+                style={
+                  shots
+                    ? { backgroundImage: `url(${item.shot.src})` }
+                    : undefined
+                }
               />
             ))
           ) : (

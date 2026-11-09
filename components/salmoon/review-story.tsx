@@ -823,7 +823,7 @@ function Composer({
  * centered on phones. */
 function Foot({ offer, contact }: { offer: Offer; contact: Contact }) {
   return (
-    <div className="mt-2 flex flex-col items-center gap-1 px-1 text-xs md:flex-row md:items-baseline md:justify-between md:gap-4">
+    <div className="mt-2 flex flex-col items-center gap-2 px-1 text-xs md:flex-row md:items-baseline md:justify-between md:gap-4">
       <Note offer={offer} />
       <FooterMeta copy={contact} />
     </div>
