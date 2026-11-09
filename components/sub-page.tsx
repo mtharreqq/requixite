@@ -79,6 +79,7 @@ export function SubPage({
   const copy = getPortfolioCopy(locale);
   // The contact page is only its composer: nothing to scroll to.
   const bare = path === "/contact";
+  const ask = copy.review.cta.pages[path] ?? copy.review.cta;
   return (
     <PortfolioMotion className="bg-background text-foreground selection:bg-foreground selection:text-background flex min-h-screen w-full justify-center overflow-x-clip">
       <main className="flex w-full max-w-lg flex-col gap-y-14 px-4 pt-10 pb-20 md:max-w-xl md:gap-y-16 md:px-4 md:pt-14 md:pb-0">
@@ -88,10 +89,14 @@ export function SubPage({
             <Suggestions locale={locale} path={path} />
             <SectionReveal>
               <section id="contact" className="flex flex-col gap-5">
-                <h2 className="text-xl leading-tight font-medium tracking-[-0.03em] md:text-2xl">
-                  {copy.review.cta.title}
+                <h2 className="text-center text-xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-2xl">
+                  {ask.title}
                 </h2>
-                <AskBox locale={locale} />
+                <AskBox
+                  locale={locale}
+                  title={ask.title}
+                  placeholder={ask.placeholder}
+                />
               </section>
             </SectionReveal>
             {/* Short pages push the footer to the bottom of the screen. */}

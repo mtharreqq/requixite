@@ -838,7 +838,15 @@ function Note({ offer }: { offer: Offer }) {
 
 /** The story's last composer on its own, without the plans: the sub-pages
  * and the contact page. */
-export function AskBox({ locale }: { locale: Locale }) {
+export function AskBox({
+  locale,
+  title,
+  placeholder,
+}: {
+  locale: Locale;
+  title?: string;
+  placeholder?: string;
+}) {
   const { review: copy, offer, contact } = getPortfolioCopy(locale);
   const { text, setText, send, onKeyDown } = useDraft();
   return (
@@ -846,7 +854,7 @@ export function AskBox({ locale }: { locale: Locale }) {
       <div className="composer" data-mode="cta" style={{ borderRadius: 22 }}>
         <div className="composer-body">
           <label htmlFor="contact-ask" className="sr-only">
-            {copy.cta.title}
+            {title ?? copy.cta.title}
           </label>
           <textarea
             id="contact-ask"
@@ -854,7 +862,7 @@ export function AskBox({ locale }: { locale: Locale }) {
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={onKeyDown}
-            placeholder={copy.cta.placeholder}
+            placeholder={placeholder ?? copy.cta.placeholder}
             className="composer-input"
           />
           <div className="flex min-w-0 items-center [grid-area:tools]">
