@@ -1,5 +1,5 @@
 import { ReviewStory } from "@/components/salmoon/review-story";
-import { ChatDialog } from "@/components/salmoon/chat-dialog";
+import { ChatDialog } from "@/components/salmoon/chat-dialog-lazy";
 import { RailNav } from "@/components/salmoon/rail-nav";
 import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
 import { PortfolioMotion } from "@/components/salmoon/portfolio-motion";

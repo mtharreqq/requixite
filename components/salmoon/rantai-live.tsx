@@ -274,7 +274,7 @@ function NewNav({ active = -1 }: { active?: number }) {
       </span>
       <span className="ml-auto flex rounded-full bg-neutral-100 p-0.5 text-[11px] font-medium">
         <span className="rounded-full bg-white px-2.5 py-1 shadow-sm">EN</span>
-        <span className="px-2.5 py-1 text-neutral-500">ID</span>
+        <span className="px-2.5 py-1 text-neutral-600">ID</span>
       </span>
       <span className="ml-2 flex h-9 items-center gap-2 rounded-full bg-black px-4 text-[13px] font-medium text-white">
         Contact us
