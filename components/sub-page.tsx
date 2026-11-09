@@ -168,6 +168,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
           {copy.review.cta.title}
         </h1>
         <AskBox locale={locale} />
+        <Suggestions locale={locale} path="/contact" />
       </section>
     </SubPage>
   );
