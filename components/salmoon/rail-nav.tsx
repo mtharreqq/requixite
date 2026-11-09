@@ -184,6 +184,10 @@ function ThemeMenu({ copy }: { copy: RailCopy["pages"] }) {
   );
 }
 
+// Phones only; desktop drops the box.
+const PILL =
+  "pointer-events-auto bg-background/85 border-border/80 rounded-full border backdrop-blur-md md:contents";
+
 /** The site's toolbar, on every page: the avatar on the rail opens the
  * pages, theme and language on hover (or tap). */
 function Menu({
@@ -435,92 +439,99 @@ export function RailNav({
   return (
     <nav
       aria-label={copy.navigation}
-      // Phones: a pill along the bottom. Desktop: anchored at the avatar, so
-      // it stays put and the rail grows upward.
-      className="bg-background/85 border-border/80 fixed bottom-3 left-1/2 z-50 flex -translate-x-1/2 items-center gap-4 rounded-full border py-2 pr-2 pl-4 backdrop-blur-md md:bottom-[calc(50%-7rem)] md:left-8 md:translate-x-0 md:flex-col md:items-start md:gap-0 md:rounded-none md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none"
+      // Phones: the rail as a pill bottom left, the avatar its own circle
+      // bottom right. Desktop: anchored at the avatar, so it stays put and the
+      // rail grows upward.
+      className="pointer-events-none fixed inset-x-4 bottom-3 z-50 flex items-center justify-between md:inset-x-auto md:bottom-[calc(50%-7rem)] md:left-8 md:flex-col md:items-start"
     >
-      <div
-        ref={railRef}
-        onPointerLeave={() => hover(null)}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerCancel={() => {
-          setScrubbing(false);
-          hover(null);
-        }}
-        className="group/rail relative touch-none"
-      >
-        {/* Ticks (visual only, sized every frame by the effect above) */}
+      <div className={`${PILL} px-4 py-2`}>
         <div
-          aria-hidden
-          className="flex h-6 items-end gap-[7px] md:h-auto md:flex-col"
+          ref={railRef}
+          onPointerLeave={() => hover(null)}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={() => {
+            setScrubbing(false);
+            hover(null);
+          }}
+          className="group/rail relative touch-none"
         >
-          {Array.from({ length: ticks }, (_, i) => (
-            <span
-              key={i}
-              ref={(el) => {
-                tickRefs.current[i] = el;
-              }}
-              className="bg-foreground block h-8 w-0.5 shrink-0 origin-bottom rounded-full md:h-0.5 md:w-8 md:origin-left"
-              style={tickStyle(i, 0, 0, 0, 1)}
-            />
-          ))}
-        </div>
+          {/* Ticks (visual only, sized every frame by the effect above) */}
+          <div
+            aria-hidden
+            className="flex h-6 items-end gap-[7px] md:h-auto md:flex-col"
+          >
+            {Array.from({ length: ticks }, (_, i) => (
+              <span
+                key={i}
+                ref={(el) => {
+                  tickRefs.current[i] = el;
+                }}
+                className="bg-foreground block h-8 w-0.5 shrink-0 origin-bottom rounded-full md:h-0.5 md:w-8 md:origin-left"
+                style={tickStyle(i, 0, 0, 0, 1)}
+              />
+            ))}
+          </div>
 
-        {/* Hit areas: one band per section, edge to edge, so the hover never
+          {/* Hit areas: one band per section, edge to edge, so the hover never
             drops while moving between sections. Narrow until the rail is
             hovered, then wide enough to cover the labels. */}
-        {sections.map((section, index) => {
-          const center = index * STEP * TICK_PITCH + 1;
-          const isActive = index === active;
-          const isHovered = index === hovered;
-          return (
-            <a
-              key={section.id}
-              href={`#${section.id}`}
-              aria-current={isActive ? "location" : undefined}
-              onPointerEnter={(e) => e.pointerType === "mouse" && hover(index)}
-              onFocus={() => hover(index)}
-              onBlur={() => hover(null)}
-              className={
-                phone
-                  ? "absolute -top-2 -bottom-2 flex justify-center outline-none"
-                  : `absolute -left-3 flex items-center outline-none group-focus-within/rail:w-44 group-hover/rail:w-44 ${
-                      scrubbing ? "w-44" : "w-14"
-                    }`
-              }
-              style={
-                phone
-                  ? { left: center - BAND / 2, width: BAND }
-                  : { top: center - BAND / 2, height: BAND }
-              }
-            >
-              <span
-                className={`absolute bottom-full mb-2 rounded-md px-1.5 py-0.5 text-xs whitespace-nowrap backdrop-blur-sm transition-[opacity,color,background-color] duration-150 md:bottom-auto md:left-11 md:mb-0 ${
-                  isHovered
-                    ? "bg-muted text-foreground font-medium opacity-100"
-                    : `bg-background/95 shadow-xs ${
-                        scrubbing
-                          ? "opacity-100"
-                          : isActive && flash
-                            ? "opacity-100"
-                            : // Phones: the rail sits over the story, so
-                              // only the flash.
-                              isActive && active < lastIndex
-                              ? "opacity-0 group-focus-within/rail:opacity-100 group-hover/rail:opacity-100 md:opacity-100"
-                              : "opacity-0 group-focus-within/rail:opacity-100 group-hover/rail:opacity-100"
-                      } ${isActive ? "text-foreground" : "text-muted-foreground"}`
-                }`}
+          {sections.map((section, index) => {
+            const center = index * STEP * TICK_PITCH + 1;
+            const isActive = index === active;
+            const isHovered = index === hovered;
+            return (
+              <a
+                key={section.id}
+                href={`#${section.id}`}
+                aria-current={isActive ? "location" : undefined}
+                onPointerEnter={(e) =>
+                  e.pointerType === "mouse" && hover(index)
+                }
+                onFocus={() => hover(index)}
+                onBlur={() => hover(null)}
+                className={
+                  phone
+                    ? "absolute -top-2 -bottom-2 flex justify-center outline-none"
+                    : `absolute -left-3 flex items-center outline-none group-focus-within/rail:w-44 group-hover/rail:w-44 ${
+                        scrubbing ? "w-44" : "w-14"
+                      }`
+                }
+                style={
+                  phone
+                    ? { left: center - BAND / 2, width: BAND }
+                    : { top: center - BAND / 2, height: BAND }
+                }
               >
-                {section.label}
-              </span>
-            </a>
-          );
-        })}
+                <span
+                  className={`absolute bottom-full mb-2 rounded-md px-1.5 py-0.5 text-xs whitespace-nowrap backdrop-blur-sm transition-[opacity,color,background-color] duration-150 md:bottom-auto md:left-11 md:mb-0 ${
+                    isHovered
+                      ? "bg-muted text-foreground font-medium opacity-100"
+                      : `bg-background/95 shadow-xs ${
+                          scrubbing
+                            ? "opacity-100"
+                            : isActive && flash
+                              ? "opacity-100"
+                              : // Phones: the rail sits over the story, so
+                                // only the flash.
+                                isActive && active < lastIndex
+                                ? "opacity-0 group-focus-within/rail:opacity-100 group-hover/rail:opacity-100 md:opacity-100"
+                                : "opacity-0 group-focus-within/rail:opacity-100 group-hover/rail:opacity-100"
+                        } ${isActive ? "text-foreground" : "text-muted-foreground"}`
+                  }`}
+                >
+                  {section.label}
+                </span>
+              </a>
+            );
+          })}
+        </div>
       </div>
 
-      <Menu copy={copy} locale={locale} path={path} phone={phone} />
+      <div className={`${PILL} p-2`}>
+        <Menu copy={copy} locale={locale} path={path} phone={phone} />
+      </div>
     </nav>
   );
 }

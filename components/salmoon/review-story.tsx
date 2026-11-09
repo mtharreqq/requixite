@@ -308,11 +308,13 @@ function Caption({
   to,
   children,
   p,
+  end,
 }: {
   from: number;
   to: number;
   children: React.ReactNode;
   p: P;
+  end?: boolean;
 }) {
   // Enter and leave like SplitReveal: fade, rise, unblur.
   const shown = useTransform(
@@ -323,7 +325,7 @@ function Caption({
   );
   return (
     <motion.p
-      className="[grid-area:1/1] max-md:filter-none!"
+      className={cn("[grid-area:1/1] max-md:filter-none!", end && "self-end")}
       style={{
         opacity: shown,
         y: useTransform(shown, [0, 1], ["0.4em", "0em"]),
@@ -799,9 +801,9 @@ function Composer({
         </div>
       </motion.div>
       {cta && (
-        <motion.p {...later(0.9)} className="mt-2 px-1 text-xs">
-          <Note offer={offer} />
-        </motion.p>
+        <motion.div {...later(0.9)}>
+          <Foot offer={offer} contact={contact} />
+        </motion.div>
       )}
       {cta && (
         // The story ends here: the same ways on as under the hello.
@@ -814,6 +816,17 @@ function Composer({
         </motion.div>
       )}
     </motion.div>
+  );
+}
+
+/** Under every composer: the note and "© Requixite • v…"; stacked and
+ * centered on phones. */
+function Foot({ offer, contact }: { offer: Offer; contact: Contact }) {
+  return (
+    <div className="mt-2 flex flex-col items-center gap-1 px-1 text-xs md:flex-row md:items-baseline md:justify-between md:gap-4">
+      <Note offer={offer} />
+      <FooterMeta copy={contact} />
+    </div>
   );
 }
 
@@ -873,10 +886,7 @@ export function AskBox({
           </span>
         </div>
       </div>
-      <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 px-1 text-xs">
-        <Note offer={offer} />
-        <FooterMeta copy={contact} />
-      </div>
+      <Foot offer={offer} contact={contact} />
     </div>
   );
 }
@@ -1984,6 +1994,8 @@ export function ReviewStory({
                       from={CAPTION_AT[i + 2]}
                       to={CAPTION_AT[i + 3]}
                       p={p}
+                      // The last one hugs the composer below it.
+                      end={i === copy.captions.length}
                     >
                       {text}
                     </Caption>
