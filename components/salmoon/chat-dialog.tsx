@@ -2,7 +2,7 @@
 
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import { Dialog } from "radix-ui";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUp, Mail, X } from "lucide-react";
@@ -35,7 +35,7 @@ function Typing({ label }: { label: string }) {
       <span className="bg-muted inline-flex h-8 items-center gap-1 rounded-[18px] rounded-bl-md px-3.5">
         <span className="sr-only">{label}</span>
         {[0, 1, 2].map((i) => (
-          <motion.span
+          <m.span
             key={i}
             aria-hidden="true"
             className="bg-muted-foreground/60 size-1.5 rounded-full"
@@ -117,13 +117,13 @@ function Thread({
         <Avatar />
         <div className="space-y-1">
           {copy.greeting.map((line, i) => (
-            <motion.p
+            <m.p
               key={line}
               {...(animateIntro ? rise(i) : {})}
               className="bg-muted text-foreground w-fit max-w-[16rem] rounded-[18px] rounded-bl-md px-3.5 py-2 text-sm leading-snug"
             >
               {line}
-            </motion.p>
+            </m.p>
           ))}
         </div>
       </div>
@@ -131,7 +131,7 @@ function Thread({
       {sent.length > 0 && (
         <div className="flex flex-col items-end gap-1">
           {sent.map((line, i) => (
-            <motion.p
+            <m.p
               key={i}
               initial={reduce ? false : { opacity: 0, y: 8, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -139,7 +139,7 @@ function Thread({
               className="bg-foreground text-background w-fit max-w-[16rem] rounded-[18px] rounded-br-md px-3.5 py-2 text-sm leading-snug break-words whitespace-pre-wrap"
             >
               {line}
-            </motion.p>
+            </m.p>
           ))}
         </div>
       )}
@@ -151,13 +151,13 @@ function Thread({
           <div className="flex items-end gap-2">
             <Avatar />
             <div className="min-w-0 space-y-2">
-              <motion.p
+              <m.p
                 {...rise(0)}
                 className="bg-muted text-foreground w-fit max-w-[16rem] rounded-[18px] rounded-bl-md px-3.5 py-2 text-sm leading-snug"
               >
                 {copy.pick}
-              </motion.p>
-              <motion.ul
+              </m.p>
+              <m.ul
                 {...rise(1)}
                 className="flex flex-wrap gap-1.5"
                 aria-label={copy.via}
@@ -177,7 +177,7 @@ function Thread({
                     </a>
                   </li>
                 ))}
-              </motion.ul>
+              </m.ul>
               {copied && (
                 <p className="text-muted-foreground text-xs" role="status">
                   {copy.copied}

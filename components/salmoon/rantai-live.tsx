@@ -3,7 +3,7 @@
 import Image from "next/image";
 import {
   AnimatePresence,
-  motion,
+  m,
   useInView,
   useMotionValue,
   useMotionValueEvent,
@@ -105,7 +105,7 @@ function OldSite() {
     >
       {/* Backdrop per slide, darkened so the caps stay readable. */}
       <AnimatePresence initial={false}>
-        <motion.div
+        <m.div
           key={slide}
           className="absolute inset-0"
           initial={{ opacity: 0 }}
@@ -113,7 +113,7 @@ function OldSite() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <motion.div
+          <m.div
             className="absolute inset-0"
             initial={{ scale: 1 }}
             animate={reduce ? undefined : { scale: 1.08 }}
@@ -123,19 +123,20 @@ function OldSite() {
               src={`${live}/${SLIDES[slide].bg}.jpg`}
               alt=""
               fill
-              // The first backdrop is the case study's LCP.
-              preload={slide === 1}
+              // Three quarters covered by the dark overlay: low quality
+              // can't be seen, and the LCP image gets a fraction lighter.
+              quality={30}
               sizes="(min-width: 1024px) 56rem, 100vw"
               className="object-cover"
             />
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       </AnimatePresence>
       <span className="absolute inset-0 bg-[#0a0b10]/75" />
       <span className="absolute inset-0 bg-[radial-gradient(rgb(255_255_255/0.04)_1px,transparent_1px)] [background-size:28px_28px]" />
       <OldNav />
       <AnimatePresence mode="wait" initial={false}>
-        <motion.p
+        <m.p
           key={slide}
           className="absolute top-[222px] left-4 text-[80px] leading-[1.4] font-black tracking-[0.04em] uppercase"
           initial={{ opacity: 0, x: -80 }}
@@ -146,7 +147,7 @@ function OldSite() {
           {SLIDES[slide].lines[0]}
           <br />
           <span className="pl-20">{SLIDES[slide].lines[1]}</span>
-        </motion.p>
+        </m.p>
       </AnimatePresence>
       {[ChevronLeft, ChevronRight].map((Icon, i) => (
         <span
@@ -161,12 +162,12 @@ function OldSite() {
           <span className="absolute inset-y-0 left-0 w-[90px] bg-white/10" />
           <span className="relative">RANTAI SERVICES</span>
         </span>
-        <motion.span
+        <m.span
           animate={reduce ? undefined : { x: [0, 6, 0] }}
           transition={{ duration: 1.2, repeat: Infinity }}
         >
           <ArrowRight className="size-4" />
-        </motion.span>
+        </m.span>
       </p>
       <ul className="absolute bottom-10 left-[43px] flex gap-[7px]">
         {[Linkedin, Github, Instagram, Youtube, Send].map((Icon, i) => (
@@ -223,7 +224,7 @@ function OldProducts() {
       </p>
       <ul className="absolute inset-x-[15px] top-[312px] bottom-[22px] grid grid-cols-3 gap-[30px]">
         {OLD_PRODUCTS.map(({ Icon, name, body }, i) => (
-          <motion.li
+          <m.li
             key={name}
             className="flex flex-col items-center border border-white/[0.07] px-14 pt-16 text-center"
             initial={reduce ? false : { opacity: 0, y: 40 }}
@@ -242,7 +243,7 @@ function OldProducts() {
               </span>
               <ArrowRight className="size-4" />
             </span>
-          </motion.li>
+          </m.li>
         ))}
       </ul>
       <span className="absolute right-[30px] bottom-[34px] grid size-11 place-items-center rounded-full border-2 border-sky-400 border-l-transparent">
@@ -308,7 +309,7 @@ function NewSite({ play }: { play: boolean }) {
                 className="block text-[92px] leading-[0.94] font-medium tracking-[-0.05em]"
               />
             ))}
-            <motion.span
+            <m.span
               className="mt-6 block max-w-[500px] text-[17px] leading-relaxed text-white/70"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -316,8 +317,8 @@ function NewSite({ play }: { play: boolean }) {
             >
               Agents, data platforms, and engineering teams for enterprise and
               government, built to run in production.
-            </motion.span>
-            <motion.span
+            </m.span>
+            <m.span
               className="mt-8 flex gap-3 text-[14px] font-medium"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -329,8 +330,8 @@ function NewSite({ play }: { play: boolean }) {
               <span className="flex h-11 items-center gap-2 rounded-full border border-white/20 px-6">
                 Explore products <ArrowRight className="size-4" />
               </span>
-            </motion.span>
-            <motion.span
+            </m.span>
+            <m.span
               className="mt-10 flex items-center gap-10 border-t border-white/10 pt-3"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -349,7 +350,7 @@ function NewSite({ play }: { play: boolean }) {
                   className="opacity-75 brightness-0 invert"
                 />
               ))}
-            </motion.span>
+            </m.span>
           </div>
         )}
         <span className="absolute top-6 right-6 text-[11px] font-medium tracking-[0.08em] text-white/50">
@@ -380,13 +381,13 @@ function NewProducts({ play }: { play: boolean }) {
       {play && (
         <>
           <div className="absolute top-[170px] left-[47px] w-[460px]">
-            <motion.span
+            <m.span
               {...rise(0.1)}
               className="flex items-center gap-2 text-[11px] font-medium tracking-[0.08em] text-neutral-500"
             >
               <span className="size-0 border-t-[7px] border-l-[7px] border-t-sky-500 border-l-transparent" />
               PRODUCTS
-            </motion.span>
+            </m.span>
             {["AI products built", "for real operations."].map((line, k) => (
               <SplitReveal
                 key={line}
@@ -397,14 +398,14 @@ function NewProducts({ play }: { play: boolean }) {
                 className={`block text-[54px] leading-[1.02] font-medium tracking-[-0.045em] ${k ? "" : "mt-4"}`}
               />
             ))}
-            <motion.span
+            <m.span
               {...rise(0.35)}
               className="mt-6 block max-w-[290px] text-[16px] leading-relaxed text-neutral-500"
             >
               Four products that work together, from your data to the agents
               that act on it.
-            </motion.span>
-            <motion.span
+            </m.span>
+            <m.span
               {...rise(0.5)}
               className="mt-8 flex gap-2.5 text-[14px] font-medium"
             >
@@ -414,13 +415,13 @@ function NewProducts({ play }: { play: boolean }) {
               <span className="flex h-11 items-center gap-2 rounded-full border border-neutral-200 px-6">
                 See them in action <ArrowRight className="size-4" />
               </span>
-            </motion.span>
+            </m.span>
           </div>
           {/* Tiles run off the right and bottom on purpose, as on rantai.dev. */}
           <div className="absolute top-[108px] right-[47px] h-[386px] w-[515px] overflow-hidden rounded-[28px] bg-[#eef3ff]">
             <div className="absolute top-[34px] -right-14 -bottom-14 left-[34px] flex gap-3">
               <div className="flex w-[60%] flex-col gap-3">
-                <motion.div {...rise(0.35)} className={`${TILE} basis-[58%]`}>
+                <m.div {...rise(0.35)} className={`${TILE} basis-[58%]`}>
                   <Image
                     src={`${live}/rantai-agents-chat.webp`}
                     alt=""
@@ -428,8 +429,8 @@ function NewProducts({ play }: { play: boolean }) {
                     sizes="20rem"
                     className="object-cover object-top-left"
                   />
-                </motion.div>
-                <motion.div {...rise(0.55)} className={`${TILE} flex-1`}>
+                </m.div>
+                <m.div {...rise(0.55)} className={`${TILE} flex-1`}>
                   <Image
                     src={`${live}/lake-dashboard.webp`}
                     alt=""
@@ -437,10 +438,10 @@ function NewProducts({ play }: { play: boolean }) {
                     sizes="20rem"
                     className="object-cover object-[0%_18%]"
                   />
-                </motion.div>
+                </m.div>
               </div>
               <div className="flex flex-1 flex-col gap-3">
-                <motion.div {...rise(0.45)} className={`${TILE} basis-[40%]`}>
+                <m.div {...rise(0.45)} className={`${TILE} basis-[40%]`}>
                   <Image
                     src={`${live}/rantai-claw-console.webp`}
                     alt=""
@@ -448,8 +449,8 @@ function NewProducts({ play }: { play: boolean }) {
                     sizes="12rem"
                     className="object-cover object-left"
                   />
-                </motion.div>
-                <motion.div
+                </m.div>
+                <m.div
                   {...rise(0.6)}
                   className="flex basis-[24%] flex-col justify-between rounded-2xl bg-[#8b5cf6] p-4 text-white"
                 >
@@ -464,8 +465,8 @@ function NewProducts({ play }: { play: boolean }) {
                       after fine-tuning
                     </span>
                   </span>
-                </motion.div>
-                <motion.div
+                </m.div>
+                <m.div
                   {...rise(0.75)}
                   className="flex flex-1 flex-col gap-3 rounded-2xl bg-neutral-950 p-4 text-white"
                 >
@@ -473,11 +474,11 @@ function NewProducts({ play }: { play: boolean }) {
                     <Server className="size-4 text-white/70" />
                     Runs on your infrastructure
                   </span>
-                </motion.div>
+                </m.div>
               </div>
             </div>
           </div>
-          <motion.div
+          <m.div
             {...rise(0.8)}
             className="absolute inset-x-0 top-[590px] flex flex-col items-center"
           >
@@ -488,7 +489,7 @@ function NewProducts({ play }: { play: boolean }) {
             <span className="mt-4 text-[60px] leading-none font-medium tracking-[-0.045em]">
               One request, four products.
             </span>
-          </motion.div>
+          </m.div>
         </>
       )}
     </div>
@@ -547,13 +548,13 @@ export function RantaiLive({
     return () => ro.disconnect();
   }, []);
 
-  // Breakout wrapper: the frame's own transform is taken by its entrance.
+  // Breakout wrapper: the frame's own transform is taken by its lift.
   return (
     <div className="w-full lg:ml-[50%] lg:w-[min(56rem,calc(100vw-8rem))] lg:-translate-x-1/2">
       {/* Pinned about mid-screen (frame is ~18rem tall on phones, ~38rem on
           desktop) while the spacer scrolls past. */}
       <div className="sticky top-[calc(50svh-10.5rem)] z-10 md:top-[max(1.5rem,calc(50svh-20.5rem))]">
-        <motion.div
+        <m.div
           className={`relative ${reduce ? "" : "md:origin-top md:scale-[calc(0.86+0.14*var(--k))]"}`}
           style={{ "--k": lift } as React.CSSProperties}
         >
@@ -563,7 +564,7 @@ export function RantaiLive({
               aria-hidden
               className="absolute inset-0 rounded-xl opacity-(--k) shadow-[0_48px_120px_-32px_rgb(0_0_0/0.6)] max-md:hidden"
             />
-            <figure className="hero-live border-border/80 bg-muted/50 w-full overflow-hidden rounded-xl border shadow-[0_24px_60px_-28px_rgb(0_0_0/0.45)]">
+            <figure className="border-border/80 bg-muted/50 w-full overflow-hidden rounded-xl border shadow-[0_24px_60px_-28px_rgb(0_0_0/0.45)]">
               <div className="flex h-10 items-center gap-3 px-3">
                 <span className="flex gap-1.5 max-sm:hidden" aria-hidden>
                   {[0, 1, 2].map((i) => (
@@ -590,7 +591,7 @@ export function RantaiLive({
                   {[copy.before, copy.after].map((label, i) => {
                     const on = polished === (i === 1);
                     return (
-                      <motion.span
+                      <m.span
                         key={label}
                         className={`col-start-1 row-start-1 text-right ${i ? "text-foreground" : "text-muted-foreground"}`}
                         initial={false}
@@ -606,7 +607,7 @@ export function RantaiLive({
                         transition={{ duration: 0.45, ease }}
                       >
                         {label}
-                      </motion.span>
+                      </m.span>
                     );
                   })}
                 </span>
@@ -625,8 +626,8 @@ export function RantaiLive({
                 aria-hidden
                 className={`[container-type:inline-size] relative aspect-[8/5] w-full overflow-hidden ${polished ? "bg-white" : "bg-[#0a0b10]"}`}
               >
-                {/* CSS scales it before hydration (the first backdrop is the
-                  LCP); browsers without length division wait for the JS. */}
+                {/* CSS scales it before the first measure; browsers without
+                  length division wait for the JS. */}
                 <div
                   className="invisible absolute top-0 left-0 origin-top-left [transform:scale(calc(100cqw/1200px))] supports-[scale:calc(1px/1px)]:visible"
                   style={{
@@ -639,15 +640,15 @@ export function RantaiLive({
                   }}
                 >
                   {page ? <OldProducts /> : <OldSite />}
-                  <motion.div className="absolute inset-0" style={{ clipPath }}>
+                  <m.div className="absolute inset-0" style={{ clipPath }}>
                     {page ? (
                       <NewProducts play={play} />
                     ) : (
                       <NewSite play={play} />
                     )}
-                  </motion.div>
+                  </m.div>
                 </div>
-                <motion.span
+                <m.span
                   className="pointer-events-none absolute inset-y-0 w-px bg-white shadow-[0_0_16px_2px_rgb(255_255_255/0.7)]"
                   style={{ left, opacity: lineOpacity }}
                 />
@@ -672,7 +673,7 @@ export function RantaiLive({
               </button>
             ))}
           </div>
-        </motion.div>
+        </m.div>
       </div>
       {!reduce && <div ref={spacer} aria-hidden className="h-[170svh]" />}
     </div>

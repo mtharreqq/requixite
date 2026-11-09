@@ -18,6 +18,8 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 828, 1080, 1200],
     imageSizes: [48, 64, 96, 128, 256, 384],
     formats: ["image/avif", "image/webp"],
+    // 30: backdrops under a dark overlay, where detail never shows.
+    qualities: [30, 75],
   },
 };
 

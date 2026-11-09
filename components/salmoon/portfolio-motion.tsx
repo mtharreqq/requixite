@@ -1,19 +1,30 @@
 "use client";
 
 import { type ReactNode } from "react";
-import { MotionConfig, motion, useReducedMotion } from "framer-motion";
+import { LazyMotion, MotionConfig, m, useReducedMotion } from "framer-motion";
+
+// The animation engine loads after the page has painted: the server HTML
+// already holds every starting style, so nothing waits on it.
+const domAnimation = () =>
+  import("@/lib/motion-features").then((mod) => mod.domAnimation);
+const domMax = () => import("@/lib/motion-features").then((mod) => mod.domMax);
 
 export function PortfolioMotion({
   children,
   className,
+  layout,
 }: {
   children: ReactNode;
   className?: string;
+  /** Layout animations (the home story) need the bigger feature set. */
+  layout?: boolean;
 }) {
   return (
-    <MotionConfig reducedMotion="user">
-      <div className={className}>{children}</div>
-    </MotionConfig>
+    <LazyMotion features={layout ? domMax : domAnimation} strict>
+      <MotionConfig reducedMotion="user">
+        <div className={className}>{children}</div>
+      </MotionConfig>
+    </LazyMotion>
   );
 }
 
@@ -21,7 +32,7 @@ export function PortfolioMotion({
 export function SectionReveal({ children }: { children: ReactNode }) {
   const reduce = useReducedMotion();
   return (
-    <motion.div
+    <m.div
       data-reveal
       className="w-full"
       initial={reduce ? false : { opacity: 0, y: 20 }}
@@ -30,6 +41,6 @@ export function SectionReveal({ children }: { children: ReactNode }) {
       transition={reduce ? { duration: 0 } : { duration: 0.6, ease: "easeOut" }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }

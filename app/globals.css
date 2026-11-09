@@ -12,35 +12,6 @@
   }
 }
 
-@keyframes portfolio-fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* From 1% opacity, not 0, so it still counts for LCP. */
-@keyframes hero-rise {
-  from {
-    opacity: 0.01;
-    transform: translateY(12px);
-  }
-}
-/* The live rantai.dev frame rises after the CTAs. */
-.hero-live {
-  animation: hero-rise 900ms 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-/* A fast Tab press must never leave focused controls hidden or in motion.
-   Collapse the timing instead of `animation: none`: removing the name and
-   adding it back restarts the animation, so focus leaving #work would
-   replay the entrance. */
-#work:focus-within .hero-live {
-  animation-delay: 0s;
-  animation-duration: 0s;
-}
-
 .tactile-control {
   transition:
     opacity 180ms ease,
@@ -53,10 +24,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* Hero: short opacity fade, no translate. Sections stay put. */
-  .hero-live {
-    animation: portfolio-fade 200ms ease both;
-  }
   /* Hover/press movement off; colour, background, opacity transitions stay. */
   .portfolio-motion .tactile-control:active {
     scale: none;
