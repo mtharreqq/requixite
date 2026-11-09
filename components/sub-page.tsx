@@ -2,6 +2,8 @@ import Link from "next/link";
 import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
 import { ConnectSection } from "@/components/salmoon/connect-section";
 import { RailNav, type RailSection } from "@/components/salmoon/rail-nav";
+import { AskBox } from "@/components/salmoon/review-story";
+import { ChatDialog } from "@/components/salmoon/chat-dialog";
 import { ExperienceSection } from "@/components/salmoon/experience-section";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
@@ -27,7 +29,7 @@ function Suggestions({ locale, path }: { locale: Locale; path: string }) {
     ["/contact", skip.contact, skip.contactTip],
   ].filter(([p]) => p !== path);
   return (
-    <nav className="flex flex-col items-center gap-3">
+    <nav id="more" className="flex flex-col items-center gap-3">
       <p className="text-muted-foreground text-sm">{skip.next}</p>
       <div className="flex flex-wrap justify-center gap-1.5">
         {pages.map(([p, label, tip]) => (
@@ -66,14 +68,19 @@ export function SubPage({
         {children}
         <Suggestions locale={locale} path={path} />
         <SectionReveal>
-          <ConnectSection copy={copy.contact} />
+          <ConnectSection copy={copy.contact} card={path !== "/contact"} />
         </SectionReveal>
       </main>
       <RailNav
         copy={copy.rail}
         locale={locale}
         path={path}
-        sections={[...sections, { id: "contact", label: copy.rail.contact }]}
+        sections={[
+          ...sections,
+          path === "/contact"
+            ? { id: "more", label: copy.review.skip.next }
+            : { id: "contact", label: copy.rail.contact },
+        ]}
       />
     </PortfolioMotion>
   );
@@ -116,14 +123,19 @@ export function ContactPage({ locale }: { locale: Locale }) {
       path="/contact"
       sections={[{ id: "intro", label: copy.rail.intro }]}
     >
-      <header id="intro" className="flex flex-col gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
-          {copy.contactPage.title}
-        </h1>
-        <p className="text-muted-foreground text-sm leading-relaxed md:text-base">
-          {copy.contactPage.intro}
-        </p>
-      </header>
+      {/* Same ask as the story's end: the page leads with the composer. */}
+      <section id="intro" className="flex flex-col gap-8 md:pt-[12svh]">
+        <header className="flex flex-col gap-3">
+          <h1 className="text-[clamp(24px,4.8vw,36px)] leading-tight font-medium tracking-[-0.04em]">
+            {copy.review.cta.title}
+          </h1>
+          <p className="text-muted-foreground text-sm leading-relaxed md:text-base">
+            {copy.contactPage.intro}
+          </p>
+        </header>
+        <AskBox locale={locale} />
+      </section>
+      <ChatDialog copy={copy.hero.chat} />
     </SubPage>
   );
 }
