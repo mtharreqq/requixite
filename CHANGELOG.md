@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/mtharreqq/requixite/compare/requixite-v0.8.1...requixite-v0.9.0) (2026-11-09)
+
+
+### Features
+
+* case study pages, centred pins, sentence-by-sentence stack story ([2b21f33](https://github.com/mtharreqq/requixite/commit/2b21f333822eba8ab14db7c6c8552fcd45554e1a))
+
 ## [0.8.1](https://github.com/mtharreqq/requixite/compare/requixite-v0.8.0...requixite-v0.8.1) (2026-11-05)
 
 
