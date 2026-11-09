@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { useDesktopMotion } from "@/components/smooth-scroll";
 import { cn } from "@/lib/utils";
 
@@ -173,7 +173,7 @@ export function FooterWordmark({
       aria-hidden="true"
       className={cn("relative select-none", className)}
     >
-      <motion.p
+      <m.p
         className="flex justify-center"
         initial={reduce ? false : "hidden"}
         whileInView="shown"
@@ -181,7 +181,7 @@ export function FooterWordmark({
         transition={{ staggerChildren: 0.06 }}
       >
         {letters.map((char, i) => (
-          <motion.span
+          <m.span
             key={`${char}-${i}`}
             className="inline-block"
             variants={{
@@ -221,9 +221,9 @@ export function FooterWordmark({
                 {char}
               </span>
             </span>
-          </motion.span>
+          </m.span>
         ))}
-      </motion.p>
+      </m.p>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { getCaseStudyCopy } from "@/lib/case-study-copy";
 import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
-import { RantaiLive } from "@/components/salmoon/rantai-live";
+import { RantaiLiveLazy } from "@/components/salmoon/rantai-live-lazy";
 import { SubPage } from "@/components/sub-page";
 
 export function CaseStudyPage({ locale }: { locale: Locale }) {
@@ -48,7 +48,7 @@ export function CaseStudyPage({ locale }: { locale: Locale }) {
         </dl>
       </header>
 
-      <RantaiLive copy={getPortfolioCopy(locale).hero.visual} />
+      <RantaiLiveLazy copy={getPortfolioCopy(locale).hero.visual} />
 
       {copy.shots.map((shot) => (
         <figure key={shot.name} className="flex flex-col gap-3">

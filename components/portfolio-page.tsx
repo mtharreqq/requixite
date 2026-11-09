@@ -1,4 +1,4 @@
-import { ReviewStory } from "@/components/salmoon/review-story";
+import { ReviewStory } from "@/components/salmoon/review-story-lazy";
 import { ChatDialog } from "@/components/salmoon/chat-dialog-lazy";
 import { RailNav } from "@/components/salmoon/rail-nav";
 import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
@@ -9,7 +9,10 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
   return (
     // overflow-x: clip, not hidden: hidden would make this a scroll container
     // and stop the pinned sections from sticking.
-    <PortfolioMotion className="portfolio-motion bg-background text-foreground selection:bg-foreground selection:text-background relative flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip">
+    <PortfolioMotion
+      layout
+      className="portfolio-motion bg-background text-foreground selection:bg-foreground selection:text-background relative flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip"
+    >
       {/* Keyboard and screen-reader users can jump past the rail */}
       <a
         href="#main"

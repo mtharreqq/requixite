@@ -1,6 +1,6 @@
 "use client";
 
-import Lenis from "lenis";
+import type Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import { useEffect, useSyncExternalStore } from "react";
 
@@ -77,10 +77,17 @@ export function SmoothScroll() {
 
   useEffect(() => {
     if (!desktopMotion) return;
-    const lenis = new Lenis({ lerp: 0.1, autoRaf: true, anchors: true });
-    activeLenis = lenis;
+    // Loaded after the first paint: native scrolling works until it lands.
+    let lenis: Lenis | null = null;
+    let gone = false;
+    import("lenis").then(({ default: L }) => {
+      if (gone) return;
+      lenis = new L({ lerp: 0.1, autoRaf: true, anchors: true });
+      activeLenis = lenis;
+    });
     return () => {
-      lenis.destroy();
+      gone = true;
+      lenis?.destroy();
       if (activeLenis === lenis) activeLenis = null;
     };
   }, [desktopMotion]);

@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment } from "react";
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { m, useReducedMotion, type Variants } from "framer-motion";
 
 // Ported from the RantAI landing page (shared/split-reveal.tsx).
 type Tag = "h1" | "h2" | "h3" | "p" | "span";
@@ -32,6 +32,7 @@ export function SplitReveal({
   delay = 0,
   stagger = 0.06,
   from = 0,
+  appear = true,
   className,
   id,
 }: {
@@ -44,11 +45,14 @@ export function SplitReveal({
   stagger?: number;
   /** Starting opacity. The hero uses 0.01: fully transparent text does not count for LCP. */
   from?: number;
+  /** false: the first render shows the words as-is (server HTML included),
+   * so they paint before hydration. Later play changes still animate. */
+  appear?: boolean;
   className?: string;
   id?: string;
 }) {
   const reduce = Boolean(useReducedMotion());
-  const MotionTag = motion[as] as typeof motion.h2;
+  const MotionTag = m[as] as typeof m.h2;
   const containerVariants: Variants = {
     hidden: {},
     shown: { transition: { staggerChildren: stagger, delayChildren: delay } },
@@ -67,7 +71,7 @@ export function SplitReveal({
       data-reveal
       className={className}
       variants={containerVariants}
-      initial={reduce ? false : "hidden"}
+      initial={reduce || !appear ? false : "hidden"}
       exit={reduce ? undefined : "exit"}
       {...(trigger === "mount"
         ? { animate: play ? "shown" : "hidden" }
@@ -90,14 +94,14 @@ export function SplitReveal({
                 aria-hidden="true"
                 className="inline-block whitespace-nowrap"
               >
-                <motion.span
+                <m.span
                   // Blurring every word is heavy for phone GPUs: there the
                   // words only fade and rise.
                   className="inline-block max-md:filter-none!"
                   variants={variants}
                 >
                   {word}
-                </motion.span>
+                </m.span>
               </span>
               {wordIndex < words.length - 1 && " "}
             </Fragment>

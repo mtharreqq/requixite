@@ -30,7 +30,7 @@ import {
   AnimatePresence,
   animate,
   cubicBezier,
-  motion,
+  m,
   useMotionValue,
   useMotionValueEvent,
   useScroll,
@@ -320,7 +320,7 @@ function Caption({
     { ease },
   );
   return (
-    <motion.p
+    <m.p
       className={cn("[grid-area:1/1] max-md:filter-none!", end && "self-end")}
       style={{
         opacity: shown,
@@ -331,7 +331,7 @@ function Caption({
       }}
     >
       {children}
-    </motion.p>
+    </m.p>
   );
 }
 
@@ -346,7 +346,7 @@ function Part({
 }) {
   const shown = useTransform(p, [at, at + 0.015], [0, 1], { ease });
   return (
-    <motion.span
+    <m.span
       className="max-md:filter-none!"
       style={{
         opacity: shown,
@@ -356,7 +356,7 @@ function Part({
       }}
     >
       {children}
-    </motion.span>
+    </m.span>
   );
 }
 
@@ -373,7 +373,7 @@ function Tile({
 }) {
   const shown = useBeat(p, (v) => v > LOGO_AT + i * 0.006);
   return (
-    <motion.span
+    <m.span
       className={cn(
         "relative inline-flex size-[0.92em] shrink-0 items-center justify-center rounded-[0.24em] bg-white shadow-[0_0.08em_0.2em_rgba(0,0,0,0.18)] ring-[0.04em] ring-white",
         i > 0 && "-ml-[0.3em]",
@@ -392,7 +392,7 @@ function Tile({
         height={40}
         className="h-[0.55em] w-auto"
       />
-    </motion.span>
+    </m.span>
   );
 }
 
@@ -427,7 +427,7 @@ function PlanChip({
   plan: Offer["plans"][number];
   price: string;
   onPick: () => void;
-  enter: React.ComponentProps<typeof motion.button>;
+  enter: React.ComponentProps<typeof m.button>;
 }) {
   const [run, setRun] = useState(0);
   const Scene = SCENES[index];
@@ -438,7 +438,7 @@ function PlanChip({
       onOpenChange={(o) => o && setRun((r) => r + 1)}
     >
       <HoverCardTrigger asChild>
-        <motion.button
+        <m.button
           {...enter}
           type="button"
           onClick={onPick}
@@ -446,7 +446,7 @@ function PlanChip({
         >
           <span className="font-medium">{plan.name}</span>
           <span className="text-muted-foreground tabular-nums">{price}</span>
-        </motion.button>
+        </m.button>
       </HoverCardTrigger>
       <HoverCardContent
         side="top"
@@ -502,7 +502,7 @@ function Notes({ run }: { run: number }) {
       <Bar className="mt-1 w-14" />
       <span className="border-foreground/15 mt-3 block h-4 w-12 rounded-sm border" />
       {pins.map(([pos, n], i) => (
-        <motion.span
+        <m.span
           key={`${run}-${n}`}
           className={`bg-foreground text-background absolute grid size-4 place-items-center rounded-full text-[9px] font-semibold ${pos}`}
           initial={from(run, { scale: 0, opacity: 0 })}
@@ -510,7 +510,7 @@ function Notes({ run }: { run: number }) {
           transition={{ ...bounce, delay: 0.15 + i * 0.18 }}
         >
           {n}
-        </motion.span>
+        </m.span>
       ))}
     </Window>
   );
@@ -526,7 +526,7 @@ function Snap({ run }: { run: number }) {
   return (
     <Window>
       {rows.map((r, i) => (
-        <motion.div
+        <m.div
           key={`${run}-${i}`}
           className={i ? "mt-1.5" : ""}
           initial={from(run, { x: r.x })}
@@ -534,9 +534,9 @@ function Snap({ run }: { run: number }) {
           transition={{ ...bounce, delay: 0.2 + r.d }}
         >
           <Bar className={r.w} />
-        </motion.div>
+        </m.div>
       ))}
-      <motion.span
+      <m.span
         key={`${run}-btn`}
         className="mt-3 block h-4 w-12"
         initial={from(run, {
@@ -568,7 +568,7 @@ function Blocks({ run }: { run: number }) {
     <Window>
       <div className="flex flex-wrap justify-between">
         {blocks.map((b, i) => (
-          <motion.span
+          <m.span
             key={`${run}-${i}`}
             className={`bg-foreground/15 block rounded-sm ${b}`}
             initial={from(run, { opacity: 0, y: 6 })}
@@ -649,7 +649,7 @@ function Composer({
     transition: { duration: 0.6, ease: EASE, delay },
   });
   return (
-    <motion.div
+    <m.div
       ref={box}
       style={{
         scale: useTransform(p, GROW, [0.6, 1], { ease }),
@@ -673,7 +673,7 @@ function Composer({
       )}
       {/* One box all the way: prompt, follow-up bar, then your message. The
           parts glide to their new spots; only the text swaps. */}
-      <motion.div
+      <m.div
         layout
         transition={morph}
         inert={!cta}
@@ -687,7 +687,7 @@ function Composer({
               <label htmlFor="review-ask" className="sr-only">
                 {copy.cta.title}
               </label>
-              <motion.textarea
+              <m.textarea
                 key="cta"
                 {...swap}
                 ref={field}
@@ -701,43 +701,38 @@ function Composer({
               />
             </>
           ) : (
-            <motion.p
-              key={mode}
-              {...swap}
-              aria-hidden
-              className="composer-input"
-            >
+            <m.p key={mode} {...swap} aria-hidden className="composer-input">
               {mode === "big" ? (
                 <>
-                  <motion.span>{typed}</motion.span>
+                  <m.span>{typed}</m.span>
                   <span className="composer-caret" />
                 </>
               ) : (
                 copy.followup
               )}
-            </motion.p>
+            </m.p>
           )}
           {/* The + only dresses the story's AI chat; the real one has none. */}
           {!cta && (
-            <motion.span
+            <m.span
               layout="position"
               transition={morph}
               aria-hidden
               className="composer-icon"
             >
               <Plus />
-            </motion.span>
+            </m.span>
           )}
           {cta && (
             // Rather email or DM? Same toolbar as the + and send.
-            <motion.div
+            <m.div
               {...later(1)}
               className="flex min-w-0 items-center [grid-area:tools]"
             >
               <ContactIcons copy={contact} />
-            </motion.div>
+            </m.div>
           )}
-          <motion.span
+          <m.span
             layout="position"
             transition={morph}
             className="[grid-area:send]"
@@ -748,25 +743,25 @@ function Composer({
               onClick={send}
               off={cta && !text.trim()}
             />
-          </motion.span>
+          </m.span>
         </div>
-      </motion.div>
+      </m.div>
       {cta && (
-        <motion.div {...later(0.9)}>
+        <m.div {...later(0.9)}>
           <Foot offer={offer} contact={contact} />
-        </motion.div>
+        </m.div>
       )}
       {cta && (
         // The story ends here: the same ways on as under the hello.
-        <motion.div
+        <m.div
           {...later(1.1)}
           className="mt-12 flex flex-col items-center gap-3"
         >
           <p className="text-muted-foreground text-sm">{copy.skip.more}</p>
           <Shortcuts copy={copy} locale={locale} />
-        </motion.div>
+        </m.div>
       )}
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -917,7 +912,7 @@ function CommentPin({
     Math.max(0, d * (1 - g)),
   );
   return (
-    <motion.span
+    <m.span
       data-n={n}
       className="dash-pin"
       style={{
@@ -938,10 +933,10 @@ function CommentPin({
           loading="eager"
         />
       )}
-      <motion.span className="dash-pin-done" style={{ opacity: done }}>
+      <m.span className="dash-pin-done" style={{ opacity: done }}>
         <Check />
-      </motion.span>
-    </motion.span>
+      </m.span>
+    </m.span>
   );
 }
 
@@ -985,7 +980,7 @@ function Popover({
   // Above the pin, or below it when the pin sits near the top.
   const above = y > 140;
   return (
-    <motion.div
+    <m.div
       layout
       className="dash-pop"
       data-above={above}
@@ -1003,7 +998,7 @@ function Popover({
       transition={{ type: "spring", stiffness: 420, damping: 32 }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -1023,7 +1018,7 @@ function Cursor({
   w: number;
 }) {
   return (
-    <motion.div
+    <m.div
       className="dash-cursor"
       data-flip={!!at && at.x > w - 110}
       style={{ "--cur": color } as React.CSSProperties}
@@ -1035,7 +1030,7 @@ function Cursor({
         <path d="M4.6 5.4a1.2 1.2 0 0 1 1.6-1.6l14 5.8a1 1 0 0 1-.1 1.9l-5.9 1.6a2 2 0 0 0-1.4 1.4l-1.6 5.9a1 1 0 0 1-1.9.1z" />
       </svg>
       <span>{name}</span>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -1144,7 +1139,7 @@ function Answer({
 
   return (
     <div ref={root} className="flex flex-col">
-      <motion.div
+      <m.div
         initial={false}
         animate={
           focus ? { height: 0, opacity: 0 } : { height: "auto", opacity: 1 }
@@ -1171,7 +1166,7 @@ function Answer({
               {copy.building}
             </p>
             {copy.steps.slice(0, step).map((label, i) => (
-              <motion.p
+              <m.p
                 key={label}
                 {...rise}
                 className="text-muted-foreground flex items-center gap-2 pl-6 text-xs"
@@ -1182,37 +1177,37 @@ function Answer({
                   <LoaderCircle className="size-3.5 motion-safe:animate-spin" />
                 )}
                 {label}
-              </motion.p>
+              </m.p>
             ))}
           </div>
           {done && (
-            <motion.p {...rise} className="flex items-center gap-2">
+            <m.p {...rise} className="flex items-center gap-2">
               <Sparkles className="size-4" />
               {copy.reply}
-            </motion.p>
+            </m.p>
           )}
         </div>
-      </motion.div>
-      <motion.div
+      </m.div>
+      <m.div
         className="overflow-hidden"
         initial={false}
         animate={{ height: focus ? "auto" : 0 }}
         transition={fold}
       >
         <div className="text-muted-foreground flex justify-end pb-2 text-xs">
-          <motion.span
+          <m.span
             className="inline-flex items-center gap-1.5"
             style={{ opacity: commenting }}
           >
             <MessageCircle className="size-3.5" />
-            <motion.span className="tabular-nums">{open}</motion.span>
-          </motion.span>
+            <m.span className="tabular-nums">{open}</m.span>
+          </m.span>
         </div>
-      </motion.div>
-      <motion.div
+      </m.div>
+      <m.div
         style={{ opacity: built, y: useTransform(built, [0, 1], [16, 0]) }}
       >
-        <motion.div
+        <m.div
           initial={false}
           animate={size.w ? card : { width: "100%" }}
           transition={fold}
@@ -1224,16 +1219,16 @@ function Answer({
               : "bg-card ring-border overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.06)]",
           )}
         >
-          <motion.div
+          <m.div
             initial={false}
             animate={{ scale: focus ? 1 : PREVIEW }}
             transition={fold}
             style={{ width: size.w || "100%", originX: 0, originY: 0 }}
           >
             <DashBody copy={copy} dashRef={dash} pins={pins} />
-          </motion.div>
-        </motion.div>
-      </motion.div>
+          </m.div>
+        </m.div>
+      </m.div>
     </div>
   );
 }
@@ -1311,7 +1306,7 @@ function Stage({
   const leaveScale = useTransform(leave, [0, 1], [0.97, 1]);
 
   return (
-    <motion.div
+    <m.div
       ref={stage}
       data-stage
       layout="position"
@@ -1325,7 +1320,7 @@ function Stage({
     >
       <AnimatePresence mode="popLayout" initial={false}>
         {(mode === "dock" || still) && (
-          <motion.div
+          <m.div
             key="answer"
             className="min-h-0 flex-1"
             style={
@@ -1341,7 +1336,7 @@ function Stage({
             transition={{ duration: 0.3 }}
           >
             <Answer copy={copy} p={p} onSettle={() => setTick((t) => t + 1)} />
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
       <Composer
@@ -1357,7 +1352,7 @@ function Stage({
         <>
           <AnimatePresence>
             {sel >= 0 && sel <= 2 && d && (
-              <motion.div
+              <m.div
                 className="dash-sel"
                 style={{ left: d.x, top: d.y }}
                 initial={{ width: 0, height: 0 }}
@@ -1384,7 +1379,7 @@ function Stage({
                   }
                 />
                 {reply && (
-                  <motion.div
+                  <m.div
                     initial={{ opacity: 0, y: 4 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={spring}
@@ -1401,7 +1396,7 @@ function Stage({
                             : copy.replies[act % copy.replies.length]
                       }
                     />
-                  </motion.div>
+                  </m.div>
                 )}
               </Popover>
             )}
@@ -1415,7 +1410,7 @@ function Stage({
           />
         </>
       )}
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -1590,7 +1585,7 @@ function AutoPill({
   return createPortal(
     <AnimatePresence>
       {show && (
-        <motion.div
+        <m.div
           data-autopill
           className="fixed top-4 right-4 z-50"
           initial={{ opacity: 0, y: -8 }}
@@ -1612,7 +1607,7 @@ function AutoPill({
                   <Play aria-hidden className="size-3 fill-current" />
                 )}
                 {label}
-                <motion.span
+                <m.span
                   aria-hidden
                   style={{ scaleX: done }}
                   className="bg-foreground/30 absolute inset-x-3 bottom-1 h-px origin-left"
@@ -1621,7 +1616,7 @@ function AutoPill({
             </TooltipTrigger>
             <TooltipContent sideOffset={6}>{copy.skip.playTip}</TooltipContent>
           </Tooltip>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>,
     document.body,
@@ -1633,7 +1628,7 @@ function Skip({ copy, show }: { copy: Copy; show: boolean }) {
   return (
     <AnimatePresence>
       {show && (
-        <motion.div
+        <m.div
           className="absolute inset-x-0 bottom-8 flex flex-col items-center md:bottom-12"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -1653,7 +1648,7 @@ function Skip({ copy, show }: { copy: Copy; show: boolean }) {
             </TooltipTrigger>
             <TooltipContent sideOffset={6}>{copy.skip.storyTip}</TooltipContent>
           </Tooltip>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );
@@ -1795,22 +1790,22 @@ export function ReviewStory({
             // animation would otherwise wipe the offset.
             // Above the stage: on the hello the caption sits over its blank
             // middle, and the chips under it must stay clickable.
-            <motion.div
+            <m.div
               layout="position"
               transition={morph}
               className="relative z-10"
             >
-              <motion.div style={{ y: captionY }} className="relative">
+              <m.div style={{ y: captionY }} className="relative">
                 <div
                   aria-hidden
                   className="grid grid-cols-1 text-[clamp(24px,4.8vw,36px)] leading-tight font-medium tracking-[-0.04em]"
                 >
                   <Caption from={-1} to={HELLO_END} p={p}>
-                    {/* First visit: the avatar pops, then the words rise in
-                      (RantAI hero timing). From 1%, so it still counts for LCP. */}
-                    <motion.span
+                    {/* Painted as-is on load (it is the LCP); scrolling back
+                      to the top replays the pop and the word rise. */}
+                    <m.span
                       className="mr-[0.25em] inline-block align-[-0.15em]"
-                      initial={{ opacity: 0.01, scale: 0.6 }}
+                      initial={false}
                       animate={
                         hello
                           ? { opacity: 1, scale: 1 }
@@ -1826,7 +1821,7 @@ export function ReviewStory({
                         priority
                         className="block size-[1em] rounded-full"
                       />
-                    </motion.span>
+                    </m.span>
                     <SplitReveal
                       as="span"
                       trigger="mount"
@@ -1834,6 +1829,7 @@ export function ReviewStory({
                       play={hello}
                       delay={0.2}
                       from={0.01}
+                      appear={false}
                     />
                     <br />
                     <SplitReveal
@@ -1843,6 +1839,7 @@ export function ReviewStory({
                       play={hello}
                       delay={0.45}
                       from={0.01}
+                      appear={false}
                       className="text-muted-foreground"
                     />
                   </Caption>
@@ -1884,7 +1881,7 @@ export function ReviewStory({
                   composer keeps its spot. */}
                 <AnimatePresence>
                   {hello && (
-                    <motion.div
+                    <m.div
                       className="absolute inset-x-0 top-full mt-6"
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -1897,11 +1894,11 @@ export function ReviewStory({
                         onPlay={() => setAuto("on")}
                         className="justify-start"
                       />
-                    </motion.div>
+                    </m.div>
                   )}
                 </AnimatePresence>
-              </motion.div>
-            </motion.div>
+              </m.div>
+            </m.div>
           )}
           <Stage
             copy={copy}
