@@ -506,6 +506,11 @@ html {
 .composer-chip:hover {
   background: var(--muted);
 }
+/* Page links: no outline until hovered. */
+.composer-chip-ghost {
+  border-color: transparent;
+  background: transparent;
+}
 
 /* Review story dashboard, vibecoded until each dial reaches 1:
    --p spacing, --c colour, --f type, --a alignment, --x my final pass
