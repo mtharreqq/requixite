@@ -9,8 +9,10 @@ type Copy = PortfolioCopy["hero"]["visual"];
 
 /**
  * The case study's demo as a still first. The live rebuild (two whole sites,
- * the panorama, the scroll sweep) loads once the page has loaded, then
- * takes over in place. No entrance: the still is the page's LCP.
+ * the panorama, the scroll sweep) loads on the first scroll, touch, pointer
+ * move or key press, then takes over in place. Loading it on `load` instead
+ * blocked slow phones' main thread right after the first paint. No entrance:
+ * the still is the page's LCP.
  * ponytail: the still mirrors RantaiLive's frame markup by hand; change both
  * together, or extract a shared frame if it drifts again.
  */
@@ -19,15 +21,19 @@ export function RantaiLiveLazy({ copy }: { copy: Copy }) {
 
   useEffect(() => {
     let gone = false;
+    const events = ["scroll", "wheel", "touchstart", "pointermove", "keydown"];
     const start = async () => {
+      for (const e of events) window.removeEventListener(e, start);
       const mod = await import("@/components/case-study/rantai-live");
       if (!gone) setLive(() => mod.RantaiLive);
     };
-    if (document.readyState === "complete") start();
-    else window.addEventListener("load", start, { once: true });
+    for (const e of events)
+      window.addEventListener(e, start, { once: true, passive: true });
+    // Opened mid-page (reload, back button): the demo is already in reach.
+    if (window.scrollY > 0) start();
     return () => {
       gone = true;
-      window.removeEventListener("load", start);
+      for (const e of events) window.removeEventListener(e, start);
     };
   }, []);
 
