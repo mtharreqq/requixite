@@ -179,7 +179,7 @@ export function FooterMeta({ copy }: { copy: PortfolioCopy["contact"] }) {
           </button>
         </HoverCardTrigger>
         <HoverCardContent
-          side="top"
+          side="bottom"
           align="end"
           sideOffset={8}
           className={`${card} flex w-auto items-center gap-3 py-2.5 pr-2.5`}

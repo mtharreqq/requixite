@@ -444,7 +444,8 @@ export function RailNav({
       // rail grows upward.
       className="pointer-events-none fixed inset-x-4 bottom-3 z-50 flex items-center justify-between md:inset-x-auto md:bottom-[calc(50%-7rem)] md:left-8 md:flex-col md:items-start"
     >
-      <div className={`${PILL} px-4 py-2`}>
+      {/* One section (Contact): nothing to navigate, just the avatar. */}
+      <div hidden={sections.length < 2} className={`${PILL} px-4 py-2`}>
         <div
           ref={railRef}
           onPointerLeave={() => hover(null)}
@@ -529,7 +530,7 @@ export function RailNav({
         </div>
       </div>
 
-      <div className={`${PILL} p-2`}>
+      <div className={`${PILL} ml-auto p-2`}>
         <Menu copy={copy} locale={locale} path={path} phone={phone} />
       </div>
     </nav>
