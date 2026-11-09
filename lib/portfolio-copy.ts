@@ -256,9 +256,6 @@ export const english = {
       "Gold Award, WINTEX 2023 • 1st Place, UI/UX Centurion 2023 • 2nd Place, UI/UX JBC 2022",
   },
   contact: {
-    available: "Open to new projects",
-    invitation:
-      "Send me your app or prototype. I’ll reply within 2 days with the top 3 things I’d fix, free.",
     copy: "Copy email",
     copied: "Email copied",
     copyFailed: "Couldn't copy. Try sending an email instead.",
@@ -547,9 +544,6 @@ export const indonesian: PortfolioCopy = {
       "Medali Emas, WINTEX 2023 • Juara 1, UI/UX Centurion 2023 • Juara 2, UI/UX JBC 2022",
   },
   contact: {
-    available: "Terbuka untuk proyek baru",
-    invitation:
-      "Kirim aplikasi atau prototipemu. Dalam 2 hari saya balas dengan 3 hal yang paling perlu dibenahi, gratis.",
     copy: "Salin email",
     copied: "Email tersalin",
     copyFailed: "Email belum tersalin. Coba tombol Kirim email.",
