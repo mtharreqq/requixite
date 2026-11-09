@@ -6,7 +6,7 @@ import { m, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUp, Mail, X } from "lucide-react";
-import { TwitterVerifiedBadgeSvg, XSvg } from "@/components/dock-icons";
+import { TwitterVerifiedBadgeSvg, XSvg } from "@/components/shared/dock-icons";
 import { CHAT_OPEN_EVENT } from "@/lib/chat-events";
 
 type ChatCopy = PortfolioCopy["hero"]["chat"];

@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import { SplitReveal } from "@/components/salmoon/split-reveal";
+import { SplitReveal } from "@/components/shared/split-reveal";
 
 export function ExperienceSection({
   copy,

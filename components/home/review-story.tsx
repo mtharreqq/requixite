@@ -44,10 +44,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { SplitReveal } from "@/components/salmoon/split-reveal";
-import { jumpTo, smoothScrollTo } from "@/components/smooth-scroll";
-import { ContactIcons } from "@/components/salmoon/connect-section";
-import { Foot, Send, useDraft } from "@/components/salmoon/ask-box";
+import { SplitReveal } from "@/components/shared/split-reveal";
+import { jumpTo, smoothScrollTo } from "@/components/layout/smooth-scroll";
+import { ContactIcons } from "@/components/shared/connect-section";
+import { Foot, Send, useDraft } from "@/components/chat/ask-box";
 import { cn } from "@/lib/utils";
 import {
   HoverCard,

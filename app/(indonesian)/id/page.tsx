@@ -1,4 +1,4 @@
-import { PortfolioPage } from "@/components/portfolio-page";
+import { PortfolioPage } from "@/components/home/portfolio-page";
 
 export default function Home() {
   return <PortfolioPage locale="id" />;

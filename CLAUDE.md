@@ -12,11 +12,13 @@ Guidance for AI coding assistants in this repo. Also read `AGENTS.md` (motion st
 
 Next.js 16 App Router, React 19, Tailwind v4, Framer Motion, Lenis. Fully static: no database, CMS or auth. Path alias `@/*` is the repo root.
 
-The site sells polishing vibecoded apps. English lives at `/`, Indonesian at `/id`, as two route groups (`app/(english)`, `app/(indonesian)`) with their own root layouts; `components/site-layout.tsx` holds the shared shell and metadata. `proxy.ts` passes the Vercel country to a cookie for IDR/USD pricing.
+The site sells polishing vibecoded apps. English lives at `/`, Indonesian at `/id`, as two route groups (`app/(english)`, `app/(indonesian)`) with their own root layouts; `components/layout/site-layout.tsx` holds the shared shell and metadata. `proxy.ts` passes the Vercel country to a cookie for IDR/USD pricing.
 
-- **Home** (`components/portfolio-page.tsx`): `ReviewStory` (`components/salmoon/review-story.tsx`), one pinned scroll story: hello, a vibecoded dashboard, feedback, handoff, then a composer with geo-priced plans. `ChatDialog` opens from any composer.
-- **Sub-pages** (`components/sub-page.tsx`): `/about`, `/work`, `/contact` and the case study `/work/rantai` (`components/case-study-page.tsx`, with the live before/after demo in `rantai-live.tsx` and `rantai-panorama.tsx`). Each ends with a composer (`AskBox`), "Or look around first" links and the wordmark footer; Contact is just the composer.
-- **Rail** (`components/salmoon/rail-nav.tsx`): navigation on every page, one tick per section; the avatar opens pages, theme and language.
+- **Home** (`components/home/portfolio-page.tsx`): `ReviewStory` (`components/home/review-story.tsx`), one pinned scroll story: hello, a vibecoded dashboard, feedback, handoff, then a composer with geo-priced plans. `ChatDialog` opens from any composer.
+- **Sub-pages** (`components/layout/sub-page.tsx`): `/about`, `/work`, `/contact` and the case study `/work/rantai` (`components/case-study/case-study-page.tsx`, with the live before/after demo in `rantai-live.tsx` and `rantai-panorama.tsx`). Each ends with a composer (`AskBox`), "Or look around first" links and the wordmark footer; Contact is just the composer.
+- **Rail** (`components/layout/rail-nav.tsx`): navigation on every page, one tick per section; the avatar opens pages, theme and language.
+
+Components by feature: `home/`, `case-study/`, `chat/` (composer and dialog), `layout/` (shell, rail, footer, scroll), `shared/` (used across features), `ui/` (shadcn primitives). Heavy client parts have a `*-lazy.tsx` wrapper that loads them after the first paint.
 
 ## Content
 

@@ -1,6 +1,6 @@
 export type Locale = "en" | "id";
 
-export const english = {
+const english = {
   metadata:
     "Built your app with Lovable, Bolt, v0, or Cursor? Tharreq polishes vibecoded apps, fixing spacing, type, and interactions so they feel finished.",
   skip: "Skip to content",
@@ -305,7 +305,7 @@ export const english = {
 
 export type PortfolioCopy = typeof english;
 
-export const indonesian: PortfolioCopy = {
+const indonesian: PortfolioCopy = {
   metadata:
     "Bikin aplikasi pakai Lovable, Bolt, v0, atau Cursor? Tharreq merapikan aplikasi hasil vibecoding: jarak, huruf, dan interaksinya, sampai terasa jadi.",
   skip: "Langsung ke konten",

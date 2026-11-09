@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { m, useReducedMotion } from "framer-motion";
-import { useDesktopMotion } from "@/components/smooth-scroll";
+import { useDesktopMotion } from "@/components/layout/smooth-scroll";
 import { cn } from "@/lib/utils";
 
 // Ported from the RantAI landing page (layout/footer-motion.tsx).

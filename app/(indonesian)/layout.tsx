@@ -2,7 +2,7 @@ import {
   SiteLayout,
   getLocaleMetadata,
   siteViewport,
-} from "@/components/site-layout";
+} from "@/components/layout/site-layout";
 
 export const metadata = getLocaleMetadata("id");
 export const viewport = siteViewport;
