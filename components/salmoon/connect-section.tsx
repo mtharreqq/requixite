@@ -9,7 +9,7 @@ import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { Check } from "lucide-react";
+import { Check, Copy, Mail } from "lucide-react";
 import {
   GithubSvg,
   InstagramSvg,
@@ -44,7 +44,7 @@ const SOCIALS = [
   },
 ];
 
-export function ConnectSection({ copy }: { copy: PortfolioCopy["contact"] }) {
+function useCopyEmail() {
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => () => clearTimeout(timer.current), []);
@@ -64,10 +64,173 @@ export function ConnectSection({ copy }: { copy: PortfolioCopy["contact"] }) {
     clearTimeout(timer.current);
     timer.current = setTimeout(() => setCopied(false), 2500);
   }
+  return { copied, copyError, handleCopy };
+}
 
+/** Email and socials as small icons, for the story's composer toolbar. */
+export function ContactIcons({ copy }: { copy: PortfolioCopy["contact"] }) {
+  const { copied, copyError, handleCopy } = useCopyEmail();
+  const icon =
+    "composer-tool grid size-[30px] cursor-pointer place-items-center rounded-full transition-colors";
+  const items = [
+    {
+      label: copied ? copy.copied : copy.copy,
+      el: (
+        <button
+          type="button"
+          onClick={handleCopy}
+          aria-label={copy.copy}
+          className={icon}
+        >
+          {copied ? <Check /> : <Copy />}
+        </button>
+      ),
+    },
+    {
+      label: copy.send,
+      el: (
+        <a
+          href={`mailto:${EMAIL}?subject=${encodeURIComponent(copy.subject)}`}
+          aria-label={copy.send}
+          className={icon}
+        >
+          <Mail />
+        </a>
+      ),
+    },
+    ...SOCIALS.map(({ label, href, Icon }) => ({
+      label,
+      el: (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={label}
+          className={icon}
+        >
+          <Icon className="size-[14px]" />
+        </a>
+      ),
+    })),
+  ];
+  return (
+    <TooltipProvider delayDuration={250} skipDelayDuration={300}>
+      <div className="flex items-center">
+        {items.map(({ label, el }, i) => (
+          <TooltipPrimitive.Root key={i}>
+            <TooltipTrigger asChild>{el}</TooltipTrigger>
+            <TooltipContent
+              sideOffset={8}
+              className="data-[state=instant-open]:animate-none! motion-reduce:animate-none!"
+            >
+              {label}
+            </TooltipContent>
+          </TooltipPrimitive.Root>
+        ))}
+      </div>
+      <p
+        role="status"
+        className={copyError ? "text-destructive text-xs" : "sr-only"}
+      >
+        {copyError ? copy.copyFailed : copied ? copy.copied : ""}
+      </p>
+    </TooltipProvider>
+  );
+}
+
+/** Copy or send the email, plus the socials, for the contact card. */
+export function ContactActions({ copy }: { copy: PortfolioCopy["contact"] }) {
+  const { copied, copyError, handleCopy } = useCopyEmail();
+  return (
+    <>
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={handleCopy}
+          className="bg-foreground text-background inline-flex h-[38px] min-w-[116px] cursor-pointer items-center justify-center gap-1.5 rounded-full px-4 text-[13px] font-medium transition-opacity hover:opacity-85"
+        >
+          <AnimatePresence mode="popLayout" initial={false}>
+            <motion.span
+              key={copied ? "copied" : "idle"}
+              className="inline-flex items-center gap-1.5"
+              initial={{
+                opacity: 0,
+                transform: "scale(0.9)",
+                filter: "blur(2px)",
+              }}
+              animate={{
+                opacity: 1,
+                transform: "scale(1)",
+                filter: "blur(0px)",
+              }}
+              exit={{
+                opacity: 0,
+                transform: "scale(0.9)",
+                filter: "blur(2px)",
+              }}
+              transition={{ duration: 0.16, ease: EASE_OUT }}
+            >
+              {copied ? (
+                <>
+                  <Check className="size-3.5" />
+                  {copy.copied}
+                </>
+              ) : (
+                copy.copy
+              )}
+            </motion.span>
+          </AnimatePresence>
+        </button>
+        <a
+          href={`mailto:${EMAIL}?subject=${encodeURIComponent(copy.subject)}`}
+          className="bg-card text-foreground hover:bg-muted border-border/80 inline-flex h-[38px] items-center rounded-full border px-4 text-[13px] font-medium transition-colors"
+        >
+          {copy.send}
+        </a>
+
+        {/* One provider for the group: after the first tooltip, the next
+              ones open instantly (skip delay) and without the entrance. */}
+        <TooltipProvider delayDuration={250} skipDelayDuration={300}>
+          <div className="ml-auto flex gap-1.5">
+            {SOCIALS.map(({ label, href, Icon }) => (
+              <TooltipPrimitive.Root key={label}>
+                <TooltipTrigger asChild>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="text-muted-foreground hover:text-foreground hover:bg-muted border-border/80 grid size-[38px] place-items-center rounded-full border transition-colors"
+                  >
+                    <Icon className="size-4" />
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent
+                  sideOffset={8}
+                  className="data-[state=instant-open]:animate-none! motion-reduce:animate-none!"
+                >
+                  {label}
+                </TooltipContent>
+              </TooltipPrimitive.Root>
+            ))}
+          </div>
+        </TooltipProvider>
+      </div>
+
+      <p
+        role="status"
+        className={copyError ? "text-destructive text-xs" : "sr-only"}
+      >
+        {copyError ? copy.copyFailed : copied ? copy.copied : ""}
+      </p>
+    </>
+  );
+}
+
+/** The contact card and the footer, for the pages without the story. */
+export function ConnectSection({ copy }: { copy: PortfolioCopy["contact"] }) {
   return (
     <section id="contact" className="w-full space-y-6">
-      {/* Contact Card */}
       <div className="bg-card border-border/80 rounded-[18px] border p-5 shadow-[0_12px_32px_-16px_rgb(0_0_0/0.22)] dark:shadow-[0_12px_32px_-16px_rgb(0_0_0/0.6)]">
         <div className="flex items-center gap-3">
           <div className="border-border/80 bg-muted relative size-11 shrink-0 overflow-hidden rounded-full border">
@@ -93,87 +256,8 @@ export function ConnectSection({ copy }: { copy: PortfolioCopy["contact"] }) {
           {copy.invitation}
         </p>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={handleCopy}
-            className="bg-foreground text-background inline-flex h-[38px] min-w-[116px] cursor-pointer items-center justify-center gap-1.5 rounded-full px-4 text-[13px] font-medium transition-opacity hover:opacity-85"
-          >
-            <AnimatePresence mode="popLayout" initial={false}>
-              <motion.span
-                key={copied ? "copied" : "idle"}
-                className="inline-flex items-center gap-1.5"
-                initial={{
-                  opacity: 0,
-                  transform: "scale(0.9)",
-                  filter: "blur(2px)",
-                }}
-                animate={{
-                  opacity: 1,
-                  transform: "scale(1)",
-                  filter: "blur(0px)",
-                }}
-                exit={{
-                  opacity: 0,
-                  transform: "scale(0.9)",
-                  filter: "blur(2px)",
-                }}
-                transition={{ duration: 0.16, ease: EASE_OUT }}
-              >
-                {copied ? (
-                  <>
-                    <Check className="size-3.5" />
-                    {copy.copied}
-                  </>
-                ) : (
-                  copy.copy
-                )}
-              </motion.span>
-            </AnimatePresence>
-          </button>
-          <a
-            href={`mailto:${EMAIL}?subject=${encodeURIComponent(copy.subject)}`}
-            className="bg-card text-foreground hover:bg-muted border-border/80 inline-flex h-[38px] items-center rounded-full border px-4 text-[13px] font-medium transition-colors"
-          >
-            {copy.send}
-          </a>
-
-          {/* One provider for the group: after the first tooltip, the next
-              ones open instantly (skip delay) and without the entrance. */}
-          <TooltipProvider delayDuration={250} skipDelayDuration={300}>
-            <div className="ml-auto flex gap-1.5">
-              {SOCIALS.map(({ label, href, Icon }) => (
-                <TooltipPrimitive.Root key={label}>
-                  <TooltipTrigger asChild>
-                    <a
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={label}
-                      className="text-muted-foreground hover:text-foreground hover:bg-muted border-border/80 grid size-[38px] place-items-center rounded-full border transition-colors"
-                    >
-                      <Icon className="size-4" />
-                    </a>
-                  </TooltipTrigger>
-                  <TooltipContent
-                    sideOffset={8}
-                    className="data-[state=instant-open]:animate-none! motion-reduce:animate-none!"
-                  >
-                    {label}
-                  </TooltipContent>
-                </TooltipPrimitive.Root>
-              ))}
-            </div>
-          </TooltipProvider>
-        </div>
+        <ContactActions copy={copy} />
       </div>
-
-      <p
-        role="status"
-        className={copyError ? "text-destructive text-xs" : "sr-only"}
-      >
-        {copyError ? copy.copyFailed : copied ? copy.copied : ""}
-      </p>
 
       {/* One row: brand left, version right. The name opens its meaning. */}
       <footer className="text-muted-foreground text-[11px] leading-relaxed">

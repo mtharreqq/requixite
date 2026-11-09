@@ -1,38 +1,35 @@
 "use client";
 
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
-import {
-  useEffect,
-  useRef,
-  useState,
-  type PointerEvent,
-  type ReactNode,
-} from "react";
+import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { useTheme } from "next-themes";
-import { Moon, Sun } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  Briefcase,
+  House,
+  Check,
+  ChevronRight,
+  Languages,
+  Mail,
+  Monitor,
+  Moon,
+  Sun,
+  User,
+} from "lucide-react";
 import { smoothScrollTo } from "@/components/smooth-scroll";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import type { Locale } from "@/lib/portfolio-copy";
 
-// The review story's chapters get their own ticks, so the rail keeps
-// moving (and naming where you are) through the long pin.
-const SECTIONS = [
-  { id: "review" },
-  { id: "vibecoded" },
-  { id: "feedback" },
-  { id: "handoff" },
-  { id: "offer" },
-  { id: "experience" },
-  { id: "work" },
-  { id: "contact" },
-];
-
-const EASE_OUT = [0.23, 1, 0.32, 1] as const; // matches --ease-out token
+/** A tick on the rail: an element id on this page and its label. */
+export type RailSection = { id: string; label: string };
 
 const MINOR_PER_SECTION = 2;
-// Up to here, the active label stays up: you're still in the story.
-const STORY_END = SECTIONS.findIndex((s) => s.id === "offer");
 const STEP = MINOR_PER_SECTION + 1;
-const TICKS = (SECTIONS.length - 1) * STEP + 1;
 // The point of the viewport (from the top) that counts as "currently reading".
 const READ_LINE = 0.4;
 // How many ticks either side of the cursor get pulled out.
@@ -56,12 +53,12 @@ const FLASH_MS = 1200;
  * progress moves linearly between them as the reader scrolls through.
  * The top of the page is always 0 and the bottom is always 1.
  */
-function readProgress(): number {
+function readProgress(ids: string[]): number {
   const vh = window.innerHeight;
   const maxScroll = Math.max(document.documentElement.scrollHeight - vh, 1);
   // The scroll position at which each section reaches the read line,
   // clamped to what is actually reachable.
-  const stops = SECTIONS.map(({ id }) => {
+  const stops = ids.map((id) => {
     const el = document.getElementById(id);
     const top = el ? el.getBoundingClientRect().top + window.scrollY : 0;
     return Math.min(Math.max(top - vh * READ_LINE, 0), maxScroll);
@@ -100,15 +97,167 @@ function tickStyle(
   };
 }
 
+type RailCopy = PortfolioCopy["rail"];
+
+const row =
+  "text-muted-foreground hover:text-foreground hover:bg-muted aria-[current=page]:text-foreground flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2 py-1.5 text-xs transition-colors";
+
+/** Theme, a submenu of the menu: light, dark or whatever the OS says. */
+function ThemeMenu({ copy }: { copy: RailCopy["pages"] }) {
+  const [open, setOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const Current = theme === "light" ? Sun : theme === "dark" ? Moon : Monitor;
+  return (
+    <HoverCard
+      open={open}
+      onOpenChange={setOpen}
+      openDelay={0}
+      closeDelay={150}
+    >
+      <HoverCardTrigger asChild>
+        <button
+          type="button"
+          aria-haspopup="menu"
+          aria-expanded={open}
+          onClick={() => setOpen((o) => !o)}
+          className={`${row} data-[state=open]:bg-muted data-[state=open]:text-foreground`}
+        >
+          <Current aria-hidden className="size-3.5" />
+          {copy.theme}
+          <ChevronRight aria-hidden className="ml-auto size-3.5" />
+        </button>
+      </HoverCardTrigger>
+      <HoverCardContent
+        side="right"
+        align="start"
+        sideOffset={8}
+        alignOffset={-4}
+        className="bg-popover/95 border-border/80 w-40 rounded-xl p-1 shadow-xl backdrop-blur-md"
+      >
+        <div role="menu" aria-label={copy.theme} className="flex flex-col">
+          {(
+            [
+              ["light", copy.light, Sun],
+              ["dark", copy.dark, Moon],
+              ["system", copy.system, Monitor],
+            ] as const
+          ).map(([value, label, Icon]) => (
+            <button
+              key={value}
+              type="button"
+              role="menuitemradio"
+              aria-checked={theme === value}
+              onClick={() => setTheme(value)}
+              className={`${row} aria-checked:text-foreground`}
+            >
+              <Icon aria-hidden className="size-3.5" />
+              {label}
+              {theme === value && (
+                <Check aria-hidden className="ml-auto size-3.5" />
+              )}
+            </button>
+          ))}
+        </div>
+      </HoverCardContent>
+    </HoverCard>
+  );
+}
+
+/** The site's toolbar, on every page: the avatar on the rail opens the
+ * pages, theme and language on hover (or tap). */
+function Menu({
+  copy,
+  locale,
+  path,
+}: {
+  copy: RailCopy;
+  locale: Locale;
+  path: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const base = locale === "id" ? "/id" : "";
+  return (
+    <HoverCard
+      open={open}
+      onOpenChange={setOpen}
+      openDelay={80}
+      closeDelay={150}
+    >
+      <HoverCardTrigger asChild>
+        <button
+          type="button"
+          aria-label={copy.pages.menu}
+          aria-expanded={open}
+          onClick={() => setOpen((o) => !o)}
+          className={`ring-border data-[state=open]:ring-foreground/40 hover:ring-foreground/40 relative mt-6 -ml-1 block size-6 cursor-pointer overflow-hidden rounded-full ring-1 transition-[box-shadow,scale] duration-150 active:scale-90`}
+        >
+          <Image src="/avatar.png" alt="" width={24} height={24} />
+        </button>
+      </HoverCardTrigger>
+      <HoverCardContent
+        side="right"
+        align="end"
+        sideOffset={24}
+        className="bg-popover/95 border-border/80 w-44 rounded-xl p-1 shadow-xl backdrop-blur-md"
+      >
+        <nav aria-label={copy.pages.menu} className="flex flex-col">
+          {(
+            [
+              ["", copy.pages.home, House],
+              ["/about", copy.pages.about, User],
+              ["/work", copy.pages.work, Briefcase],
+              ["/contact", copy.pages.contact, Mail],
+            ] as const
+          ).map(([p, label, Icon]) => (
+            <Link
+              key={p}
+              href={base + p || "/"}
+              onClick={() => setOpen(false)}
+              aria-current={
+                path === p || (p && path.startsWith(p + "/"))
+                  ? "page"
+                  : undefined
+              }
+              className={row}
+            >
+              <Icon aria-hidden className="size-3.5" />
+              {label}
+            </Link>
+          ))}
+          <span aria-hidden className="bg-border mx-2 my-1 h-px" />
+          <ThemeMenu copy={copy.pages} />
+          <Link
+            href={locale === "id" ? path || "/" : `/id${path}`}
+            hrefLang={locale === "id" ? "en" : "id"}
+            lang={locale === "id" ? "en" : "id"}
+            className={row}
+          >
+            <Languages aria-hidden className="size-3.5" />
+            {locale === "id" ? "English" : "Bahasa Indonesia"}
+          </Link>
+        </nav>
+      </HoverCardContent>
+    </HoverCard>
+  );
+}
+
 export function RailNav({
   copy,
-  languageControl,
+  locale,
+  path = "",
+  sections,
 }: {
-  copy: PortfolioCopy["rail"];
-  languageControl: ReactNode;
+  copy: RailCopy;
+  locale: Locale;
+  /** This page, e.g. "/about". */
+  path?: string;
+  /** This page's sections, top to bottom. */
+  sections: RailSection[];
 }) {
-  const { setTheme, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const ticks = (sections.length - 1) * STEP + 1;
+  // The last one (contact or pricing) only names itself on hover or flash.
+  const lastIndex = sections.length - 1;
+  const ids = sections.map((s) => s.id).join(" ");
   const [active, setActive] = useState(0);
   const [flash, setFlash] = useState(false);
   const [hovered, setHovered] = useState<number | null>(null);
@@ -135,8 +284,8 @@ export function RailNav({
   const kickRef = useRef<() => void>(() => {});
 
   useEffect(() => {
-    setMounted(true);
     const a = anim.current;
+    const idList = ids.split(" ");
     const phone = window.matchMedia("(max-width: 767px)");
 
     const paint = () => {
@@ -175,13 +324,11 @@ export function RailNav({
     };
 
     const onScroll = () => {
-      const p = readProgress();
+      const p = readProgress(idList);
       // The section the reader is inside, not the nearest tick.
-      const index = Math.min(
-        Math.floor(p * (SECTIONS.length - 1) + 1e-6),
-        SECTIONS.length - 1,
-      );
-      a.cursorTarget = p * (TICKS - 1);
+      const last = idList.length - 1;
+      const index = Math.min(Math.floor(p * last + 1e-6), last);
+      a.cursorTarget = p * last * STEP;
       if (index !== a.active) {
         // Name the new section for a moment, while the wave sits on its tick.
         // Not on load: only when the reader actually moves to another one.
@@ -216,7 +363,7 @@ export function RailNav({
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
     };
-  }, []);
+  }, [ids]);
 
   function hover(index: number | null) {
     setHovered(index);
@@ -235,7 +382,7 @@ export function RailNav({
   function sectionAt(clientY: number): number {
     const rect = railRef.current!.getBoundingClientRect();
     const index = Math.round((clientY - rect.top - 1) / BAND);
-    return Math.min(Math.max(index, 0), SECTIONS.length - 1);
+    return Math.min(Math.max(index, 0), sections.length - 1);
   }
 
   function onPointerDown(e: PointerEvent<HTMLDivElement>) {
@@ -251,7 +398,7 @@ export function RailNav({
 
   function onPointerUp(e: PointerEvent<HTMLDivElement>) {
     if (!scrubbing) return;
-    const target = document.getElementById(SECTIONS[sectionAt(e.clientY)].id);
+    const target = document.getElementById(sections[sectionAt(e.clientY)].id);
     if (target)
       smoothScrollTo(target.getBoundingClientRect().top + window.scrollY);
     setScrubbing(false);
@@ -261,11 +408,11 @@ export function RailNav({
   return (
     <nav
       aria-label={copy.navigation}
-      onPointerLeave={() => hover(null)}
-      className="group/rail fixed top-1/2 left-3 z-50 flex -translate-y-1/2 flex-col items-start md:left-8"
+      className="fixed top-1/2 left-3 z-50 flex -translate-y-1/2 flex-col items-start md:left-8"
     >
       <div
         ref={railRef}
+        onPointerLeave={() => hover(null)}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -273,11 +420,11 @@ export function RailNav({
           setScrubbing(false);
           hover(null);
         }}
-        className="relative touch-none"
+        className="group/rail relative touch-none"
       >
         {/* Ticks (visual only, sized every frame by the effect above) */}
         <div aria-hidden className="flex flex-col gap-[7px]">
-          {Array.from({ length: TICKS }, (_, i) => (
+          {Array.from({ length: ticks }, (_, i) => (
             <span
               key={i}
               ref={(el) => {
@@ -292,7 +439,7 @@ export function RailNav({
         {/* Hit areas: one band per section, edge to edge, so the hover never
             drops while moving between sections. Narrow until the rail is
             hovered, then wide enough to cover the labels. */}
-        {SECTIONS.map((section, index) => {
+        {sections.map((section, index) => {
           const center = index * STEP * TICK_PITCH + 1;
           const isActive = index === active;
           const isHovered = index === hovered;
@@ -320,56 +467,20 @@ export function RailNav({
                             ? "opacity-100"
                             : // Phones: the rail sits over the story, so
                               // only the flash.
-                              isActive && active < STORY_END
+                              isActive && active < lastIndex
                               ? "opacity-0 group-focus-within/rail:opacity-100 group-hover/rail:opacity-100 md:opacity-100"
                               : "opacity-0 group-focus-within/rail:opacity-100 group-hover/rail:opacity-100"
                       } ${isActive ? "text-foreground" : "text-muted-foreground"}`
                 }`}
               >
-                {
-                  copy[
-                    section.id as keyof Omit<
-                      PortfolioCopy["rail"],
-                      "navigation" | "theme"
-                    >
-                  ]
-                }
+                {section.label}
               </span>
             </a>
           );
         })}
       </div>
 
-      <button
-        type="button"
-        onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-        className="text-muted-foreground hover:text-foreground relative mt-6 -ml-2 grid size-7 cursor-pointer place-items-center rounded-full transition-[color,scale] duration-150 ease-out active:scale-90"
-        aria-label={copy.theme}
-      >
-        {/* Mount the presence only after hydration so the correct icon
-            appears without a moon-to-sun animation on load. */}
-        {!mounted ? (
-          <span className="size-3.5" />
-        ) : (
-          <AnimatePresence mode="popLayout" initial={false}>
-            <motion.span
-              key={resolvedTheme === "dark" ? "sun" : "moon"}
-              className="grid place-items-center"
-              initial={{ opacity: 0, transform: "rotate(-45deg) scale(0.9)" }}
-              animate={{ opacity: 1, transform: "rotate(0deg) scale(1)" }}
-              exit={{ opacity: 0, transform: "rotate(45deg) scale(0.9)" }}
-              transition={{ duration: 0.2, ease: EASE_OUT }}
-            >
-              {resolvedTheme === "dark" ? (
-                <Sun className="size-3.5" />
-              ) : (
-                <Moon className="size-3.5" />
-              )}
-            </motion.span>
-          </AnimatePresence>
-        )}
-      </button>
-      {languageControl}
+      <Menu copy={copy} locale={locale} path={path} />
     </nav>
   );
 }

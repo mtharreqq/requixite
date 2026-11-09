@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import {
   AnimatePresence,
   motion,
@@ -666,13 +665,6 @@ export function RantaiLive({
                 {label}
               </button>
             ))}
-            <Link
-              href={copy.caseStudyHref}
-              className="text-muted-foreground hover:text-foreground inline-flex h-8 items-center gap-1 px-2 text-xs font-medium transition-colors"
-            >
-              {copy.caseStudy}
-              <ArrowRight aria-hidden className="size-3" />
-            </Link>
           </div>
         </motion.div>
       </div>

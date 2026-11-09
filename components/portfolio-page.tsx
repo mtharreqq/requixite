@@ -1,15 +1,8 @@
 import { ReviewStory } from "@/components/salmoon/review-story";
-import { WorkSection } from "@/components/salmoon/work-section";
 import { ChatDialog } from "@/components/salmoon/chat-dialog";
-import { ExperienceSection } from "@/components/salmoon/experience-section";
-import { ConnectSection } from "@/components/salmoon/connect-section";
 import { RailNav } from "@/components/salmoon/rail-nav";
 import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
-import { LanguageSwitch } from "@/components/language-switch";
-import {
-  PortfolioMotion,
-  SectionReveal,
-} from "@/components/salmoon/portfolio-motion";
+import { PortfolioMotion } from "@/components/salmoon/portfolio-motion";
 
 export function PortfolioPage({ locale }: { locale: Locale }) {
   const copy = getPortfolioCopy(locale);
@@ -33,14 +26,12 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
         tabIndex={-1}
         className="relative flex w-full max-w-lg flex-col items-center gap-y-14 pt-8 pr-4 pl-10 outline-none md:max-w-xl md:gap-y-16 md:px-4 md:pt-12"
       >
-        <ReviewStory copy={copy.review} offer={copy.offer} locale={locale} />
-        <SectionReveal>
-          <ExperienceSection copy={copy.experience} />
-        </SectionReveal>
-        <WorkSection copy={copy.hero} />
-        <SectionReveal>
-          <ConnectSection copy={copy.contact} />
-        </SectionReveal>
+        <ReviewStory
+          copy={copy.review}
+          offer={copy.offer}
+          contact={copy.contact}
+          locale={locale}
+        />
       </main>
 
       {/* No trigger of its own: openChat() opens it from anywhere. */}
@@ -49,9 +40,10 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
       {/* Section rail, left edge */}
       <RailNav
         copy={copy.rail}
-        languageControl={
-          <LanguageSwitch locale={locale} label={copy.language} />
-        }
+        locale={locale}
+        sections={(
+          ["review", "vibecoded", "feedback", "handoff", "offer"] as const
+        ).map((id) => ({ id, label: copy.rail[id] }))}
       />
     </PortfolioMotion>
   );
