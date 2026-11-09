@@ -67,9 +67,12 @@ export function SubPage({
       <main className="flex w-full max-w-lg flex-col gap-y-14 pt-10 pr-4 pl-10 md:max-w-xl md:gap-y-16 md:px-4 md:pt-14">
         {children}
         <Suggestions locale={locale} path={path} />
-        <SectionReveal>
-          <ConnectSection copy={copy.contact} card={path !== "/contact"} />
-        </SectionReveal>
+        {/* Short pages push the footer to the bottom of the screen. */}
+        <div className="mt-auto">
+          <SectionReveal>
+            <ConnectSection copy={copy.contact} card={path !== "/contact"} />
+          </SectionReveal>
+        </div>
       </main>
       <RailNav
         copy={copy.rail}
