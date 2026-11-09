@@ -35,8 +35,6 @@ export const english = {
   },
   contactPage: {
     title: "Contact me",
-    intro:
-      "Got a vibecoded app that almost works? Send it over. I’ll make it feel finished.",
     meta: "Send Tharreq your app, prototype, or just a hello.",
   },
   hero: {
@@ -343,8 +341,6 @@ export const indonesian: PortfolioCopy = {
   },
   contactPage: {
     title: "Hubungi aku",
-    intro:
-      "Punya aplikasi vibecoded yang hampir jadi? Kirim aja. Biar aku bikin terasa beres.",
     meta: "Kirim aplikasi, prototipe, atau sekadar sapaan ke Tharreq.",
   },
   hero: {
