@@ -36,7 +36,7 @@ function AccordionTrigger({
         data-slot="accordion-trigger"
         className={cn(
           "group/disclosure text-foreground focus-visible:ring-ring flex flex-1 cursor-pointer items-baseline justify-between gap-3 rounded-sm text-left transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-          variant === "default" && "py-4 text-sm font-medium",
+          variant === "default" && "side:text-sm py-4 text-[15px] font-medium",
           variant === "compact" && "py-3 text-xs font-medium",
           variant === "quiet" &&
             "text-muted-foreground decoration-muted-foreground/40 hover:text-foreground justify-center py-1 text-[11px] font-normal underline decoration-dotted underline-offset-4",
@@ -70,7 +70,7 @@ function AccordionContent({
   return (
     <AccordionPrimitive.Content
       data-slot="accordion-content"
-      className="disclosure-content overflow-hidden text-sm"
+      className="disclosure-content side:text-sm overflow-hidden text-[15px]"
       {...props}
     >
       <div

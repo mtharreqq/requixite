@@ -31,6 +31,9 @@ export const siteViewport: Viewport = {
     { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
   ],
   colorScheme: "light dark",
+  // Edge to edge on notched phones; the bottom bar and sheets pad themselves
+  // with the safe-area insets.
+  viewportFit: "cover",
 };
 
 export function getLocaleMetadata(language: Locale): Metadata {

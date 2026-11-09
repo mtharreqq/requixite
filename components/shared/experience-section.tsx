@@ -20,7 +20,7 @@ export function ExperienceSection({
           text={copy.title}
           className="text-foreground text-sm font-bold tracking-wider uppercase"
         />
-        <p className="text-muted-foreground text-sm leading-relaxed md:text-base">
+        <p className="text-muted-foreground text-[15px] leading-relaxed md:text-base">
           {copy.intro}
         </p>
       </div>
@@ -44,7 +44,7 @@ export function ExperienceSection({
                     </span>
                   </span>
                 </span>
-                <span className="text-muted-foreground shrink-0 text-[11px] font-normal">
+                <span className="text-muted-foreground side:text-[11px] shrink-0 text-[13px] font-normal">
                   {item.period}
                 </span>
               </span>
@@ -53,7 +53,7 @@ export function ExperienceSection({
           </AccordionItem>
         ))}
       </Accordion>
-      <div className="text-muted-foreground border-border/40 flex flex-col gap-2 border-t pt-4 text-[11px] leading-relaxed">
+      <div className="text-muted-foreground border-border/40 side:text-[11px] flex flex-col gap-2 border-t pt-4 text-[13px] leading-relaxed">
         <p>{copy.education}</p>
         <p>{copy.toolkit}</p>
         <p>{copy.recognition}</p>

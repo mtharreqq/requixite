@@ -79,7 +79,7 @@ export function SubPage({
   const ask = copy.review.cta.pages[path] ?? copy.review.cta;
   return (
     <PortfolioMotion className="bg-background text-foreground selection:bg-foreground selection:text-background flex min-h-screen w-full justify-center overflow-x-clip">
-      <main className="flex w-full max-w-lg flex-col gap-y-14 px-4 pt-10 pb-20 md:max-w-xl md:gap-y-16 md:px-4 md:pt-14 md:pb-0">
+      <main className="tablet:max-w-2xl tablet:px-8 tablet:pb-[calc(6rem+env(safe-area-inset-bottom))] tablet:pt-20 flex w-full max-w-lg flex-col gap-y-14 px-4 pt-10 pb-[calc(5rem+env(safe-area-inset-bottom))] md:max-w-xl md:gap-y-16 md:px-4 md:pt-14 md:pb-0">
         {children}
         {!bare && (
           <>
@@ -141,7 +141,7 @@ export function AboutPage({ locale }: { locale: Locale }) {
         {copy.about.story.map((p) => (
           <p
             key={p}
-            className="text-muted-foreground text-sm leading-relaxed md:text-base"
+            className="text-muted-foreground text-[15px] leading-relaxed md:text-base"
           >
             {p}
           </p>
@@ -194,7 +194,7 @@ export function WorkPage({ locale }: { locale: Locale }) {
         <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
           {copy.workPage.title}
         </h1>
-        <p className="text-muted-foreground text-sm leading-relaxed md:text-base">
+        <p className="text-muted-foreground text-[15px] leading-relaxed md:text-base">
           {copy.workPage.intro}
         </p>
       </header>
@@ -207,19 +207,19 @@ export function WorkPage({ locale }: { locale: Locale }) {
                 alt={p.name}
                 width={1200}
                 height={750}
-                sizes="(min-width: 768px) 576px, 100vw"
+                sizes="(min-width: 768px) 640px, 100vw"
                 className="border-border/80 w-full rounded-lg border transition-opacity group-hover:opacity-90"
               />
               <div className="flex items-baseline justify-between gap-4">
                 <h2 className="font-semibold">{p.name}</h2>
-                <span className="text-muted-foreground text-xs">
+                <span className="text-muted-foreground side:text-xs text-[13px]">
                   {p.client} · {p.year}
                 </span>
               </div>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <p className="text-muted-foreground side:text-sm text-[15px] leading-relaxed">
                 {p.summary}
               </p>
-              <span className="text-muted-foreground group-hover:text-foreground inline-flex items-center gap-1 text-xs font-medium transition-colors">
+              <span className="text-muted-foreground group-hover:text-foreground side:text-xs inline-flex items-center gap-1 text-sm font-medium transition-colors">
                 {copy.workPage.read}
                 <ArrowRight aria-hidden className="size-3" />
               </span>

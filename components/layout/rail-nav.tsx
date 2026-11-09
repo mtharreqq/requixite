@@ -7,6 +7,7 @@ import {
   useState,
   useSyncExternalStore,
   type PointerEvent,
+  type Ref,
 } from "react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
@@ -17,6 +18,7 @@ import {
   Check,
   ChevronRight,
   Languages,
+  ListOrdered,
   Mail,
   Monitor,
   Moon,
@@ -30,6 +32,8 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import type { Locale } from "@/lib/portfolio-copy";
+import { Sheet, sheetRow } from "@/components/ui/sheet";
+import { BAR_QUERY } from "@/lib/touch";
 
 /** A tick on the rail: an element id on this page and its label. */
 export type RailSection = { id: string; label: string };
@@ -90,7 +94,6 @@ function tickStyle(
   hoverPos: number,
   hoverAmount: number,
   scale: number,
-  phone = false,
 ) {
   const major = i % STEP === 0;
   const scrollPull = Math.max(0, 1 - Math.abs(i - cursor) / REACH);
@@ -99,23 +102,22 @@ function tickStyle(
   const pull = Math.max(scrollPull, hoverPull);
   const width = ((major ? 14 : 9) + pull * 18) * scale;
   return {
-    // Phones lay the rail along the bottom, so the ticks grow up.
-    transform: `${phone ? "scaleY" : "scaleX"}(${width / MAX_TICK})`,
+    transform: `scaleX(${width / MAX_TICK})`,
     opacity: (major ? 0.45 : 0.22) + pull * 0.55,
   };
 }
 
 type RailCopy = PortfolioCopy["rail"];
 
-const PHONE = "(max-width: 767px)";
-function usePhone() {
+/** Touch first (phones, tablets): the bottom bar and sheets. */
+function useTouch() {
   return useSyncExternalStore(
     (cb) => {
-      const m = window.matchMedia(PHONE);
+      const m = window.matchMedia(BAR_QUERY);
       m.addEventListener("change", cb);
       return () => m.removeEventListener("change", cb);
     },
-    () => window.matchMedia(PHONE).matches,
+    () => window.matchMedia(BAR_QUERY).matches,
     () => false,
   );
 }
@@ -184,25 +186,146 @@ function ThemeMenu({ copy }: { copy: RailCopy["pages"] }) {
   );
 }
 
-// Phones only; desktop drops the box.
+// Touch only; the side rail drops the box.
 const PILL =
-  "pointer-events-auto bg-background/85 border-border/80 rounded-full border backdrop-blur-md md:contents";
+  "pointer-events-auto bg-background/85 border-border/80 rounded-full border backdrop-blur-md side:contents";
 
-/** The site's toolbar, on every page: the avatar on the rail opens the
- * pages, theme and language on hover (or tap). */
-function Menu({
+const PAGES = [
+  ["", "home", House],
+  ["/about", "about", User],
+  ["/work", "work", Briefcase],
+  ["/contact", "contact", Mail],
+] as const;
+
+const isHere = (path: string, p: string) =>
+  path === p || (!!p && path.startsWith(p + "/"));
+
+/** The avatar: the site's menu. On a mouse it opens a card on hover; on touch
+ * the whole 40px circle is the button (a 2px halo makes it 44px) and it opens
+ * a sheet. */
+function AvatarButton(props: React.ComponentProps<"button">) {
+  return (
+    <button
+      type="button"
+      {...props}
+      className="group bar:size-10 bar:before:absolute bar:before:-inset-0.5 bar:before:rounded-full side:mt-6 side:-ml-1 relative grid cursor-pointer place-items-center rounded-full transition-[scale] duration-150 active:scale-90"
+    >
+      <span className="ring-border group-hover:ring-foreground/40 group-data-[state=open]:ring-foreground/40 block size-6 overflow-hidden rounded-full ring-1 transition-[box-shadow] duration-150">
+        <Image src="/avatar.png" alt="" width={24} height={24} />
+      </span>
+    </button>
+  );
+}
+
+/** Touch: pages, theme and language in a sheet, like an app's settings. */
+function MenuSheet({
   copy,
   locale,
   path,
-  phone,
+  open,
+  onOpenChange,
 }: {
   copy: RailCopy;
   locale: Locale;
   path: string;
-  phone: boolean;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const { theme, setTheme } = useTheme();
+  const base = locale === "id" ? "/id" : "";
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange} title={copy.pages.menu}>
+      <nav aria-label={copy.pages.menu} className="flex flex-col">
+        {PAGES.map(([p, key, Icon]) => (
+          <Link
+            key={p}
+            href={base + p || "/"}
+            onClick={() => onOpenChange(false)}
+            aria-current={isHere(path, p) ? "page" : undefined}
+            className={sheetRow}
+          >
+            <Icon aria-hidden className="text-muted-foreground size-[18px]" />
+            {copy.pages[key]}
+            {isHere(path, p) && (
+              <Check aria-hidden className="ml-auto size-4" />
+            )}
+          </Link>
+        ))}
+      </nav>
+      <span aria-hidden className="bg-border mx-3 my-2 block h-px" />
+      {/* Theme as a segmented control: all three in reach, one tap. */}
+      <div
+        role="radiogroup"
+        aria-label={copy.pages.theme}
+        className="bg-muted mx-1 my-1 grid grid-cols-3 gap-1 rounded-2xl p-1"
+      >
+        {(
+          [
+            ["light", copy.pages.light, Sun],
+            ["dark", copy.pages.dark, Moon],
+            ["system", copy.pages.system, Monitor],
+          ] as const
+        ).map(([value, label, Icon]) => (
+          <button
+            key={value}
+            type="button"
+            role="radio"
+            aria-checked={theme === value}
+            onClick={() => setTheme(value)}
+            className="text-muted-foreground aria-checked:bg-background aria-checked:text-foreground flex h-11 cursor-pointer items-center justify-center gap-1.5 rounded-xl text-[13px] font-medium transition-[background-color,color,scale] duration-150 active:scale-95 aria-checked:shadow-sm"
+          >
+            <Icon aria-hidden className="size-4" />
+            {label}
+          </button>
+        ))}
+      </div>
+      <Link
+        href={locale === "id" ? path || "/" : `/id${path}`}
+        hrefLang={locale === "id" ? "en" : "id"}
+        lang={locale === "id" ? "en" : "id"}
+        className={`${sheetRow} mt-1`}
+      >
+        <Languages aria-hidden className="text-muted-foreground size-[18px]" />
+        {locale === "id" ? "English" : "Bahasa Indonesia"}
+      </Link>
+    </Sheet>
+  );
+}
+
+/** The site's toolbar, on every page: the avatar opens the pages, theme and
+ * language, in a hover card on a mouse and a sheet on touch. */
+function Menu({
+  copy,
+  locale,
+  path,
+  touch,
+}: {
+  copy: RailCopy;
+  locale: Locale;
+  path: string;
+  touch: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const base = locale === "id" ? "/id" : "";
+  if (touch)
+    return (
+      <>
+        <AvatarButton
+          aria-label={copy.pages.menu}
+          aria-haspopup="dialog"
+          aria-expanded={open}
+          data-state={open ? "open" : "closed"}
+          onClick={() => setOpen(true)}
+        />
+        <MenuSheet
+          copy={copy}
+          locale={locale}
+          path={path}
+          open={open}
+          onOpenChange={setOpen}
+        />
+      </>
+    );
   return (
     <HoverCard
       open={open}
@@ -211,44 +334,29 @@ function Menu({
       closeDelay={150}
     >
       <HoverCardTrigger asChild>
-        <button
-          type="button"
+        <AvatarButton
           aria-label={copy.pages.menu}
           aria-expanded={open}
           onClick={() => setOpen((o) => !o)}
-          className={`ring-border data-[state=open]:ring-foreground/40 hover:ring-foreground/40 relative block size-6 cursor-pointer overflow-hidden rounded-full ring-1 transition-[box-shadow,scale] duration-150 active:scale-90 md:mt-6 md:-ml-1`}
-        >
-          <Image src="/avatar.png" alt="" width={24} height={24} />
-        </button>
+        />
       </HoverCardTrigger>
       <HoverCardContent
-        side={phone ? "top" : "right"}
+        side="right"
         align="end"
-        sideOffset={phone ? 16 : 24}
+        sideOffset={24}
         className="bg-popover/95 border-border/80 w-44 rounded-xl p-1 shadow-xl backdrop-blur-md"
       >
         <nav aria-label={copy.pages.menu} className="flex flex-col">
-          {(
-            [
-              ["", copy.pages.home, House],
-              ["/about", copy.pages.about, User],
-              ["/work", copy.pages.work, Briefcase],
-              ["/contact", copy.pages.contact, Mail],
-            ] as const
-          ).map(([p, label, Icon]) => (
+          {PAGES.map(([p, key, Icon]) => (
             <Link
               key={p}
               href={base + p || "/"}
               onClick={() => setOpen(false)}
-              aria-current={
-                path === p || (p && path.startsWith(p + "/"))
-                  ? "page"
-                  : undefined
-              }
+              aria-current={isHere(path, p) ? "page" : undefined}
               className={row}
             >
               <Icon aria-hidden className="size-3.5" />
-              {label}
+              {copy.pages[key]}
             </Link>
           ))}
           <span aria-hidden className="bg-border mx-2 my-1 h-px" />
@@ -265,6 +373,94 @@ function Menu({
         </nav>
       </HoverCardContent>
     </HoverCard>
+  );
+}
+
+/** Touch: the rail folds into a button like the avatar. It opens every
+ * section of the page in a sheet, and a ring around it fills as you read. */
+function SectionMenu({
+  copy,
+  sections,
+  active,
+  open,
+  onOpenChange,
+  ringRef,
+}: {
+  copy: RailCopy;
+  sections: RailSection[];
+  active: number;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  ringRef: Ref<SVGCircleElement>;
+}) {
+  return (
+    <>
+      <button
+        type="button"
+        aria-label={copy.navigation}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        onClick={() => onOpenChange(true)}
+        className="text-muted-foreground aria-expanded:text-foreground relative grid size-10 cursor-pointer place-items-center rounded-full transition-[color,scale] duration-150 before:absolute before:-inset-0.5 before:rounded-full active:scale-90"
+      >
+        <svg
+          aria-hidden
+          viewBox="0 0 24 24"
+          className="absolute inset-2 size-6 -rotate-90"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="11.5"
+            pathLength={1}
+            fill="none"
+            strokeWidth="1"
+            className="stroke-border"
+          />
+          <circle
+            ref={ringRef}
+            cx="12"
+            cy="12"
+            r="11.5"
+            pathLength={1}
+            fill="none"
+            strokeWidth="1"
+            strokeLinecap="round"
+            strokeDasharray="1"
+            strokeDashoffset="1"
+            className="stroke-foreground/60"
+          />
+        </svg>
+        <ListOrdered aria-hidden className="size-3" />
+      </button>
+      <Sheet open={open} onOpenChange={onOpenChange} title={copy.navigation}>
+        <nav aria-label={copy.navigation} className="flex flex-col">
+          {sections.map((section, i) => (
+            <a
+              key={section.id}
+              href={`#${section.id}`}
+              aria-current={i === active ? "location" : undefined}
+              onClick={(e) => {
+                const target = document.getElementById(section.id);
+                if (!target) return;
+                e.preventDefault();
+                onOpenChange(false);
+                smoothScrollTo(
+                  target.getBoundingClientRect().top + window.scrollY,
+                );
+              }}
+              className={sheetRow}
+            >
+              <span className="text-muted-foreground w-5 text-center tabular-nums">
+                {i + 1}
+              </span>
+              {section.label}
+              {i === active && <Check aria-hidden className="ml-auto size-4" />}
+            </a>
+          ))}
+        </nav>
+      </Sheet>
+    </>
   );
 }
 
@@ -291,8 +487,10 @@ export function RailNav({
   // Touch: press and slide along the rail to pick a section, release to go.
   const [scrubbing, setScrubbing] = useState(false);
   const railRef = useRef<HTMLDivElement>(null);
-  const phone = usePhone();
+  const touch = useTouch();
   const tickRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const ringRef = useRef<SVGCircleElement>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Animation state lives outside React so the ticks can update every frame
   // without re-rendering the component.
@@ -314,7 +512,6 @@ export function RailNav({
   useEffect(() => {
     const a = anim.current;
     const idList = ids.split(" ");
-    const phone = window.matchMedia(PHONE);
 
     const paint = () => {
       tickRefs.current.forEach((el, i) => {
@@ -325,11 +522,15 @@ export function RailNav({
           a.hoverPos,
           a.hoverAmount,
           a.scale,
-          phone.matches,
         );
         el.style.transform = transform;
         el.style.opacity = `${opacity}`;
       });
+      // The touch button's ring: how far down the page you are.
+      ringRef.current?.setAttribute(
+        "stroke-dashoffset",
+        `${1 - a.cursor / Math.max((idList.length - 1) * STEP, 1)}`,
+      );
     };
 
     const step = () => {
@@ -371,10 +572,7 @@ export function RailNav({
       }
       kick();
     };
-    const onResize = () => {
-      a.scale = phone.matches ? 0.65 : 1;
-      onScroll();
-    };
+    const onResize = () => onScroll();
 
     onResize();
     // Start on the right tick instead of sliding in from the top.
@@ -410,9 +608,7 @@ export function RailNav({
 
   function sectionAt(e: PointerEvent<HTMLDivElement>): number {
     const rect = railRef.current!.getBoundingClientRect();
-    const index = Math.round(
-      (phone ? e.clientX - rect.left - 1 : e.clientY - rect.top - 1) / BAND,
-    );
+    const index = Math.round((e.clientY - rect.top - 1) / BAND);
     return Math.min(Math.max(index, 0), sections.length - 1);
   }
 
@@ -439,13 +635,57 @@ export function RailNav({
   return (
     <nav
       aria-label={copy.navigation}
-      // Phones: the rail as a pill bottom left, the avatar its own circle
-      // bottom right. Desktop: anchored at the avatar, so it stays put and the
-      // rail grows upward.
-      className="pointer-events-none fixed inset-x-4 bottom-3 z-50 flex items-center justify-between md:inset-x-auto md:bottom-[calc(50%-7rem)] md:left-8 md:flex-col md:items-start"
+      data-bottom-bar
+      // Touch: a bottom bar of sections, where you are and the avatar, clear
+      // of the home indicator. Mouse: anchored at the avatar, so it stays put
+      // and the rail grows upward.
+      className="side:inset-x-auto side:bottom-[calc(50%-7rem)] side:left-8 side:flex-col side:items-start pointer-events-none fixed inset-x-4 bottom-[max(env(safe-area-inset-bottom),12px)] z-50 flex items-center justify-between"
     >
-      {/* One section (Contact): nothing to navigate, just the avatar. */}
-      <div hidden={sections.length < 2} className={`${PILL} px-4 py-2`}>
+      {/* Touch: the bar's own material, so the page fades out under it
+        instead of running into the labels. */}
+      <div
+        aria-hidden
+        className="from-background via-background/85 side:hidden pointer-events-none fixed inset-x-0 bottom-0 -z-10 h-[calc(env(safe-area-inset-bottom)+5.5rem)] bg-linear-to-t to-transparent"
+      />
+      {/* Touch: sections button, where you are, then the avatar. One
+        section (Contact): nothing to navigate, just the avatar. */}
+      {sections.length > 1 && (
+        <>
+          <div className={`${PILL} side:hidden`}>
+            <SectionMenu
+              copy={copy}
+              sections={sections}
+              active={active}
+              open={menuOpen}
+              onOpenChange={setMenuOpen}
+              ringRef={ringRef}
+            />
+          </div>
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-hidden
+            onClick={() => setMenuOpen((o) => !o)}
+            // Dead center of the bar, whatever the label's length; no border,
+            // just enough backdrop to read over the page.
+            className="bg-background/70 side:hidden pointer-events-auto absolute left-1/2 flex h-[42px] max-w-[calc(100%-7rem)] -translate-x-1/2 cursor-pointer items-center gap-2 rounded-full px-3 text-xs backdrop-blur-md"
+          >
+            <span className="text-muted-foreground tabular-nums">
+              {active + 1}/{sections.length}
+            </span>
+            <span
+              key={active}
+              className="text-foreground motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-1 truncate font-medium duration-300"
+            >
+              {sections[active]?.label}
+            </span>
+          </button>
+        </>
+      )}
+      <div
+        hidden={sections.length < 2}
+        className={`${PILL} bar:hidden px-4 py-2`}
+      >
         <div
           ref={railRef}
           onPointerLeave={() => hover(null)}
@@ -459,17 +699,14 @@ export function RailNav({
           className="group/rail relative touch-none"
         >
           {/* Ticks (visual only, sized every frame by the effect above) */}
-          <div
-            aria-hidden
-            className="flex h-6 items-end gap-[7px] md:h-auto md:flex-col"
-          >
+          <div aria-hidden className="flex flex-col gap-[7px]">
             {Array.from({ length: ticks }, (_, i) => (
               <span
                 key={i}
                 ref={(el) => {
                   tickRefs.current[i] = el;
                 }}
-                className="bg-foreground block h-8 w-0.5 shrink-0 origin-bottom rounded-full md:h-0.5 md:w-8 md:origin-left"
+                className="bg-foreground block h-0.5 w-8 shrink-0 origin-left rounded-full"
                 style={tickStyle(i, 0, 0, 0, 1)}
               />
             ))}
@@ -492,21 +729,13 @@ export function RailNav({
                 }
                 onFocus={() => hover(index)}
                 onBlur={() => hover(null)}
-                className={
-                  phone
-                    ? "absolute -top-2 -bottom-2 flex justify-center outline-none"
-                    : `absolute -left-3 flex items-center outline-none group-focus-within/rail:w-44 group-hover/rail:w-44 ${
-                        scrubbing ? "w-44" : "w-14"
-                      }`
-                }
-                style={
-                  phone
-                    ? { left: center - BAND / 2, width: BAND }
-                    : { top: center - BAND / 2, height: BAND }
-                }
+                className={`absolute -left-3 flex items-center outline-none group-focus-within/rail:w-44 group-hover/rail:w-44 ${
+                  scrubbing ? "w-44" : "w-14"
+                }`}
+                style={{ top: center - BAND / 2, height: BAND }}
               >
                 <span
-                  className={`absolute bottom-full mb-2 rounded-md px-1.5 py-0.5 text-xs whitespace-nowrap backdrop-blur-sm transition-[opacity,color,background-color] duration-150 md:bottom-auto md:left-11 md:mb-0 ${
+                  className={`absolute left-11 rounded-md px-1.5 py-0.5 text-xs whitespace-nowrap backdrop-blur-sm transition-[opacity,color,background-color] duration-150 ${
                     isHovered
                       ? "bg-muted text-foreground font-medium opacity-100"
                       : `bg-background/95 shadow-xs ${
@@ -514,10 +743,8 @@ export function RailNav({
                             ? "opacity-100"
                             : isActive && flash
                               ? "opacity-100"
-                              : // Phones: the rail sits over the story, so
-                                // only the flash.
-                                isActive && active < lastIndex
-                                ? "opacity-0 group-focus-within/rail:opacity-100 group-hover/rail:opacity-100 md:opacity-100"
+                              : isActive && active < lastIndex
+                                ? "opacity-100"
                                 : "opacity-0 group-focus-within/rail:opacity-100 group-hover/rail:opacity-100"
                         } ${isActive ? "text-foreground" : "text-muted-foreground"}`
                   }`}
@@ -530,8 +757,8 @@ export function RailNav({
         </div>
       </div>
 
-      <div className={`${PILL} ml-auto p-2`}>
-        <Menu copy={copy} locale={locale} path={path} phone={phone} />
+      <div className={`${PILL} ml-auto`}>
+        <Menu copy={copy} locale={locale} path={path} touch={touch} />
       </div>
     </nav>
   );
