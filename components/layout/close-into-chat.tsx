@@ -27,6 +27,7 @@ import { AskBox } from "@/components/chat/ask-box";
 import { QuickReply } from "@/components/shared/quick-reply";
 import { MenuAvatar } from "@/components/shared/menu-avatar";
 import { Moving } from "@/components/chat/replies";
+import { smoothScrollTo } from "@/components/layout/smooth-scroll";
 import { cn } from "@/lib/utils";
 
 const ICONS = {
@@ -337,9 +338,12 @@ export function CloseIntoChat({
           clipPath: clip,
           maskImage: mask,
           WebkitMaskImage: mask,
-          // Landed: the still copy in the card has taken over.
-          visibility: phase >= 1 ? "hidden" : "visible",
+          // Landed: the still copy in the card has taken over. Unseen but
+          // still focusable, so Shift+Tab back from the chat reopens it.
+          opacity: phase >= 1 ? 0 : 1,
+          pointerEvents: phase >= 1 ? "none" : undefined,
         }}
+        onFocus={() => phaseRef.current > 0 && smoothScrollTo(box.top + lift)}
       >
         {children}
       </m.div>
@@ -349,7 +353,11 @@ export function CloseIntoChat({
       <m.div
         ref={stage}
         style={{ opacity: chatIn }}
-        inert={phase === 0}
+        // Keyboard: Tab past the page's end lands here; the page closes
+        // into the chat as you arrive, so the composer is never out of reach.
+        onFocus={() =>
+          phaseRef.current === 0 && smoothScrollTo(box.top + lift + CLOSE)
+        }
         className="fixed inset-0 z-0"
       >
         <div className="bar:pb-[max(env(safe-area-inset-bottom),12px)] mx-auto flex h-full w-full max-w-lg flex-col justify-end gap-3 px-4 pb-16 md:max-w-xl">

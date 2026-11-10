@@ -23,6 +23,9 @@ export function MenuAvatar({
       type="button"
       aria-label={label}
       aria-haspopup="dialog"
+      // The hello is aria-hidden (its words are in a heading for readers),
+      // so its avatar stays out of the Tab order; the rail's is the menu.
+      tabIndex={inline ? -1 : undefined}
       onClick={openMenu}
       className={cn(
         "group shrink-0 cursor-pointer rounded-full transition-[scale] duration-150 active:scale-90",
