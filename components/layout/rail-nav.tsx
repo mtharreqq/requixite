@@ -74,9 +74,9 @@ function readProgress(ids: string[]): number {
     return Math.min(Math.max(top - vh * READ_LINE, 0), maxScroll);
   });
   stops[0] = 0;
-  stops[stops.length - 1] = maxScroll;
 
-  const y = window.scrollY;
+  // +1: a fractional scrollY at the bottom still counts as there.
+  const y = window.scrollY + 1;
   const last = stops.length - 1;
   for (let i = 0; i < last; i++) {
     if (y < stops[i + 1]) {
@@ -210,8 +210,16 @@ function AvatarButton(props: React.ComponentProps<"button">) {
       {...props}
       className="group bar:size-10 bar:before:absolute bar:before:-inset-0.5 bar:before:rounded-full side:mt-6 side:-ml-1 relative grid cursor-pointer place-items-center rounded-full transition-[scale] duration-150 active:scale-90"
     >
-      <span className="ring-border group-hover:ring-foreground/40 group-data-[state=open]:ring-foreground/40 block size-6 overflow-hidden rounded-full ring-1 transition-[box-shadow] duration-150">
-        <Image src="/avatar.png" alt="" width={24} height={24} />
+      {/* Touch: 32px in the 40px button, so it reads as the avatar, not
+          a dot in a ring. */}
+      <span className="ring-border group-hover:ring-foreground/40 group-data-[state=open]:ring-foreground/40 bar:size-8 block size-6 overflow-hidden rounded-full ring-1 transition-[box-shadow] duration-150">
+        <Image
+          src="/avatar.png"
+          alt=""
+          width={32}
+          height={32}
+          className="size-full"
+        />
       </span>
     </button>
   );
@@ -406,7 +414,7 @@ function SectionMenu({
         <svg
           aria-hidden
           viewBox="0 0 24 24"
-          className="absolute inset-2 size-6 -rotate-90"
+          className="absolute inset-1 size-8 -rotate-90"
         >
           <circle
             cx="12"
@@ -431,7 +439,7 @@ function SectionMenu({
             className="stroke-foreground/60"
           />
         </svg>
-        <ListOrdered aria-hidden className="size-3" />
+        <ListOrdered aria-hidden className="size-4" />
       </button>
       <Sheet open={open} onOpenChange={onOpenChange} title={copy.navigation}>
         <nav aria-label={copy.navigation} className="flex flex-col">

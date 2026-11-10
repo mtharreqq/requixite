@@ -13,6 +13,7 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import {
   ArrowDown,
+  ArrowRight,
   ArrowUp,
   Check,
   LayoutGrid,
@@ -33,6 +34,7 @@ import {
   m,
   useMotionValue,
   useMotionValueEvent,
+  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
@@ -47,7 +49,13 @@ import {
 import { SplitReveal } from "@/components/shared/split-reveal";
 import { jumpTo, smoothScrollTo } from "@/components/layout/smooth-scroll";
 import { ContactIcons } from "@/components/shared/connect-section";
-import { Foot, Send, useDraft } from "@/components/chat/ask-box";
+import { QuickReply } from "@/components/shared/quick-reply";
+import {
+  Foot,
+  Send,
+  useDraft,
+  usePlaceholder,
+} from "@/components/chat/ask-box";
 import { cn } from "@/lib/utils";
 import { BAR_QUERY } from "@/lib/touch";
 import {
@@ -100,6 +108,9 @@ const FOCUS = 0.175;
 const VIBE_STEP = 0.02;
 const ASK_GO = 0.285;
 const SEL_END = 0.298;
+// Your selection drag, inside ASK_GO..SEL_END.
+const SEL_START = ASK_GO + 0.004;
+const SEL_DONE = SEL_END - 0.003;
 const ASK_PIN = 0.303;
 const ASK_POP = 0.308;
 const REPLY = 0.32;
@@ -113,30 +124,41 @@ const FIXALL = 0.735;
 const CTA = 0.87;
 // Where the pin lets go.
 const END = 0.92;
-// Pauses: scroll keeps going but the story holds still, so a quick flick
-// can't skip a beat. [story beat, length]. The pin's height pays for them.
-const HOLDS = [
-  [0.097, 0.03], // typed, before it sends
-  [0.101, 0.02], // sent, before the build starts
-  [0.168, 0.015], // built, before the focus
-  [REPLY + 0.002, 0.015], // my reply to your question
-  [GIVE_POP + 0.003, 0.012], // you give up
-  [ONIT + 0.002, 0.012], // I'm on it
+// Extra scroll, so a quick flick can't skip a beat: [from, to, extra] plays
+// the story from..to over (to - from + extra) of scroll. from = to is a
+// pause: scroll keeps going, the story holds still. In order; the pin's
+// height pays for them.
+const SLOW = [
+  [0.097, 0.097, 0.03], // typed, before it sends
+  [0.101, 0.101, 0.02], // sent, before the build starts
+  [0.168, 0.168, 0.015], // built, before the focus
+  [SEL_START, SEL_DONE, 0.03], // you drag the selection, slowly
+  [SEL_DONE, SEL_DONE, 0.025], // selected, before you pin your comment
+  [REPLY + 0.002, REPLY + 0.002, 0.015], // my reply to your question
+  [GIVE_POP + 0.003, GIVE_POP + 0.003, 0.012], // you give up
+  [ONIT + 0.002, ONIT + 0.002, 0.012], // I'm on it
 ] as const;
-const SPAN = END + INTRO + HOLDS.reduce((t, [, l]) => t + l, 0);
-/** Scroll progress (0–1) to story beat, flat across each hold. */
+const SPAN = END + INTRO + SLOW.reduce((t, [, , l]) => t + l, 0);
+/** Scroll progress (0–1) to story beat. */
 function toStory(v: number) {
   let u = v * SPAN - INTRO;
-  for (const [at, len] of HOLDS) {
-    if (u <= at) return u;
-    if (u <= at + len) return at;
-    u -= len;
+  for (const [a, b, extra] of SLOW) {
+    if (u <= a) return u;
+    const len = b - a + extra;
+    if (u <= a + len) return a + ((u - a) * (b - a)) / len;
+    u -= extra;
   }
   return u;
 }
 /** Story beat back to scroll progress, for the rail's chapter anchors. */
 const toScroll = (at: number) =>
-  (at + INTRO + HOLDS.reduce((t, [h, l]) => (h < at ? t + l : t), 0)) / SPAN;
+  (at +
+    INTRO +
+    SLOW.reduce(
+      (t, [a, b, l]) => t + (a === b ? (a < at ? l : 0) : l * clamp(at, a, b)),
+      0,
+    )) /
+  SPAN;
 const CAPTION_AT = [
   0,
   FOCUS,
@@ -149,9 +171,13 @@ const CAPTION_AT = [
 ];
 // Rail chapters inside the story, by the beat they start on.
 const CHAPTERS = [
-  ["vibecoded", FOCUS],
-  ["feedback", JOIN],
-  ["handoff", GIVE_GO],
+  // "It works." in, before "It just looks…".
+  ["vibecoded", FOCUS + VIBE_STEP - 0.001],
+  // "I left comments." in, the first fix compiling.
+  ["feedback", JOIN + 0.024],
+  // "So you handed it all to me." in.
+  ["handoff", GIVE_GO + 0.016],
+  ["offer", CTA],
 ] as const;
 
 type Mode = "big" | "dock" | "cta";
@@ -227,7 +253,7 @@ function selAt(v: number) {
   if (v >= GIVE_GO && v < FIXALL + 0.01) return 3;
   if (v < ASK_GO || v >= ASK_LEAVE) return -1;
   if (v >= SEL_END) return 2;
-  return Math.round(clamp(v, ASK_GO + 0.004, SEL_END - 0.003) * 20) / 20;
+  return Math.round(clamp(v, SEL_START, SEL_DONE) * 40) / 40;
 }
 
 /** The open comment: -2 your question, -3 you give up, -1 none. */
@@ -433,12 +459,14 @@ function PlanChip({
   price,
   onPick,
   enter,
+  className = "composer-chip",
 }: {
   index: number;
   plan: Offer["plans"][number];
   price: string;
   onPick: () => void;
-  enter: React.ComponentProps<typeof m.button>;
+  enter?: React.ComponentProps<typeof m.button>;
+  className?: string;
 }) {
   const [run, setRun] = useState(0);
   const Scene = SCENES[index];
@@ -453,7 +481,7 @@ function PlanChip({
           {...enter}
           type="button"
           onClick={onPick}
-          className="composer-chip"
+          className={className}
         >
           <span className="font-medium">{plan.name}</span>
           <span className="text-muted-foreground tabular-nums">{price}</span>
@@ -625,6 +653,7 @@ function Composer({
   const field = useRef<HTMLTextAreaElement>(null);
   const box = useRef<HTMLDivElement>(null);
   const { text, setText, send, onKeyDown } = useDraft();
+  const hint = usePlaceholder(copy.cta.placeholder, copy.cta.short);
   const cta = mode === "cta";
   // The floating bar takes over once this one scrolls away above.
   useEffect(() => {
@@ -669,18 +698,14 @@ function Composer({
       }}
     >
       {cta && (
-        <div className="-mx-1 mb-1 flex flex-wrap gap-1.5 p-1">
-          {offer.plans.map((pl, i) => (
-            <PlanChip
-              key={pl.name}
-              index={i}
-              plan={pl}
-              price={prices[i] ? `${offer.from} ${prices[i]}` : offer.free}
-              onPick={() => pick(pl.name)}
-              enter={later(0.6 + i * 0.08)}
-            />
-          ))}
-        </div>
+        <ChatPick
+          copy={copy}
+          offer={offer}
+          prices={prices}
+          locale={locale}
+          onPick={pick}
+          later={later}
+        />
       )}
       {/* One box all the way: prompt, follow-up bar, then your message. The
           parts glide to their new spots; only the text swaps. */}
@@ -690,7 +715,10 @@ function Composer({
         inert={!cta}
         className="composer"
         data-mode={mode}
-        style={{ borderRadius: 22 }}
+        // Docked it is one line, so a full pill; the big box and the end's
+        // two-line composer keep 22px. In style so the layout glide keeps
+        // the corners round while it scales.
+        style={{ borderRadius: mode === "dock" ? 999 : 22 }}
       >
         <div className="composer-body">
           {cta ? (
@@ -707,7 +735,7 @@ function Composer({
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 onKeyDown={onKeyDown}
-                placeholder={copy.cta.placeholder}
+                placeholder={hint}
                 className="composer-input"
               />
             </>
@@ -762,17 +790,174 @@ function Composer({
           <Foot offer={offer} contact={contact} />
         </m.div>
       )}
-      {cta && (
-        // The story ends here: the same ways on as under the hello.
-        <m.div
-          {...later(1.1)}
-          className="mt-12 flex flex-col items-center gap-3"
-        >
-          <p className="text-muted-foreground text-sm">{copy.skip.more}</p>
-          <Shortcuts copy={copy} locale={locale} />
-        </m.div>
-      )}
     </m.div>
+  );
+}
+
+// The end's chat, as a real one: dots, my question, dots again, the nudge,
+// the plans, then the quick replies. Milliseconds from the previous step.
+// Question to nudge (dots between) and nudge to plans are both 900ms.
+const CHAT_STEPS = [1200, 300, 600, 900, 350];
+
+/** The end as a chat. The composer stays at the bottom of the screen; each
+ * message lands right above it and pushes the earlier ones up, like any
+ * chat app. Hover a plan for what it does. */
+function ChatPick({
+  copy,
+  offer,
+  prices,
+  locale,
+  onPick,
+  later,
+}: {
+  copy: Copy;
+  offer: Offer;
+  prices: string[];
+  locale: Locale;
+  onPick: (name: string) => void;
+  later: (delay: number) => React.ComponentProps<typeof m.div>;
+}) {
+  const base = locale === "id" ? "/id" : "";
+  const reduce = useReducedMotion();
+  // 0 typing, 1 question, 2 typing, 3 nudge, 4 plans, 5 quick replies.
+  // Mounts as the pricing comes in, so scrolling back to it plays again.
+  const [step, setStep] = useState(reduce ? 5 : 0);
+  useEffect(() => {
+    if (reduce) return;
+    let at = 0;
+    const timers = CHAT_STEPS.map((ms, i) => {
+      at += ms;
+      return setTimeout(() => setStep(i + 1), at);
+    });
+    return () => timers.forEach(clearTimeout);
+  }, [reduce]);
+  const typing = step === 0 || step === 2;
+  const bubble =
+    "bg-muted w-fit max-w-[min(85%,26rem)] rounded-[20px] rounded-bl-md px-3.5 py-2 text-[15px] leading-snug";
+  // In from below; already-sent ones glide up to make room.
+  const arrive = {
+    layout: "position" as const,
+    initial: reduce ? false : ({ opacity: 0, y: 12 } as const),
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.4, ease: EASE },
+  };
+  // Fades in late, but glides up with the bubbles: the layout move gets the
+  // bubbles' timing, not the delayed fade's.
+  const head = {
+    ...later(0.3),
+    layout: "position" as const,
+    transition: { ...later(0.3).transition, layout: arrive.transition },
+  };
+  return (
+    <div className="mb-3">
+      <div className="flex items-end gap-2">
+        <m.span {...head} className="shrink-0">
+          <Image
+            src="/avatar.png"
+            alt=""
+            width={28}
+            height={28}
+            className="rounded-full"
+          />
+        </m.span>
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
+          <m.p {...head} className="text-muted-foreground ml-1 text-xs">
+            Tharreq
+          </m.p>
+          {step >= 1 && (
+            <m.p {...arrive} className={bubble}>
+              {copy.cta.title}
+            </m.p>
+          )}
+          {step >= 3 && (
+            <m.p {...arrive} className={bubble}>
+              {copy.cta.pick}
+            </m.p>
+          )}
+          {step >= 4 && (
+            <m.div
+              {...arrive}
+              className="bg-muted w-[min(85%,26rem)] overflow-hidden rounded-[20px] rounded-bl-md"
+            >
+              {offer.plans.map((pl, i) => (
+                <PlanChip
+                  key={pl.name}
+                  index={i}
+                  plan={pl}
+                  price={prices[i] ? `${offer.from} ${prices[i]}` : offer.free}
+                  onPick={() => onPick(pl.name)}
+                  className={cn(
+                    "hover:bg-foreground/[0.04] flex min-h-11 w-full cursor-pointer items-center justify-between gap-3 px-3.5 py-2.5 text-left text-[15px] transition-[background-color,opacity] active:opacity-60",
+                    i > 0 && "border-background border-t",
+                  )}
+                />
+              ))}
+            </m.div>
+          )}
+          <AnimatePresence mode="popLayout">
+            {typing && (
+              <m.span
+                key={step}
+                {...arrive}
+                exit={{ opacity: 0, transition: { duration: 0.1 } }}
+                role="status"
+                className="bg-muted inline-flex h-9 w-fit items-center gap-1 rounded-[20px] rounded-bl-md px-3.5"
+              >
+                <span className="sr-only">{copy.chat.typing}</span>
+                {[0, 1, 2].map((i) => (
+                  <m.span
+                    key={i}
+                    aria-hidden
+                    className="bg-muted-foreground/60 size-1.5 rounded-full"
+                    animate={{ opacity: [0.3, 1, 0.3], y: [0, -2, 0] }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      delay: i * 0.15,
+                      ease: "easeInOut",
+                    }}
+                  />
+                ))}
+              </m.span>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+      {/* Its room is kept from the start, so the composer never moves. */}
+      <m.nav
+        initial={false}
+        animate={{ opacity: step >= 5 ? 1 : 0, y: step >= 5 ? 0 : 8 }}
+        transition={{ duration: 0.4, ease: EASE }}
+        inert={step < 5}
+        aria-label={copy.skip.more}
+        className="mt-6 flex gap-1.5"
+      >
+        <QuickReply
+          href={`${base}/about`}
+          label={copy.skip.about}
+          short={copy.skip.short.about}
+          icon={
+            <ArrowRight aria-hidden className="text-muted-foreground size-3" />
+          }
+        />
+        <QuickReply
+          href={`${base}/work`}
+          label={copy.skip.work}
+          short={copy.skip.short.work}
+          icon={
+            <ArrowRight aria-hidden className="text-muted-foreground size-3" />
+          }
+        />
+        <QuickReply
+          onClick={() => jumpTo(0)}
+          label={copy.skip.top}
+          short={copy.skip.short.top}
+          icon={
+            <ArrowUp aria-hidden className="text-muted-foreground size-3" />
+          }
+        />
+      </m.nav>
+    </div>
   );
 }
 
@@ -934,7 +1119,10 @@ function CommentPin({
       }}
     >
       {you ? (
-        <YouAvatar name={you} size={22} />
+        // Fills the pin, which is smaller on phones.
+        <span className="grid size-full place-items-center rounded-full bg-orange-500 text-[11px] font-semibold text-white max-[480px]:text-[9px]">
+          {you[0]}
+        </span>
       ) : (
         <Image
           src="/avatar.png"
@@ -1063,6 +1251,9 @@ function Answer({
   const dash = useRef<HTMLDivElement>(null);
   const chat = useRef<HTMLDivElement>(null);
   const bubble = useRef<HTMLParagraphElement>(null);
+  const building = useRef<HTMLDivElement>(null);
+  const reply = useRef<ReturnType<typeof animate>>(null);
+  const fly = useRef<ReturnType<typeof animate>>(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
   // The answer's height, and what the chat and the comment count take of it;
   // box 0 when unconstrained.
@@ -1076,8 +1267,27 @@ function Answer({
     const o = stage && offsetIn(b, stage);
     if (!b || !stage || !o || p.get() >= FOCUS || matchMedia(STILL).matches)
       return;
-    animate(b, { y: [stage.offsetHeight / 2 - o.y - o.h / 2, 0] }, morph);
+    fly.current = animate(
+      b,
+      { y: [stage.offsetHeight / 2 - o.y - o.h / 2, 0] },
+      morph,
+    );
+    // The reply starts once your message has landed.
+    const l = building.current;
+    if (!l) return;
+    l.style.opacity = "0";
+    reply.current = animate(
+      l,
+      { opacity: [0, 1], y: [6, 0] },
+      { duration: 0.3, ease, delay: morph.duration },
+    );
   }, [p]);
+  // A fast jump (the menu) gets to the dashboard before the delay is over.
+  useMotionValueEvent(p, "change", (v) => {
+    if (v <= BUILT) return;
+    fly.current?.complete();
+    reply.current?.complete();
+  });
   useLayoutEffect(() => {
     const r = root.current;
     const d = dash.current;
@@ -1217,7 +1427,7 @@ function Answer({
           >
             {copy.prompt}
           </p>
-          <div className="flex flex-col gap-1.5">
+          <div ref={building} className="flex flex-col gap-1.5">
             <p className="text-muted-foreground flex items-center gap-2">
               {done ? (
                 <Check className="size-4" />
@@ -1558,7 +1768,7 @@ function Stage({
   );
 }
 
-/** Straight to the rest of the page, no story in between. */
+/** Under the hello: play the story, or straight to the rest of the page. */
 function Shortcuts({
   copy,
   locale,
@@ -1567,7 +1777,7 @@ function Shortcuts({
 }: {
   copy: Copy;
   locale: Locale;
-  onPlay?: () => void;
+  onPlay: () => void;
   className?: string;
 }) {
   const base = locale === "id" ? "/id" : "";
@@ -1577,34 +1787,28 @@ function Shortcuts({
       <TooltipContent sideOffset={6}>{tip}</TooltipContent>
     </Tooltip>
   );
+  // A phone gets the short labels, so the four keep to one row; same point,
+  // fewer words.
+  const label = (key: keyof typeof copy.skip.short) => (
+    <>
+      <span className="md:hidden">{copy.skip.short[key]}</span>
+      <span className="max-md:hidden">{copy.skip[key]}</span>
+    </>
+  );
   return (
     <div className={cn("flex flex-wrap justify-center gap-1.5", className)}>
-      {onPlay &&
-        chip(
-          copy.skip.play,
-          copy.skip.playTip,
-          <button
-            type="button"
-            onClick={onPlay}
-            className="composer-chip inline-flex items-center gap-1.5"
-          >
-            <Play aria-hidden className="size-3 fill-current" />
-            {copy.skip.play}
-          </button>,
-        )}
-      {!onPlay &&
-        chip(
-          copy.skip.top,
-          copy.skip.topTip,
-          <button
-            type="button"
-            onClick={() => jumpTo(0)}
-            className="composer-chip composer-chip-ghost inline-flex items-center gap-1.5"
-          >
-            <ArrowUp aria-hidden className="size-3" />
-            {copy.skip.top}
-          </button>,
-        )}
+      {chip(
+        copy.skip.play,
+        copy.skip.playTip,
+        <button
+          type="button"
+          onClick={onPlay}
+          className="composer-chip inline-flex items-center gap-1.5"
+        >
+          <Play aria-hidden className="size-3 fill-current" />
+          {label("play")}
+        </button>,
+      )}
       {chip(
         copy.skip.about,
         copy.skip.aboutTip,
@@ -1612,7 +1816,7 @@ function Shortcuts({
           href={`${base}/about`}
           className="composer-chip composer-chip-ghost"
         >
-          {copy.skip.about}
+          {label("about")}
         </Link>,
       )}
       {chip(
@@ -1622,28 +1826,26 @@ function Shortcuts({
           href={`${base}/work`}
           className="composer-chip composer-chip-ghost"
         >
-          {copy.skip.work}
+          {label("work")}
         </Link>,
       )}
-      {/* At the story's end the contacts are right above. */}
-      {onPlay &&
-        chip(
-          copy.skip.contact,
-          copy.skip.contactTip,
-          <Link
-            href={`${base}/contact`}
-            className="composer-chip composer-chip-ghost"
-          >
-            {copy.skip.contact}
-          </Link>,
-        )}
+      {chip(
+        copy.skip.contact,
+        copy.skip.contactTip,
+        <Link
+          href={`${base}/contact`}
+          className="composer-chip composer-chip-ghost"
+        >
+          {label("contact")}
+        </Link>,
+      )}
     </div>
   );
 }
 
-// Autoplay: the whole pin in about 40s, at an even pace, so the holds play
+// Autoplay: the whole pin in about 42s, at an even pace, so the holds play
 // as pauses. Your own scroll, a scroll key, or any other jump pauses it.
-const PLAY_MS = 40000;
+const PLAY_MS = 42000;
 const SCROLL_KEYS = new Set([
   "ArrowUp",
   "ArrowDown",
@@ -1708,21 +1910,19 @@ function useAutoplay(ref: React.RefObject<HTMLElement | null>) {
   return [auto, setAuto] as const;
 }
 
-/** Pause or resume the autoplay, with how far the story has got. */
+/** Pause or resume the autoplay. How far the story has got is the rail's
+ * job, not this pill's. */
 function AutoPill({
   copy,
   auto,
   show,
-  p,
   onToggle,
 }: {
   copy: Copy;
   auto: Auto;
   show: boolean;
-  p: P;
   onToggle: () => void;
 }) {
-  const done = useTransform(p, [-INTRO, END], [0, 1]);
   const on = auto === "on";
   const label = on ? copy.skip.pause : copy.skip.resume;
   // A portal: the stage's transforms would pin "fixed" to the stage.
@@ -1744,7 +1944,7 @@ function AutoPill({
                 type="button"
                 onClick={onToggle}
                 aria-pressed={!on}
-                className="bg-background/80 border-border/80 text-muted-foreground hover:text-foreground relative inline-flex h-8 cursor-pointer items-center gap-1.5 overflow-hidden rounded-full border px-3 text-xs font-medium backdrop-blur-md transition-colors"
+                className="bg-background/80 border-border/80 text-muted-foreground hover:text-foreground inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-full border px-3 text-xs font-medium backdrop-blur-md transition-colors"
               >
                 {on ? (
                   <Pause aria-hidden className="size-3 fill-current" />
@@ -1752,11 +1952,6 @@ function AutoPill({
                   <Play aria-hidden className="size-3 fill-current" />
                 )}
                 {label}
-                <m.span
-                  aria-hidden
-                  style={{ scaleX: done }}
-                  className="bg-foreground/30 absolute inset-x-3 bottom-1 h-px origin-left"
-                />
               </button>
             </TooltipTrigger>
             <TooltipContent sideOffset={6}>{copy.skip.playTip}</TooltipContent>
@@ -1842,25 +2037,13 @@ export function ReviewStory({
   useMotionValueEvent(p, "change", (v) => {
     setHello(v < HELLO_END - 0.02);
     setEnded(v >= END - 0.002);
+    setAtCta(v >= CTA);
   });
+  // At the pricing the captions are done; their stack folds away so the
+  // chat sits where they were.
+  const [atCta, setAtCta] = useState(false);
   const [ended, setEnded] = useState(false);
   const [auto, setAuto] = useAutoplay(ref);
-  // At the end, the blank under the centered pricing is pulled back so the
-  // next section rises right after it.
-  const content = useRef<HTMLDivElement>(null);
-  const [slack, setSlack] = useState(0);
-  useLayoutEffect(() => {
-    const c = content.current;
-    if (!c || still) return;
-    const ro = new ResizeObserver(() =>
-      setSlack(
-        Math.max(0, (c.parentElement!.offsetHeight - c.offsetHeight) / 2),
-      ),
-    );
-    ro.observe(c);
-    ro.observe(c.parentElement!);
-    return () => ro.disconnect();
-  }, [still]);
   // The intro line starts in the middle of the screen and makes room as the
   // composer grows. Half the stage (its height class) plus the gap, in CSS,
   // so it is right from the first paint. Lifted to the screen's middle
@@ -1880,9 +2063,8 @@ export function ReviewStory({
       // nothing slides when you scroll back up.
       className={cn(
         "relative w-full",
-        !still && "-mt-8 h-[1225svh] md:-mt-12 md:h-[1445svh]",
+        !still && "-mt-8 h-[1285svh] md:-mt-12 md:h-[1515svh]",
       )}
-      style={{ marginBottom: still ? 0 : -slack }}
     >
       {/* Rail chapters, placed at the scroll spot of their beat. */}
       {!still &&
@@ -1897,19 +2079,24 @@ export function ReviewStory({
             }}
           />
         ))}
-      {/* #offer lands where the pin ends: the plans above the composer. */}
-      <div
-        id="offer"
-        aria-hidden
-        className={cn(
-          "pointer-events-none absolute inset-x-0 bottom-0",
-          !still && "h-svh",
-        )}
-      />
+      {/* Still: no chapters; #offer is the end of it. */}
+      {still && (
+        <div
+          id="offer"
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0"
+        />
+      )}
       <div
         className={cn(
           "flex flex-col gap-6",
-          !still && "sticky top-0 h-svh justify-center",
+          // The end is a chat: the composer at the bottom of the screen,
+          // like any chat app, my messages above it, with a little room
+          // under the fine print.
+          !still &&
+            (atCta
+              ? "sticky top-0 h-svh justify-end pb-[calc(env(safe-area-inset-bottom)+2.5rem)] md:pb-16"
+              : "sticky top-0 h-svh justify-center"),
           // Touch: clear of the top bar.
           "bar:pt-[calc(max(env(safe-area-inset-top),12px)+3rem)]",
         )}
@@ -1920,20 +2107,16 @@ export function ReviewStory({
             copy={copy}
             auto={auto}
             show={!hello && !ended}
-            p={p}
             onToggle={() => setAuto(auto === "on" ? "paused" : "on")}
           />
         )}
-        <div ref={content} className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6">
           <h1 id="review-heading" className="sr-only">
             {copy.title}
           </h1>
           <p className="sr-only">{copy.sr}</p>
-          {still ? (
-            <p className="text-[clamp(24px,4.8vw,36px)] leading-tight font-medium tracking-[-0.04em]">
-              {copy.cta.title}
-            </p>
-          ) : (
+          {/* No caption at the end: the chat over the composer asks. */}
+          {still ? null : (
             // Layout glide outside, scroll offset inside: a layout
             // animation would otherwise wipe the offset.
             // Above the stage: on the hello the caption sits over its blank
@@ -1941,7 +2124,7 @@ export function ReviewStory({
             <m.div
               layout="position"
               transition={morph}
-              className="relative z-10"
+              className={cn("relative z-10", atCta && "hidden")}
             >
               <m.div style={{ y: captionY }} className="relative">
                 <div
@@ -2014,14 +2197,12 @@ export function ReviewStory({
                       </Fragment>
                     ))}
                   </Caption>
-                  {[...copy.captions, copy.cta.title].map((text, i) => (
+                  {copy.captions.map((text, i) => (
                     <Caption
                       key={text}
                       from={CAPTION_AT[i + 2]}
                       to={CAPTION_AT[i + 3]}
                       p={p}
-                      // The last one hugs the composer below it.
-                      end={i === copy.captions.length}
                     >
                       {text}
                     </Caption>

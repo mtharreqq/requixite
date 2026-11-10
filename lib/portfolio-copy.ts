@@ -80,6 +80,7 @@ const english = {
     followup: "Ask a follow-up…",
     you: "You",
     chat: {
+      typing: "Tharreq is typing",
       ask: "@Tharreq can you help me make this look better?",
       reply: "Sure. Let me take a look 👀",
       giveup: "Okay, I give up 😩 Can you just fix all of it?",
@@ -104,38 +105,57 @@ const english = {
     cta: {
       title: "Your turn. What needs fixing?",
       placeholder: "Paste your app’s link, or tell me what feels off…",
+      // Phones: the same ask, short enough for one line.
+      short: "Paste your app’s link…",
+      // Phones: my bubble over the plans, under "Your turn".
+      pick: "Send me your app’s link. Or pick how you’d like to start:",
       send: "Send",
       // The closing composer on each sub-page, about what that page showed.
       pages: {
         "/about": {
           title: "Now you know me. What’s your app?",
           placeholder: "Tell me about your app, or just say hi…",
+          short: "Tell me about your app…",
         },
         "/work": {
           title: "Liked these? Yours is next.",
           placeholder: "Paste your app’s link, it could be the next one here…",
+          short: "Paste your app’s link…",
         },
         "/work/rantai": {
           title: "Got a rantai.dev of your own?",
           placeholder: "Paste the AI-built site that needs the same treatment…",
+          short: "Paste your AI-built site…",
         },
-      } as Record<string, { title: string; placeholder: string }>,
+      } as Record<
+        string,
+        { title: string; placeholder: string; short: string }
+      >,
     },
     skip: {
       story: "Scroll for the story",
       storyTip: "Or just scroll down",
       play: "Play it for me",
+      // The hello's four chips on a phone, where the full ones need two rows.
+      short: {
+        play: "Play it for me",
+        about: "About",
+        work: "Work",
+        contact: "Contact",
+        top: "Top",
+        home: "Story",
+      },
       playTip: "Too lazy to scroll? Sit back, it scrolls itself",
       pause: "Pause",
       resume: "Play",
       top: "Back to top",
       topTip: "Straight back to the hello",
       more: "Or look around first",
-      about: "About",
+      about: "About me",
       aboutTip: "Who I am and where I work",
-      work: "Work",
+      work: "See my work",
       workTip: "Skip to the live demo",
-      contact: "Contact",
+      contact: "Contact me",
       contactTip: "Say hi, or send me your app",
       next: "Keep looking",
       home: "The story",
@@ -268,6 +288,8 @@ const english = {
   },
   contact: {
     copy: "Copy email",
+    // Phones: one button for email and socials, opening a sheet.
+    more: "Email & socials",
     copied: "Email copied",
     copyFailed: "Couldn't copy. Try sending an email instead.",
     send: "Send email",
@@ -379,6 +401,7 @@ const indonesian: PortfolioCopy = {
     followup: "Tanya lagi…",
     you: "Kamu",
     chat: {
+      typing: "Tharreq sedang mengetik",
       ask: "@Tharreq bisa bantu bikin ini lebih bagus?",
       reply: "Bisa. Coba aku lihat dulu 👀",
       giveup: "Oke, nyerah 😩 Kamu aja deh yang beresin semuanya?",
@@ -404,38 +427,54 @@ const indonesian: PortfolioCopy = {
       title: "Giliranmu. Apa yang perlu dibenahi?",
       placeholder:
         "Tempel link aplikasimu, atau ceritakan apa yang terasa aneh…",
+      short: "Tempel link aplikasimu…",
+      pick: "Kirim link aplikasimu. Atau pilih mau mulai dari mana:",
       send: "Kirim",
       pages: {
         "/about": {
           title: "Udah kenal aku. Sekarang aplikasimu?",
           placeholder: "Ceritain aplikasimu, atau sapa aja dulu…",
+          short: "Ceritain aplikasimu…",
         },
         "/work": {
           title: "Suka yang ini? Berikutnya punyamu.",
           placeholder:
             "Tempel link aplikasimu, biar jadi yang berikutnya di sini…",
+          short: "Tempel link aplikasimu…",
         },
         "/work/rantai": {
           title: "Punya rantai.dev versimu sendiri?",
           placeholder: "Tempel situs buatan AI yang butuh perlakuan yang sama…",
+          short: "Tempel situs buatan AI-mu…",
         },
-      } as Record<string, { title: string; placeholder: string }>,
+      } as Record<
+        string,
+        { title: string; placeholder: string; short: string }
+      >,
     },
     skip: {
       story: "Scroll untuk lihat ceritanya",
       storyTip: "Atau scroll aja ke bawah",
-      play: "Putarin aja",
+      play: "Putarin buat aku",
+      short: {
+        play: "Putarin aja",
+        about: "Tentang",
+        work: "Karya",
+        contact: "Kontak",
+        top: "Ke atas",
+        home: "Cerita",
+      },
       playTip: "Malas scroll? Santai, biar jalan sendiri",
       pause: "Jeda",
       resume: "Lanjut",
       top: "Ke atas lagi",
       topTip: "Langsung balik ke awal",
       more: "Atau lihat-lihat dulu",
-      about: "Tentang",
+      about: "Tentang aku",
       aboutTip: "Siapa aku dan kerja di mana",
-      work: "Karya",
+      work: "Lihat karyaku",
       workTip: "Langsung ke demo",
-      contact: "Kontak",
+      contact: "Hubungi aku",
       contactTip: "Sapa aku, atau kirim aplikasimu",
       next: "Lihat yang lain",
       home: "Ceritanya",
@@ -566,6 +605,7 @@ const indonesian: PortfolioCopy = {
   },
   contact: {
     copy: "Salin email",
+    more: "Email & sosmed",
     copied: "Email tersalin",
     copyFailed: "Email belum tersalin. Coba tombol Kirim email.",
     send: "Kirim email",

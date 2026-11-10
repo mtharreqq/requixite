@@ -401,10 +401,12 @@ html {
 .composer[data-mode="cta"] .composer-body {
   grid-template-areas: "in in in" "tools tools send";
 }
+/* The same inset all round, so the + and the send sit as far from the edge
+   on every side. */
 .composer[data-mode="dock"] .composer-body,
 .composer[data-mode="float"] .composer-body {
   grid-template-areas: "plus in send";
-  padding: 6px 6px 6px 8px;
+  padding: 6px;
 }
 .composer[data-mode="float"] {
   border-radius: 999px;
