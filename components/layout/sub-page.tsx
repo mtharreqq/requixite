@@ -45,7 +45,8 @@ export function SubPage({
           <>
             <SectionReveal>
               <section id="contact" className="flex flex-col gap-5">
-                <h2 className="text-xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-2xl">
+                {/* Phones: centered, like the fine print under the composer. */}
+                <h2 className="text-center text-xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-left md:text-2xl">
                   {ask.title}
                 </h2>
                 <AskBox locale={locale} title={ask.title} placeholder={ask} />
