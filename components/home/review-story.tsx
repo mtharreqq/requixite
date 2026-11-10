@@ -933,48 +933,51 @@ function ChatPick({
               </m.span>
             )}
           </AnimatePresence>
-          {/* Scroll on: one more message, then the other pages as bubbles. */}
+          {/* Scroll on: one more bubble, the other pages in a row inside
+              it, like the plans' bubble with its rows. */}
           <AnimatePresence>
             {more && (
-              <m.p
+              <m.div
                 key="more"
                 {...arrive}
                 exit={{ opacity: 0, transition: { duration: 0.15 } }}
-                className={bubble}
+                className="bg-muted w-[min(85%,26rem)] overflow-hidden rounded-[20px] rounded-bl-md"
               >
-                {copy.skip.more}
-              </m.p>
-            )}
-            {more && (
-              <m.nav
-                key="pages"
-                {...arrive}
-                exit={{ opacity: 0, transition: { duration: 0.15 } }}
-                aria-label={copy.skip.more}
-                className="flex gap-1.5"
-              >
-                <QuickReply
-                  href={`${base}/about`}
-                  label={copy.skip.about}
-                  short={copy.skip.short.about}
-                  bubble
-                  icon={<ArrowRight aria-hidden className="size-3" />}
-                />
-                <QuickReply
-                  href={`${base}/work`}
-                  label={copy.skip.work}
-                  short={copy.skip.short.work}
-                  bubble
-                  icon={<ArrowRight aria-hidden className="size-3" />}
-                />
-                <QuickReply
-                  onClick={() => jumpTo(0)}
-                  label={copy.skip.top}
-                  short={copy.skip.short.top}
-                  bubble
-                  icon={<ArrowUp aria-hidden className="size-3" />}
-                />
-              </m.nav>
+                <p className="px-3.5 py-2 text-[15px] leading-snug">
+                  {copy.skip.more}
+                </p>
+                <nav
+                  // Read without the emoji.
+                  aria-label={copy.skip.more.replace(
+                    /\s*\p{Extended_Pictographic}/gu,
+                    "",
+                  )}
+                  className="border-background grid grid-cols-3 border-t"
+                >
+                  <QuickReply
+                    cell
+                    href={`${base}/about`}
+                    label={copy.skip.about}
+                    short={copy.skip.short.about}
+                    icon={<ArrowRight aria-hidden className="size-3.5" />}
+                  />
+                  <QuickReply
+                    cell
+                    href={`${base}/work`}
+                    label={copy.skip.work}
+                    short={copy.skip.short.work}
+                    icon={<ArrowRight aria-hidden className="size-3.5" />}
+                    className="border-background border-x"
+                  />
+                  <QuickReply
+                    cell
+                    onClick={() => jumpTo(0)}
+                    label={copy.skip.top}
+                    short={copy.skip.short.top}
+                    icon={<ArrowUp aria-hidden className="size-3.5" />}
+                  />
+                </nav>
+              </m.div>
             )}
           </AnimatePresence>
         </div>
@@ -2107,16 +2110,20 @@ export function ReviewStory({
         !still && "-mt-8 h-[1335svh] md:-mt-12 md:h-[1565svh]",
       )}
     >
-      {/* Rail chapters, placed at the scroll spot of their beat. */}
+      {/* Rail chapters at the scroll spot of their beat, 40svh lower: the
+          rail turns to a section once it reaches 40% down the screen, so
+          this way it turns right on the beat (the one that shows it, like
+          the look-around bubbles), not 0.4 screens early. */}
       {!still &&
         CHAPTERS.map(([id, at]) => (
           <div
             key={id}
             id={id}
             aria-hidden
+            data-on-read-line
             className="pointer-events-none absolute inset-x-0"
             style={{
-              top: `calc((100% - 100svh) * ${toScroll(at)})`,
+              top: `calc((100% - 100svh) * ${toScroll(at)} + 40svh)`,
             }}
           />
         ))}
