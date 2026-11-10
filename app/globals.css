@@ -229,6 +229,56 @@
   animation: none;
   mix-blend-mode: normal;
 }
+/* The move into the contact chat after you send from another page: the
+   composer holds its place (or glides to the contact page's spot), the
+   rest crossfades. */
+:root[data-handoff]::view-transition-old(root) {
+  animation: handoff-out 200ms ease-out both;
+}
+:root[data-handoff]::view-transition-new(root) {
+  animation: handoff-in 320ms 60ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+::view-transition-group(composer) {
+  animation-duration: 450ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+::view-transition-old(composer),
+::view-transition-new(composer) {
+  animation-duration: 450ms;
+  height: 100%;
+}
+@keyframes handoff-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes handoff-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* The contact chat's messages, scrolling over the composer. They fade out
+   just above it (its padding keeps the newest clear at rest), and on a wide
+   screen at the top edge too; on touch the top bar's fade does that. */
+.chat-scroll {
+  scrollbar-width: thin;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 2.5rem,
+    #000 calc(100% - 1.25rem),
+    transparent
+  );
+  @variant bar {
+    mask-image: linear-gradient(
+      to bottom,
+      #000 calc(100% - 1.25rem),
+      transparent
+    );
+  }
+}
+
 ::selection {
   background: theme("colors.black");
   color: theme("colors.white");

@@ -56,6 +56,7 @@ import { jumpTo, smoothScrollTo } from "@/components/layout/smooth-scroll";
 import { ContactIcons } from "@/components/shared/connect-section";
 import { QuickReply } from "@/components/shared/quick-reply";
 import { MenuAvatar } from "@/components/shared/menu-avatar";
+import { Moving } from "@/components/chat/replies";
 import {
   Foot,
   Send,
@@ -962,12 +963,21 @@ function ChatPick({
           </AnimatePresence>
         </div>
       </div>
+      <Moving locale={locale} className="mt-3" />
     </div>
   );
 }
 
 /** "Ask me anything", pinned to the bottom once the pricing box is gone. */
-function FloatBar({ copy, show }: { copy: Copy; show: boolean }) {
+function FloatBar({
+  copy,
+  show,
+  locale,
+}: {
+  copy: Copy;
+  show: boolean;
+  locale: Locale;
+}) {
   const { text, setText, send, onKeyDown } = useDraft();
   return (
     <div
@@ -977,6 +987,7 @@ function FloatBar({ copy, show }: { copy: Copy; show: boolean }) {
         !show && "translate-y-[calc(100%+2rem)] opacity-0",
       )}
     >
+      {show && <Moving locale={locale} className="mb-3" />}
       <div className="composer" data-mode="float">
         <div className="composer-body">
           <label htmlFor="review-float" className="sr-only">
@@ -2275,7 +2286,7 @@ export function ReviewStory({
           />
         </div>
       </div>
-      <FloatBar copy={copy} show={gone && !away} />
+      <FloatBar copy={copy} show={gone && !away} locale={locale} />
     </section>
   );
 }

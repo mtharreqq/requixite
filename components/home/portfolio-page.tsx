@@ -1,5 +1,4 @@
 import { ReviewStory } from "@/components/home/review-story-lazy";
-import { ChatDialog } from "@/components/chat/chat-dialog-lazy";
 import { RailNav } from "@/components/layout/rail-nav";
 import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
 import { PortfolioMotion } from "@/components/shared/portfolio-motion";
@@ -38,9 +37,6 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
           locale={locale}
         />
       </main>
-
-      {/* No trigger of its own: openChat() opens it from anywhere. */}
-      <ChatDialog copy={copy.hero.chat} />
 
       {/* Section rail, left edge */}
       <RailNav

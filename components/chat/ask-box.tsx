@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { ArrowUp } from "lucide-react";
 import {
   getPortfolioCopy,
@@ -18,7 +19,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { openChat } from "@/lib/chat-events";
+import { moveToContact, sendMessage } from "@/lib/conversation";
 import { ContactIcons } from "@/components/shared/connect-section";
 
 // The composer pieces the sub-pages share with the home story, apart from it
@@ -26,22 +27,38 @@ import { ContactIcons } from "@/components/shared/connect-section";
 
 type Offer = PortfolioCopy["offer"];
 
-/** A message box that opens the chat dialog with its text on send. */
+/** A message box. On send your message goes to the chat on the contact
+ * page, and you with it, unless you're there already. */
 export function useDraft() {
   const [text, setText] = useState("");
-  const send = () => {
+  const router = useRouter();
+  const path = usePathname();
+  const contact = path.startsWith("/id") ? "/id/contact" : "/contact";
+  const here = path === contact;
+  const write = (t: string) => {
+    setText(t);
+    // Ready before you send, so the move doesn't wait on it.
+    if (!here && t.trim()) router.prefetch(contact);
+  };
+  const send = (e?: React.SyntheticEvent) => {
     const t = text.trim();
     if (!t) return;
-    openChat(t);
     setText("");
+    if (here) return sendMessage(t);
+    const from = e?.currentTarget ?? document.activeElement;
+    moveToContact(
+      t,
+      () => router.push(contact),
+      from instanceof Element ? from.closest<HTMLElement>(".composer") : null,
+    );
   };
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault();
-      send();
+      send(e);
     }
   };
-  return { text, setText, send, onKeyDown };
+  return { text, setText: write, send, onKeyDown };
 }
 
 export function Send({
@@ -50,7 +67,7 @@ export function Send({
   off,
 }: {
   label: string;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent) => void;
   off: boolean;
 }) {
   return (
@@ -66,7 +83,7 @@ export function Send({
           <ArrowUp />
         </button>
       </TooltipTrigger>
-      <TooltipContent sideOffset={6}>{label}</TooltipContent>
+      <TooltipContent sideOffset={2}>{label}</TooltipContent>
     </Tooltip>
   );
 }
@@ -134,6 +151,7 @@ export function AskBox({
   title,
   placeholder,
   draft,
+  named,
 }: {
   locale: Locale;
   title?: string;
@@ -141,6 +159,8 @@ export function AskBox({
   placeholder?: { placeholder: string; short: string };
   /** Its draft, when something else fills it too (a picked plan). */
   draft?: ReturnType<typeof useDraft>;
+  /** The contact page's: where a composer sent from elsewhere lands. */
+  named?: boolean;
 }) {
   const { review: copy, offer, contact } = getPortfolioCopy(locale);
   const hint = usePlaceholder(
@@ -151,7 +171,14 @@ export function AskBox({
   const { text, setText, send, onKeyDown } = draft ?? own;
   return (
     <div>
-      <div className="composer" data-mode="cta" style={{ borderRadius: 22 }}>
+      <div
+        className="composer"
+        data-mode="cta"
+        style={{
+          borderRadius: 22,
+          viewTransitionName: named ? "composer" : undefined,
+        }}
+      >
         <div className="composer-body">
           <label htmlFor="contact-ask" className="sr-only">
             {title ?? copy.cta.title}
