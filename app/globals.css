@@ -567,6 +567,17 @@ html {
   .tap-area::before {
     inset: -14px -6px;
   }
+  /* ponytail: stacked tight on phones, so the note's halo stops short below
+     and the meta's above: each tap lands on what's under it, at 33px rather
+     than 44. Spread them apart if that's too small. */
+  @media (max-width: 767px) {
+    .foot > .tap-area::before {
+      bottom: -2px;
+    }
+    .foot > p .tap-area::before {
+      top: -2px;
+    }
+  }
   /* Pressed, since there is no hover to answer a tap. */
   .composer-chip:active,
   .composer-tool:active {

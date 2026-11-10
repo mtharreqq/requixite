@@ -7,6 +7,7 @@ import { QuickReply } from "@/components/shared/quick-reply";
 import { ChatDialog } from "@/components/chat/chat-dialog-lazy";
 import { ExperienceSection } from "@/components/shared/experience-section";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 import {
   Tooltip,
@@ -20,7 +21,15 @@ import {
 
 /** The other pages under the closing composer, like the homepage's end:
  * starting at the next one. */
-function Suggestions({ locale, path }: { locale: Locale; path: string }) {
+function Suggestions({
+  locale,
+  path,
+  className,
+}: {
+  locale: Locale;
+  path: string;
+  className?: string;
+}) {
   const { skip } = getPortfolioCopy(locale).review;
   const base = locale === "id" ? "/id" : "";
   const all = [
@@ -36,7 +45,10 @@ function Suggestions({ locale, path }: { locale: Locale; path: string }) {
     ([p]) => p !== path,
   );
   return (
-    <nav aria-label={skip.next} className="mt-12 flex flex-col gap-3">
+    <nav
+      aria-label={skip.next}
+      className={cn("flex flex-col gap-3", className)}
+    >
       <p className="text-muted-foreground text-sm">{skip.more}</p>
       {/* Quick replies, as at the end of the home story. */}
       <div className="flex gap-1.5">
@@ -96,11 +108,13 @@ export function SubPage({
           <>
             <SectionReveal>
               <section id="contact" className="flex flex-col gap-5">
-                <h2 className="text-xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-2xl">
+                {/* As the story's end: the other pages just over the
+                    composer, the fine print tight under it. */}
+                <h2 className="text-center text-xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-2xl">
                   {ask.title}
                 </h2>
-                <AskBox locale={locale} title={ask.title} placeholder={ask} />
                 <Suggestions locale={locale} path={path} />
+                <AskBox locale={locale} title={ask.title} placeholder={ask} />
               </section>
             </SectionReveal>
             {/* Short pages push the footer to the bottom of the screen. */}
@@ -177,7 +191,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
           {copy.review.cta.title}
         </h1>
         <AskBox locale={locale} />
-        <Suggestions locale={locale} path="/contact" />
+        <Suggestions locale={locale} path="/contact" className="mt-12" />
       </section>
     </SubPage>
   );
