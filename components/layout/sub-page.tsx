@@ -3,83 +3,17 @@ import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
 import { FooterWordmark } from "@/components/layout/footer-wordmark";
 import { RailNav, type RailSection } from "@/components/layout/rail-nav";
 import { AskBox } from "@/components/chat/ask-box";
-import { QuickReply } from "@/components/shared/quick-reply";
 import { ChatDialog } from "@/components/chat/chat-dialog-lazy";
 import { ExperienceSection } from "@/components/shared/experience-section";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import {
   PortfolioMotion,
   SectionReveal,
 } from "@/components/shared/portfolio-motion";
 
-/** The other pages under the closing composer, like the homepage's end:
- * starting at the next one. */
-function Suggestions({
-  locale,
-  path,
-  className,
-  bare,
-}: {
-  locale: Locale;
-  path: string;
-  className?: string;
-  /** No "Or look around first": the title over it says it. */
-  bare?: boolean;
-}) {
-  const { skip } = getPortfolioCopy(locale).review;
-  const base = locale === "id" ? "/id" : "";
-  const all = [
-    ["", skip.home, skip.short.home, skip.homeTip],
-    ["/about", skip.about, skip.short.about, skip.aboutTip],
-    ["/work", skip.work, skip.short.work, skip.workTip],
-    ["/contact", skip.contact, skip.short.contact, skip.contactTip],
-  ];
-  // Case studies count as Work (they live in its list), so Work stays on.
-  const at = all.findIndex(([p]) => p && (path + "/").startsWith(p + "/"));
-  // Start at the next page and wrap, skipping this one.
-  const pages = [...all.slice(at + 1), ...all.slice(0, at + 1)].filter(
-    ([p]) => p !== path,
-  );
-  return (
-    <nav
-      aria-label={skip.next}
-      className={cn("flex flex-col gap-3", className)}
-    >
-      {!bare && <p className="text-muted-foreground text-sm">{skip.more}</p>}
-      {/* Quick replies, as at the end of the home story. */}
-      <div className="flex gap-1.5">
-        {pages.map(([p, label, short, tip]) => (
-          <Tooltip key={p} delayDuration={500}>
-            <TooltipTrigger asChild>
-              <QuickReply
-                href={base + p || "/"}
-                label={label}
-                short={short}
-                icon={
-                  <ArrowRight
-                    aria-hidden
-                    className="text-muted-foreground size-3"
-                  />
-                }
-              />
-            </TooltipTrigger>
-            <TooltipContent sideOffset={6}>{tip}</TooltipContent>
-          </Tooltip>
-        ))}
-      </div>
-    </nav>
-  );
-}
-
-/** About, Work and case studies: their own page, same column, then other
- * pages to try, the story's closing composer and the footer. */
+/** About, Work and case studies: their own page, same column, then the
+ * story's closing composer and the footer. */
 export function SubPage({
   locale,
   path,
@@ -111,21 +45,10 @@ export function SubPage({
           <>
             <SectionReveal>
               <section id="contact" className="flex flex-col gap-5">
-                {/* As the story's end: the other pages just over the
-                    composer, the fine print tight under it. */}
-                <div className="flex flex-col gap-2">
-                  <h2 className="text-xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-2xl">
-                    {ask.title}
-                  </h2>
-                  <p className="text-muted-foreground text-sm">
-                    {copy.review.skip.more}
-                  </p>
-                </div>
-                {/* Chips to composer: the same 12px as the homepage's end. */}
-                <div className="flex flex-col gap-3">
-                  <Suggestions locale={locale} path={path} bare />
-                  <AskBox locale={locale} title={ask.title} placeholder={ask} />
-                </div>
+                <h2 className="text-xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-2xl">
+                  {ask.title}
+                </h2>
+                <AskBox locale={locale} title={ask.title} placeholder={ask} />
               </section>
             </SectionReveal>
             {/* Short pages push the footer to the bottom of the screen. */}
@@ -202,7 +125,6 @@ export function ContactPage({ locale }: { locale: Locale }) {
           {copy.review.cta.title}
         </h1>
         <AskBox locale={locale} />
-        <Suggestions locale={locale} path="/contact" className="mt-12" />
       </section>
     </SubPage>
   );
