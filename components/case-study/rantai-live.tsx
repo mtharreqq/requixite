@@ -578,7 +578,7 @@ export function RantaiLive({
                   href={`https://www.${url}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-background text-muted-foreground hover:text-foreground rounded-md px-2.5 py-0.5 text-[11px] transition-colors"
+                  className="bg-background text-muted-foreground hover:text-foreground bar:relative bar:z-10 bar:before:absolute bar:before:-inset-x-1 bar:before:-inset-y-3 rounded-md px-2.5 py-0.5 text-[11px] transition-colors"
                 >
                   {url}
                 </a>
@@ -615,7 +615,7 @@ export function RantaiLive({
                   href={`https://www.${url}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-foreground flex items-center gap-1 rounded-full py-1 pr-1 text-[11px] font-medium underline-offset-2 transition-colors hover:underline"
+                  className="text-muted-foreground hover:text-foreground bar:relative bar:z-10 bar:before:absolute bar:before:-inset-3 flex items-center gap-1 rounded-full py-1 pr-1 text-[11px] font-medium underline-offset-2 transition-colors hover:underline"
                 >
                   <span className="max-sm:sr-only">{copy.visit}</span>
                   <ArrowUpRight aria-hidden className="size-3" />
@@ -667,7 +667,7 @@ export function RantaiLive({
                 type="button"
                 aria-pressed={page === i}
                 onClick={() => setPage(i)}
-                className={`h-8 rounded-full border px-3.5 text-xs transition-colors duration-200 ${page === i ? "bg-foreground text-background border-foreground" : "bg-background border-border text-foreground/70 hover:text-foreground"}`}
+                className={`bar:relative bar:h-10 bar:px-4 bar:text-sm bar:before:absolute bar:before:-inset-x-[3px] bar:before:-inset-y-2 bar:before:rounded-full h-8 rounded-full border px-3.5 text-xs transition-colors duration-200 ${page === i ? "bg-foreground text-background border-foreground" : "bg-background border-border text-foreground/70 hover:text-foreground"}`}
               >
                 {label}
               </button>

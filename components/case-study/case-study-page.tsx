@@ -38,7 +38,7 @@ export function CaseStudyPage({ locale }: { locale: Locale }) {
                 href="https://www.rantai.dev"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-0.5 font-medium underline-offset-2 hover:underline"
+                className="tap-area inline-flex items-center gap-0.5 font-medium underline-offset-2 hover:underline"
               >
                 {copy.visit}
                 <ArrowUpRight aria-hidden className="size-3" />

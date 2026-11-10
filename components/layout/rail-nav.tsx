@@ -667,7 +667,7 @@ export function RailNav({
             onClick={() => setMenuOpen((o) => !o)}
             // Dead center of the bar, whatever the label's length; no border,
             // just enough backdrop to read over the page.
-            className="bg-background/70 side:hidden pointer-events-auto absolute left-1/2 flex h-[42px] max-w-[calc(100%-7rem)] -translate-x-1/2 cursor-pointer items-center gap-2 rounded-full px-3 text-xs backdrop-blur-md"
+            className="bg-background/70 side:hidden pointer-events-auto absolute left-1/2 flex h-[42px] max-w-[calc(100%-7rem)] -translate-x-1/2 cursor-pointer items-center gap-2 rounded-full px-3 text-xs backdrop-blur-md before:absolute before:inset-x-0 before:-inset-y-px"
           >
             <span className="text-muted-foreground tabular-nums">
               {active + 1}/{sections.length}
