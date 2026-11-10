@@ -41,6 +41,17 @@ const MINOR_PER_SECTION = 2;
 const STEP = MINOR_PER_SECTION + 1;
 // The point of the viewport (from the top) that counts as "currently reading".
 const READ_LINE = 0.4;
+
+/** Where a click on a section scrolls to. Most land with their top at the
+ * top; an anchor marked data-on-read-line sits READ_LINE below the spot
+ * it stands for (so the rail turns to it right there), so it lands that
+ * much higher. */
+function scrollTarget(el: HTMLElement) {
+  const top = el.getBoundingClientRect().top + window.scrollY;
+  return el.hasAttribute("data-on-read-line")
+    ? top - window.innerHeight * READ_LINE
+    : top;
+}
 // How many ticks either side of the cursor get pulled out.
 const REACH = 2.5;
 const HOVER_REACH = 1.5;
@@ -458,9 +469,7 @@ function SectionMenu({
                 if (!target) return;
                 e.preventDefault();
                 onOpenChange(false);
-                smoothScrollTo(
-                  target.getBoundingClientRect().top + window.scrollY,
-                );
+                smoothScrollTo(scrollTarget(target));
               }}
               className={sheetRow}
             >
@@ -639,8 +648,7 @@ export function RailNav({
   function onPointerUp(e: PointerEvent<HTMLDivElement>) {
     if (!scrubbing) return;
     const target = document.getElementById(sections[sectionAt(e)].id);
-    if (target)
-      smoothScrollTo(target.getBoundingClientRect().top + window.scrollY);
+    if (target) smoothScrollTo(scrollTarget(target));
     setScrubbing(false);
     hover(null);
   }
