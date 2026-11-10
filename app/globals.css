@@ -930,9 +930,9 @@ span.dash-extra {
 .dash-sel {
   position: absolute;
   z-index: 1;
-  border: 1.5px solid #f97316;
+  border: 1.5px solid #3b82f6;
   border-radius: 4px;
-  background: rgb(249 115 22 / 0.08);
+  background: rgb(59 130 246 / 0.08);
   pointer-events: none;
 }
 .dash-cursor {
