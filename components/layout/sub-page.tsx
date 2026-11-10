@@ -3,6 +3,7 @@ import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
 import { FooterWordmark } from "@/components/layout/footer-wordmark";
 import { RailNav, type RailSection } from "@/components/layout/rail-nav";
 import { AskBox } from "@/components/chat/ask-box";
+import { QuickReply } from "@/components/shared/quick-reply";
 import { ChatDialog } from "@/components/chat/chat-dialog-lazy";
 import { ExperienceSection } from "@/components/shared/experience-section";
 import Image from "next/image";
@@ -23,10 +24,10 @@ function Suggestions({ locale, path }: { locale: Locale; path: string }) {
   const { skip } = getPortfolioCopy(locale).review;
   const base = locale === "id" ? "/id" : "";
   const all = [
-    ["", skip.home, skip.homeTip],
-    ["/about", skip.about, skip.aboutTip],
-    ["/work", skip.work, skip.workTip],
-    ["/contact", skip.contact, skip.contactTip],
+    ["", skip.home, skip.short.home, skip.homeTip],
+    ["/about", skip.about, skip.short.about, skip.aboutTip],
+    ["/work", skip.work, skip.short.work, skip.workTip],
+    ["/contact", skip.contact, skip.short.contact, skip.contactTip],
   ];
   // Case studies count as Work (they live in its list), so Work stays on.
   const at = all.findIndex(([p]) => p && (path + "/").startsWith(p + "/"));
@@ -35,21 +36,24 @@ function Suggestions({ locale, path }: { locale: Locale; path: string }) {
     ([p]) => p !== path,
   );
   return (
-    <nav
-      aria-label={skip.next}
-      className="mt-12 flex flex-col items-center gap-3"
-    >
+    <nav aria-label={skip.next} className="mt-12 flex flex-col gap-3">
       <p className="text-muted-foreground text-sm">{skip.more}</p>
-      <div className="flex flex-wrap justify-center gap-1.5">
-        {pages.map(([p, label, tip]) => (
+      {/* Quick replies, as at the end of the home story. */}
+      <div className="flex gap-1.5">
+        {pages.map(([p, label, short, tip]) => (
           <Tooltip key={p} delayDuration={500}>
             <TooltipTrigger asChild>
-              <Link
+              <QuickReply
                 href={base + p || "/"}
-                className="composer-chip composer-chip-ghost"
-              >
-                {label}
-              </Link>
+                label={label}
+                short={short}
+                icon={
+                  <ArrowRight
+                    aria-hidden
+                    className="text-muted-foreground size-3"
+                  />
+                }
+              />
             </TooltipTrigger>
             <TooltipContent sideOffset={6}>{tip}</TooltipContent>
           </Tooltip>
@@ -79,6 +83,13 @@ export function SubPage({
   const ask = copy.review.cta.pages[path] ?? copy.review.cta;
   return (
     <PortfolioMotion className="bg-background text-foreground selection:bg-foreground selection:text-background flex min-h-screen w-full justify-center overflow-x-clip">
+      {/* Long pages scroll under soft edges; Contact is one screen. */}
+      {!bare && (
+        <>
+          <div aria-hidden className="edge-fade top-0" />
+          <div aria-hidden className="edge-fade bottom-0 rotate-180" />
+        </>
+      )}
       <main className="tablet:max-w-2xl tablet:px-8 tablet:pb-[calc(2rem+env(safe-area-inset-bottom))] bar:pt-[calc(max(env(safe-area-inset-top),12px)+4.5rem)] flex w-full max-w-lg flex-col gap-y-14 px-4 pt-10 pb-[calc(2rem+env(safe-area-inset-bottom))] md:max-w-xl md:gap-y-16 md:px-4 md:pt-14 md:pb-0">
         {children}
         {!bare && (
@@ -88,11 +99,7 @@ export function SubPage({
                 <h2 className="text-xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-2xl">
                   {ask.title}
                 </h2>
-                <AskBox
-                  locale={locale}
-                  title={ask.title}
-                  placeholder={ask.placeholder}
-                />
+                <AskBox locale={locale} title={ask.title} placeholder={ask} />
                 <Suggestions locale={locale} path={path} />
               </section>
             </SectionReveal>

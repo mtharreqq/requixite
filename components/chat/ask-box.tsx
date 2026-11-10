@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { ArrowUp } from "lucide-react";
 import {
   getPortfolioCopy,
@@ -76,7 +76,7 @@ export function Send({
  * centered on phones. */
 export function Foot({ offer, contact }: { offer: Offer; contact: Contact }) {
   return (
-    <div className="bar:gap-3 bar:text-[13px] mt-2 flex flex-col items-center gap-2 px-1 text-xs md:flex-row md:items-baseline md:justify-between md:gap-4">
+    <div className="bar:text-[13px] mt-2 flex flex-col items-center gap-1 px-1 text-xs md:flex-row md:items-baseline md:justify-between md:gap-4">
       <Note offer={offer} />
       <FooterMeta copy={contact} />
     </div>
@@ -113,6 +113,22 @@ function Note({ offer }: { offer: Offer }) {
   );
 }
 
+const PHONE = "(max-width: 767px)";
+/** The long placeholder, or on a phone the short one. The server renders
+ * the long one; a phone swaps it after hydration. */
+export function usePlaceholder(long: string, short: string) {
+  const phone = useSyncExternalStore(
+    (cb) => {
+      const m = matchMedia(PHONE);
+      m.addEventListener("change", cb);
+      return () => m.removeEventListener("change", cb);
+    },
+    () => matchMedia(PHONE).matches,
+    () => false,
+  );
+  return phone ? short : long;
+}
+
 /** The story's last composer on its own, without the plans: the sub-pages
  * and the contact page. */
 export function AskBox({
@@ -122,9 +138,14 @@ export function AskBox({
 }: {
   locale: Locale;
   title?: string;
-  placeholder?: string;
+  /** Long, and short for phones; the home composer's by default. */
+  placeholder?: { placeholder: string; short: string };
 }) {
   const { review: copy, offer, contact } = getPortfolioCopy(locale);
+  const hint = usePlaceholder(
+    placeholder?.placeholder ?? copy.cta.placeholder,
+    placeholder?.short ?? copy.cta.short,
+  );
   const { text, setText, send, onKeyDown } = useDraft();
   return (
     <div>
@@ -139,7 +160,7 @@ export function AskBox({
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={onKeyDown}
-            placeholder={placeholder ?? copy.cta.placeholder}
+            placeholder={hint}
             className="composer-input"
           />
           <div className="flex min-w-0 items-center [grid-area:tools]">

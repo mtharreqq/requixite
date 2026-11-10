@@ -20,14 +20,16 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
       >
         {copy.skip}
       </a>
-      <div aria-hidden className="edge-fade top-0" />
-      <div aria-hidden className="edge-fade bottom-0 rotate-180" />
+      {/* No edge fades: the story is pinned, nothing scrolls under them,
+          and the bottom one would cover the docked composer. */}
 
       {/* Main Intimate Centered Column */}
       <main
         id="main"
         tabIndex={-1}
-        className="tablet:max-w-2xl tablet:px-8 tablet:pb-[calc(2rem+env(safe-area-inset-bottom))] relative flex w-full max-w-lg flex-col items-center gap-y-14 px-4 pt-8 pb-[calc(2rem+env(safe-area-inset-bottom))] outline-none md:max-w-xl md:gap-y-16 md:px-4 md:pt-12 md:pb-0"
+        // No bottom padding: the story ends on the chat with its composer at
+        // the bottom of the screen, so there is nothing left to scroll.
+        className="tablet:max-w-2xl tablet:px-8 relative flex w-full max-w-lg flex-col items-center gap-y-14 px-4 pt-8 outline-none md:max-w-xl md:gap-y-16 md:px-4 md:pt-12"
       >
         <ReviewStory
           copy={copy.review}
