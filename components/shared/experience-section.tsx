@@ -27,7 +27,8 @@ export function ExperienceSection({
       <Accordion type="multiple" className="w-full">
         {copy.items.map((item) => (
           <AccordionItem value={item.org} key={`${item.org}-${item.role}`}>
-            <AccordionTrigger>
+            {/* + on the title row (28px), even when the dates wrap under it. */}
+            <AccordionTrigger className="[&>.disclosure-indicator]:mt-2 [&>.disclosure-indicator]:self-start!">
               <span className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-x-3 gap-y-1">
                 <span className="flex min-w-0 items-center gap-3">
                   <Image

@@ -73,10 +73,11 @@ export function Send({
 }
 
 /** Under every composer: the note and "© Requixite • v…"; stacked and
- * centered on phones. */
+ * centered on phones, far enough apart (and from the composer's buttons)
+ * for every 44px halo. */
 export function Foot({ offer, contact }: { offer: Offer; contact: Contact }) {
   return (
-    <div className="bar:text-[13px] mt-2 flex flex-col items-center gap-1 px-1 text-xs md:flex-row md:items-baseline md:justify-between md:gap-4">
+    <div className="bar:text-[13px] bar:mt-3 mt-2 flex flex-col items-center gap-7 px-1 text-xs md:flex-row md:items-baseline md:justify-between md:gap-4">
       <Note offer={offer} />
       <FooterMeta copy={contact} />
     </div>

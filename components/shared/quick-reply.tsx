@@ -20,7 +20,7 @@ export function QuickReply({
   icon: ReactNode;
 } & Omit<ComponentProps<"button">, "children">) {
   const cls = cn(
-    "hover:bg-muted bar:relative bar:before:absolute bar:before:inset-x-0 bar:before:-inset-y-1 flex h-9 shrink-0 cursor-pointer items-center gap-1 rounded-full border px-3 text-[13px] transition-[background-color,scale] active:scale-95",
+    "hover:bg-muted bar:relative bar:before:absolute bar:before:inset-x-0 bar:before:-inset-y-1.25 flex h-9 shrink-0 cursor-pointer items-center gap-1 rounded-full border px-3 text-[13px] transition-[background-color,scale] active:scale-95",
     className,
   );
   const body = (
