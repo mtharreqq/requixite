@@ -124,6 +124,8 @@ const ASK_POP = 0.308;
 const REPLY = 0.32;
 const ASK_LEAVE = 0.336;
 const JOIN = 0.342;
+// The four you fix, in copy order: spacing, colour, type, alignment.
+const MAIN_AT = [0.35, 0.385, 0.42, 0.455];
 const PILE_AT = 0.49;
 const GIVE_GO = 0.7;
 const GIVE_POP = 0.707;
@@ -144,9 +146,13 @@ const SLOW = [
   [0.168, 0.168, 0.015], // built, before the focus
   [SEL_START, SEL_DONE, 0.03], // you drag the selection, slowly
   [SEL_DONE, SEL_DONE, 0.025], // selected, before you pin your comment
-  [REPLY + 0.002, REPLY + 0.002, 0.015], // my reply to your question
-  [GIVE_POP + 0.003, GIVE_POP + 0.003, 0.012], // you give up
-  [ONIT + 0.002, ONIT + 0.002, 0.012], // I'm on it
+  // The comments are the story: each one holds long enough to read.
+  [ASK_POP + 0.003, ASK_POP + 0.003, 0.04], // your question
+  [REPLY + 0.002, REPLY + 0.002, 0.05], // my reply to your question
+  // Each of your four fixes, once my reply is in.
+  ...MAIN_AT.map((at) => [at + 0.012, at + 0.012, 0.015] as const),
+  [GIVE_POP + 0.003, GIVE_POP + 0.003, 0.05], // you give up
+  [ONIT + 0.002, ONIT + 0.002, 0.05], // I'm on it
   // The pricing, before "look around": its own stop on the rail.
   [CTA + 0.005, CTA + 0.005, 0.04],
 ] as const;
@@ -209,8 +215,6 @@ type Spot = {
   fix: number;
 };
 
-// The four you fix, in copy order: spacing, colour, type, alignment.
-const MAIN_AT = [0.35, 0.385, 0.42, 0.455];
 const MAIN = (
   [
     ["stats", 0.5, 0],
@@ -1092,13 +1096,16 @@ function DashBody({
   );
 }
 
-function YouAvatar({ name, size }: { name: string; size: number }) {
+/** You, the visitor: a plain person icon, not a letter. */
+function YouAvatar({ className }: { className?: string }) {
   return (
     <span
-      className="grid shrink-0 place-items-center rounded-full bg-orange-500 font-semibold text-white"
-      style={{ width: size, height: size, fontSize: size * 0.5 }}
+      className={cn(
+        "grid shrink-0 place-items-center rounded-full bg-blue-500 text-white",
+        className,
+      )}
     >
-      {name[0]}
+      <User aria-hidden className="size-[62%]" strokeWidth={2.5} />
     </span>
   );
 }
@@ -1136,9 +1143,7 @@ function CommentPin({
     >
       {you ? (
         // Fills the pin, which is smaller on phones.
-        <span className="grid size-full place-items-center rounded-full bg-orange-500 text-[11px] font-semibold text-white max-[480px]:text-[9px]">
-          {you[0]}
-        </span>
+        <YouAvatar className="size-full" />
       ) : (
         <Image
           src="/avatar.png"
@@ -1160,7 +1165,7 @@ function Msg({ copy, you, text }: { copy: Copy; you?: boolean; text: string }) {
     <div className="flex flex-col gap-1">
       <div className="flex items-center gap-1.5 text-xs">
         {you ? (
-          <YouAvatar name={copy.you} size={18} />
+          <YouAvatar className="size-[18px]" />
         ) : (
           <Image
             src="/avatar.png"
@@ -1773,7 +1778,7 @@ function Stage({
           </AnimatePresence>
           <Cursor
             name={copy.you}
-            color="#f97316"
+            color="#3b82f6"
             at={youAt}
             home={{ x: box.w * 0.3, y: box.h }}
             w={box.w}
@@ -1859,9 +1864,9 @@ function Shortcuts({
   );
 }
 
-// Autoplay: the whole pin in about 42s, at an even pace, so the holds play
+// Autoplay: the whole pin in about 49s, at an even pace, so the holds play
 // as pauses. Your own scroll, a scroll key, or any other jump pauses it.
-const PLAY_MS = 42000;
+const PLAY_MS = 49000;
 const SCROLL_KEYS = new Set([
   "ArrowUp",
   "ArrowDown",
@@ -2098,7 +2103,7 @@ export function ReviewStory({
       // nothing slides when you scroll back up.
       className={cn(
         "relative w-full",
-        !still && "-mt-8 h-[1335svh] md:-mt-12 md:h-[1565svh]",
+        !still && "-mt-8 h-[1550svh] md:-mt-12 md:h-[1820svh]",
       )}
     >
       {/* Rail chapters at the scroll spot of their beat, 40svh lower: the
