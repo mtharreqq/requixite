@@ -126,7 +126,9 @@ export function ContactIcons({ copy }: { copy: PortfolioCopy["contact"] }) {
   ];
   return (
     <TooltipProvider delayDuration={250} skipDelayDuration={300}>
-      <div className="flex items-center">
+      {/* On touch, room for each icon's 44px halo without stealing its
+          neighbour's taps. */}
+      <div className="bar:gap-2 flex items-center">
         {items.map(({ label, el }, i) => (
           <TooltipPrimitive.Root key={i}>
             <TooltipTrigger asChild>{el}</TooltipTrigger>

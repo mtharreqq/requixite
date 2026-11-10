@@ -1100,6 +1100,7 @@ function Answer({
     return () => ro.disconnect();
   }, [fit]);
   const built = useBeat(p, (v) => v > BUILT, settle);
+  const builtY = useTransform(built, [0, 1], [16, 0]);
   const polished = useBeat(p, (v) => v > FIXALL, settle);
   const commenting = useBeat(p, (v) => v > MAIN_AT[0] - 0.01, settle);
   const [step, setStep] = useState(0);
@@ -1173,30 +1174,37 @@ function Answer({
     space.box && size.h
       ? Math.min(1, Math.max(0.5, (space.box - space.row) / size.h))
       : 1;
-  const card = focus
-    ? {
-        width: size.w * full,
-        height: full < 1 ? size.h * full : "auto",
-        padding: 0,
-        marginLeft: (size.w * (1 - full)) / 2,
-      }
-    : {
-        width: size.w * preview + 2 * PAD,
-        height: size.h * preview + 2 * PAD,
-        padding: PAD,
-        marginLeft: 0,
-      };
+  // Still: the chat stays and the full dashboard sits under it, set from
+  // the first render (its animations may never get to play).
+  const big = focus || !fit;
+  const card = !fit
+    ? { width: "100%" }
+    : focus
+      ? {
+          width: size.w * full,
+          height: full < 1 ? size.h * full : "auto",
+          padding: 0,
+          marginLeft: (size.w * (1 - full)) / 2,
+        }
+      : {
+          width: size.w * preview + 2 * PAD,
+          height: size.h * preview + 2 * PAD,
+          padding: PAD,
+          marginLeft: 0,
+        };
 
   return (
     <div ref={root} className="flex flex-col">
       <m.div
         initial={false}
         animate={
-          focus ? { height: 0, opacity: 0 } : { height: "auto", opacity: 1 }
+          focus && fit
+            ? { height: 0, opacity: 0 }
+            : { height: "auto", opacity: 1 }
         }
         transition={fold}
         // Unclipped while open, so your message can fly up into it.
-        style={{ overflow: focus ? "hidden" : "visible" }}
+        style={{ overflow: focus && fit ? "hidden" : "visible" }}
         onAnimationComplete={onSettle}
       >
         <div
@@ -1244,7 +1252,7 @@ function Answer({
       <m.div
         className="overflow-hidden"
         initial={false}
-        animate={{ height: focus ? "auto" : 0 }}
+        animate={{ height: focus && fit ? "auto" : 0 }}
         transition={fold}
       >
         <div
@@ -1260,9 +1268,9 @@ function Answer({
           </m.span>
         </div>
       </m.div>
-      <m.div
-        style={{ opacity: built, y: useTransform(built, [0, 1], [16, 0]) }}
-      >
+      {/* Still: shown as is. Its spring can stop at 0 when the story jumps
+        to the end on mount. */}
+      <m.div style={fit ? { opacity: built, y: builtY } : undefined}>
         <m.div
           initial={false}
           animate={size.w ? card : { width: "100%" }}
@@ -1270,14 +1278,14 @@ function Answer({
           onAnimationComplete={onSettle}
           className={cn(
             "rounded-2xl ring-1 transition-[box-shadow,background-color] duration-500",
-            focus
+            big
               ? "ring-transparent"
               : "bg-card ring-border overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.06)]",
           )}
         >
           <m.div
             initial={false}
-            animate={{ scale: focus ? full : preview }}
+            animate={{ scale: big ? full : preview }}
             transition={fold}
             style={{ width: size.w || "100%", originX: 0, originY: 0 }}
           >
@@ -1411,7 +1419,13 @@ function Stage({
 
   return (
     <m.div
-      ref={stage}
+      // Runs again once the lazy motion features load. Building the motion
+      // elements resets every scroll-driven value to its first render (the
+      // hello); a reload mid-story needs them worked out again.
+      ref={(el) => {
+        stage.current = el;
+        if (el) p.dirty();
+      }}
       data-stage
       layout="position"
       transition={morph}
@@ -1771,7 +1785,7 @@ function Skip({ copy, show }: { copy: Copy; show: boolean }) {
               <button
                 type="button"
                 onClick={() => smoothScrollTo(scrollY + innerHeight, 1.2)}
-                className="text-muted-foreground hover:text-foreground flex cursor-pointer flex-col items-center gap-1 text-sm transition-colors"
+                className="text-muted-foreground hover:text-foreground bar:relative bar:before:absolute bar:before:-inset-y-0.5 bar:before:inset-x-0 flex cursor-pointer flex-col items-center gap-1 text-sm transition-colors"
               >
                 {copy.skip.story}
                 <ArrowDown className="size-4 motion-safe:animate-bounce" />
@@ -1896,7 +1910,7 @@ export function ReviewStory({
           "flex flex-col gap-6",
           !still && "sticky top-0 h-svh justify-center",
           // Touch: clear of the top bar.
-          !still && "bar:pt-[calc(max(env(safe-area-inset-top),12px)+3rem)]",
+          "bar:pt-[calc(max(env(safe-area-inset-top),12px)+3rem)]",
         )}
       >
         {!still && <Skip copy={copy} show={hello} />}
@@ -2012,24 +2026,29 @@ export function ReviewStory({
                 </div>
                 {/* Ways on, right under the hello; out of flow so the
                   composer keeps its spot. */}
-                <AnimatePresence>
-                  {hello && (
-                    <m.div
-                      className="absolute inset-x-0 top-full mt-6"
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, transition: { duration: 0.2 } }}
-                      transition={{ duration: 0.6, ease: EASE, delay: 0.8 }}
-                    >
-                      <Shortcuts
-                        copy={copy}
-                        locale={locale}
-                        onPlay={() => setAuto("on")}
-                        className="justify-start"
-                      />
-                    </m.div>
-                  )}
-                </AnimatePresence>
+                {/* Always mounted: an exit can't finish before the lazy
+                  motion features load (a reload mid-story). */}
+                <m.div
+                  className="absolute inset-x-0 top-full mt-6"
+                  inert={!hello}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={
+                    hello
+                      ? {
+                          opacity: 1,
+                          y: 0,
+                          transition: { duration: 0.6, ease: EASE, delay: 0.8 },
+                        }
+                      : { opacity: 0, transition: { duration: 0.2 } }
+                  }
+                >
+                  <Shortcuts
+                    copy={copy}
+                    locale={locale}
+                    onPlay={() => setAuto("on")}
+                    className="justify-start"
+                  />
+                </m.div>
               </m.div>
             </m.div>
           )}

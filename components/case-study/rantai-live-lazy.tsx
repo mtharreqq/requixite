@@ -57,7 +57,7 @@ export function RantaiLiveLazy({ copy }: { copy: Copy }) {
                 href="https://www.rantai.dev"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-background text-muted-foreground hover:text-foreground rounded-md px-2.5 py-0.5 text-[11px] transition-colors"
+                className="bg-background text-muted-foreground hover:text-foreground bar:relative bar:z-10 bar:before:absolute bar:before:-inset-x-1 bar:before:-inset-y-3 rounded-md px-2.5 py-0.5 text-[11px] transition-colors"
               >
                 rantai.dev
               </a>
@@ -76,7 +76,7 @@ export function RantaiLiveLazy({ copy }: { copy: Copy }) {
                 href="https://www.rantai.dev"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground flex items-center gap-1 rounded-full py-1 pr-1 text-[11px] font-medium underline-offset-2 transition-colors hover:underline"
+                className="text-muted-foreground hover:text-foreground bar:relative bar:z-10 bar:before:absolute bar:before:-inset-3 flex items-center gap-1 rounded-full py-1 pr-1 text-[11px] font-medium underline-offset-2 transition-colors hover:underline"
               >
                 <span className="max-sm:sr-only">{copy.visit}</span>
                 <ArrowUpRight aria-hidden className="size-3" />
@@ -104,7 +104,7 @@ export function RantaiLiveLazy({ copy }: { copy: Copy }) {
                 key={label}
                 type="button"
                 aria-pressed={i === 0}
-                className={`h-8 rounded-full border px-3.5 text-xs ${i === 0 ? "bg-foreground text-background border-foreground" : "bg-background border-border text-foreground/70"}`}
+                className={`bar:relative bar:h-10 bar:px-4 bar:text-sm bar:before:absolute bar:before:-inset-x-[3px] bar:before:-inset-y-2 bar:before:rounded-full h-8 rounded-full border px-3.5 text-xs ${i === 0 ? "bg-foreground text-background border-foreground" : "bg-background border-border text-foreground/70"}`}
               >
                 {label}
               </button>

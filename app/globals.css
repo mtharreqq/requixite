@@ -537,8 +537,10 @@ html {
     padding: 0 14px;
     font-size: 14px;
   }
+  /* The halo hangs off the padding box, inside the 1px border: 3px more
+     each side reaches 44. */
   .composer-chip::before {
-    inset: -2px;
+    inset: -3px;
   }
   .tap-area::before {
     inset: -12px -6px;
