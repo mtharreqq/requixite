@@ -288,7 +288,7 @@ export function CloseIntoChat({
         <div className="flex w-full justify-center">{children}</div>
         <section
           id="contact"
-          className="mx-auto flex w-full max-w-lg flex-col gap-3 px-4 pt-6 pb-[calc(env(safe-area-inset-bottom)+2.5rem)] md:max-w-xl"
+          className="bar:pb-[max(env(safe-area-inset-bottom),12px)] mx-auto flex w-full max-w-lg flex-col gap-3 px-4 pt-6 pb-16 md:max-w-xl"
         >
           <div className="flex items-end gap-2">
             <Avatar locale={locale} />
@@ -352,7 +352,7 @@ export function CloseIntoChat({
         inert={phase === 0}
         className="fixed inset-0 z-0"
       >
-        <div className="mx-auto flex h-full w-full max-w-lg flex-col justify-end gap-3 px-4 pb-[calc(env(safe-area-inset-bottom)+2.5rem)] md:max-w-xl">
+        <div className="bar:pb-[max(env(safe-area-inset-bottom),12px)] mx-auto flex h-full w-full max-w-lg flex-col justify-end gap-3 px-4 pb-16 md:max-w-xl">
           <div className="flex items-end gap-2">
             <Avatar locale={locale} />
             <div className="flex min-w-0 flex-1 flex-col gap-1">

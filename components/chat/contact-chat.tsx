@@ -74,7 +74,7 @@ export function ContactChat({ locale }: { locale: Locale }) {
       aria-labelledby="contact-title"
       // One screen: the messages over the composer, scrolling on their own
       // once they outgrow it, under the top bar's fade.
-      className="flex h-svh flex-col pb-[calc(env(safe-area-inset-bottom)+2.5rem)]"
+      className="bar:pb-[max(env(safe-area-inset-bottom),12px)] flex h-svh flex-col pb-16"
     >
       <h1 id="contact-title" className="sr-only">
         {copy.cta.title}
