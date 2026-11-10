@@ -85,7 +85,7 @@ export type CaseStudyCopy = typeof english;
 const indonesian: CaseStudyCopy = {
   title: "rantai.dev, dari buatan AI jadi rapi",
   description:
-    "Bagaimana saya mengubah website RantAI yang dibuat dengan AI jadi situs yang jelas, cepat, dua bahasa, dan punya CMS sendiri.",
+    "Bagaimana aku mengubah website RantAI yang dibuat dengan AI jadi situs yang jelas, cepat, dua bahasa, dan punya CMS sendiri.",
   meta: [
     ["Klien", "RantAI"],
     ["Peran", "Desain dan pengembangan"],
@@ -119,8 +119,8 @@ const indonesian: CaseStudyCopy = {
     {
       title: "Eksplorasi",
       body: [
-        "Saya mulai di Figma, mencoba beberapa arah hero berdampingan: headline polos, grid produk, dan adegan yang menampilkan produknya sedang berjalan. Yang terakhir menang, karena menunjukkan hasil kerjanya, bukan sekadar menjelaskan.",
-        "Dari situ, setiap halaman saya susun di sekitar satu pertanyaan pengunjung: ini apa, bisa bantu saya apa, dan bagaimana mulainya.",
+        "Aku mulai di Figma, mencoba beberapa arah hero berdampingan: headline polos, grid produk, dan adegan yang menampilkan produknya sedang berjalan. Yang terakhir menang, karena menunjukkan hasil kerjanya, bukan sekadar menjelaskan.",
+        "Dari situ, setiap halaman aku susun di sekitar satu pertanyaan pengunjung: ini apa, bisa bantu aku apa, dan bagaimana mulainya.",
       ],
     },
     {

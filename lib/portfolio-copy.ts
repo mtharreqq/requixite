@@ -295,12 +295,6 @@ const english = {
     copyFailed: "Couldn't copy. Try sending an email instead.",
     send: "Send email",
     subject: "Honest take on my app — Requixite",
-    updated: "Updated",
-    dateLocale: "en-US",
-    source: "Source code",
-    aboutName: "About Requixite",
-    nameMeaning:
-      "Requixite is my personal studio. Three words guide the work: Precise, for care in the details. Exquisite, for things worth looking at. Requisite, for what people actually need.",
   },
   rail: {
     navigation: "Page sections",
@@ -380,12 +374,12 @@ const indonesian: PortfolioCopy = {
       typing: "Tharreq sedang mengetik",
       greeting: [
         "Halo! 👋",
-        "Kirim link aplikasimu. Saya balas dengan 3 hal yang paling perlu dibenahi, gratis.",
+        "Kirim link aplikasimu. Aku balas dengan 3 hal yang paling perlu dibenahi, gratis.",
       ],
       placeholder: "Tempel link, atau ceritakan aplikasimu…",
       send: "Kirim",
       pick: "Siap. Mau dikirim lewat mana?",
-      moving: "Siap! Kita lanjut di halaman kontak, ya. Saya antar ke sana…",
+      moving: "Siap! Kita lanjut di halaman kontak, ya. Aku antar ke sana…",
       via: "Kirim lewat",
       subject: "Minta honest take untuk aplikasiku — Requixite",
       copied: "Pesan sudah disalin. Tempel di DM, ya.",
@@ -579,12 +573,12 @@ const indonesian: PortfolioCopy = {
     note: "Tharreq manusia dan bisa salah.",
     noteTip:
       "Makanya tiap detail dicek dua kali dan dikerjain sebaik mungkin. Mulai gratis, harga pasti sebelum kerja berbayar.",
-    ask: "Saya tertarik dengan {plan}. Aplikasi saya: ",
+    ask: "Aku tertarik dengan {plan}. Aplikasiku: ",
   },
   experience: {
     title: "Yang akan mengerjakan",
     intro:
-      "Saya sendiri, langsung. Setiap hari saya mendesain dan membangun antarmuka, jadi detailnya saya perbaiki langsung di kodemu, bukan di mockup yang harus dibangun ulang orang lain.",
+      "Aku sendiri, langsung. Setiap hari aku mendesain dan membangun antarmuka, jadi detailnya aku perbaiki langsung di kodemu, bukan di mockup yang harus dibangun ulang orang lain.",
     education: "Teknik Komputer, Telkom University · IPK 3,93",
     items: [
       {
@@ -614,12 +608,6 @@ const indonesian: PortfolioCopy = {
     copyFailed: "Email belum tersalin. Coba tombol Kirim email.",
     send: "Kirim email",
     subject: "Minta honest take untuk aplikasiku — Requixite",
-    updated: "Diperbarui",
-    dateLocale: "id-ID",
-    source: "Kode sumber",
-    aboutName: "Tentang Requixite",
-    nameMeaning:
-      "Requixite adalah nama studio personal saya. Pegangannya tiga kata: Precise, teliti sampai ke detail. Exquisite, enak dilihat dan dinikmati. Requisite, menjawab kebutuhan yang nyata.",
   },
   rail: {
     navigation: "Bagian halaman",
