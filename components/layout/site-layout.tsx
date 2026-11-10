@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { ThemeColorSync } from "@/providers/theme-color-sync";
 import { SmoothScroll } from "@/components/layout/smooth-scroll";
+import { LangHint } from "@/components/layout/lang-hint";
 import "@/app/globals.css";
 import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
 
@@ -73,6 +74,7 @@ export function SiteLayout({
           <ThemeColorSync />
           <SmoothScroll />
           {children}
+          <LangHint locale={locale} />
         </ThemeProvider>
         <SpeedInsights />
         <Analytics />
