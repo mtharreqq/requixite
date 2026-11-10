@@ -11,6 +11,7 @@ export function CaseStudyPage({ locale }: { locale: Locale }) {
     <SubPage
       locale={locale}
       path="/work/rantai"
+      title={copy.title}
       sections={[
         { id: "intro", label: getPortfolioCopy(locale).rail.intro },
         ...copy.sections.map((s, i) => ({ id: `part-${i}`, label: s.title })),

@@ -19,13 +19,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { openChat } from "@/lib/chat-events";
-import { ContactIcons, FooterMeta } from "@/components/shared/connect-section";
+import { ContactIcons } from "@/components/shared/connect-section";
 
 // The composer pieces the sub-pages share with the home story, apart from it
 // so they don't load the whole story.
 
 type Offer = PortfolioCopy["offer"];
-type Contact = PortfolioCopy["contact"];
 
 /** A message box that opens the chat dialog with its text on send. */
 export function useDraft() {
@@ -72,13 +71,12 @@ export function Send({
   );
 }
 
-/** Under every composer: the note and "© Requixite • v…"; stacked tight and
- * centered on phones, clear of the composer's buttons. */
-export function Foot({ offer, contact }: { offer: Offer; contact: Contact }) {
+/** Under every composer: the note, centered. The © line lives in the
+ * avatar's menu, out of the chat's way. */
+export function Foot({ offer }: { offer: Offer }) {
   return (
-    <div className="foot bar:text-[13px] bar:mt-3 mt-2 flex flex-col items-center gap-1 px-1 text-xs md:flex-row md:items-baseline md:justify-between md:gap-4">
+    <div className="foot bar:text-[13px] bar:mt-3 mt-2 flex justify-center px-1 text-xs">
       <Note offer={offer} />
-      <FooterMeta copy={contact} />
     </div>
   );
 }
@@ -135,18 +133,22 @@ export function AskBox({
   locale,
   title,
   placeholder,
+  draft,
 }: {
   locale: Locale;
   title?: string;
   /** Long, and short for phones; the home composer's by default. */
   placeholder?: { placeholder: string; short: string };
+  /** Its draft, when something else fills it too (a picked plan). */
+  draft?: ReturnType<typeof useDraft>;
 }) {
   const { review: copy, offer, contact } = getPortfolioCopy(locale);
   const hint = usePlaceholder(
     placeholder?.placeholder ?? copy.cta.placeholder,
     placeholder?.short ?? copy.cta.short,
   );
-  const { text, setText, send, onKeyDown } = useDraft();
+  const own = useDraft();
+  const { text, setText, send, onKeyDown } = draft ?? own;
   return (
     <div>
       <div className="composer" data-mode="cta" style={{ borderRadius: 22 }}>
@@ -171,7 +173,7 @@ export function AskBox({
           </span>
         </div>
       </div>
-      <Foot offer={offer} contact={contact} />
+      <Foot offer={offer} />
     </div>
   );
 }
