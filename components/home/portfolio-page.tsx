@@ -47,7 +47,14 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
         copy={copy.rail}
         locale={locale}
         sections={(
-          ["review", "vibecoded", "feedback", "handoff", "offer"] as const
+          [
+            "review",
+            "vibecoded",
+            "feedback",
+            "handoff",
+            "offer",
+            "more",
+          ] as const
         ).map((id) => ({ id, label: copy.rail[id] }))}
       />
     </PortfolioMotion>

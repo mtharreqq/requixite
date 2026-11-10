@@ -11,6 +11,7 @@ export function QuickReply({
   label,
   short,
   icon,
+  bubble,
   className,
   ...rest
 }: {
@@ -18,9 +19,14 @@ export function QuickReply({
   label: string;
   short?: string;
   icon: ReactNode;
+  /** Dressed as one of my chat bubbles instead of an outlined pill. */
+  bubble?: boolean;
 } & Omit<ComponentProps<"button">, "children">) {
   const cls = cn(
-    "hover:bg-muted bar:relative bar:before:absolute bar:before:inset-x-0 bar:before:-inset-y-1.25 flex h-9 shrink-0 cursor-pointer items-center gap-1 rounded-full border px-3 text-[13px] transition-[background-color,scale] active:scale-95",
+    "bar:relative bar:before:absolute bar:before:inset-x-0 bar:before:-inset-y-1.25 flex h-9 shrink-0 cursor-pointer items-center gap-1 transition-[background-color,scale] active:scale-95",
+    bubble
+      ? "bg-muted hover:bg-foreground/[0.08] rounded-[20px] rounded-bl-md px-3.5 text-[15px]"
+      : "hover:bg-muted rounded-full border px-3 text-[13px]",
     className,
   );
   const body = (

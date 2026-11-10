@@ -122,6 +122,8 @@ const GIVE_POP = 0.707;
 const ONIT = 0.72;
 const FIXALL = 0.735;
 const CTA = 0.87;
+// A little more scroll: "or look around first", with the other pages.
+const MORE = 0.895;
 // Where the pin lets go.
 const END = 0.92;
 // Extra scroll, so a quick flick can't skip a beat: [from, to, extra] plays
@@ -137,6 +139,8 @@ const SLOW = [
   [REPLY + 0.002, REPLY + 0.002, 0.015], // my reply to your question
   [GIVE_POP + 0.003, GIVE_POP + 0.003, 0.012], // you give up
   [ONIT + 0.002, ONIT + 0.002, 0.012], // I'm on it
+  // The pricing, before "look around": its own stop on the rail.
+  [CTA + 0.005, CTA + 0.005, 0.04],
 ] as const;
 const SPAN = END + INTRO + SLOW.reduce((t, [, , l]) => t + l, 0);
 /** Scroll progress (0–1) to story beat. */
@@ -178,6 +182,7 @@ const CHAPTERS = [
   // "So you handed it all to me." in.
   ["handoff", GIVE_GO + 0.016],
   ["offer", CTA],
+  ["more", MORE],
 ] as const;
 
 type Mode = "big" | "dock" | "cta";
@@ -703,6 +708,7 @@ function Composer({
           offer={offer}
           prices={prices}
           locale={locale}
+          p={p}
           onPick={pick}
           later={later}
         />
@@ -795,9 +801,10 @@ function Composer({
 }
 
 // The end's chat, as a real one: dots, my question, dots again, the nudge,
-// the plans, then the quick replies. Milliseconds from the previous step.
-// Question to nudge (dots between) and nudge to plans are both 900ms.
-const CHAT_STEPS = [1200, 300, 600, 900, 350];
+// then the plans. Milliseconds from the previous step. Question to nudge
+// (dots between) and nudge to plans are both 900ms. Scroll on (MORE) for
+// the other pages.
+const CHAT_STEPS = [1200, 300, 600, 900];
 
 /** The end as a chat. The composer stays at the bottom of the screen; each
  * message lands right above it and pushes the earlier ones up, like any
@@ -807,6 +814,7 @@ function ChatPick({
   offer,
   prices,
   locale,
+  p,
   onPick,
   later,
 }: {
@@ -814,14 +822,18 @@ function ChatPick({
   offer: Offer;
   prices: string[];
   locale: Locale;
+  p: P;
   onPick: (name: string) => void;
   later: (delay: number) => React.ComponentProps<typeof m.div>;
 }) {
   const base = locale === "id" ? "/id" : "";
   const reduce = useReducedMotion();
-  // 0 typing, 1 question, 2 typing, 3 nudge, 4 plans, 5 quick replies.
+  // 0 typing, 1 question, 2 typing, 3 nudge, 4 plans.
   // Mounts as the pricing comes in, so scrolling back to it plays again.
-  const [step, setStep] = useState(reduce ? 5 : 0);
+  const [step, setStep] = useState(reduce ? 4 : 0);
+  const [scrolled, setScrolled] = useState(() => p.get() >= MORE);
+  useMotionValueEvent(p, "change", (v) => setScrolled(v >= MORE));
+  const more = scrolled && step >= 4;
   useEffect(() => {
     if (reduce) return;
     let at = 0;
@@ -921,42 +933,52 @@ function ChatPick({
               </m.span>
             )}
           </AnimatePresence>
+          {/* Scroll on: one more message, then the other pages as bubbles. */}
+          <AnimatePresence>
+            {more && (
+              <m.p
+                key="more"
+                {...arrive}
+                exit={{ opacity: 0, transition: { duration: 0.15 } }}
+                className={bubble}
+              >
+                {copy.skip.more}
+              </m.p>
+            )}
+            {more && (
+              <m.nav
+                key="pages"
+                {...arrive}
+                exit={{ opacity: 0, transition: { duration: 0.15 } }}
+                aria-label={copy.skip.more}
+                className="flex gap-1.5"
+              >
+                <QuickReply
+                  href={`${base}/about`}
+                  label={copy.skip.about}
+                  short={copy.skip.short.about}
+                  bubble
+                  icon={<ArrowRight aria-hidden className="size-3" />}
+                />
+                <QuickReply
+                  href={`${base}/work`}
+                  label={copy.skip.work}
+                  short={copy.skip.short.work}
+                  bubble
+                  icon={<ArrowRight aria-hidden className="size-3" />}
+                />
+                <QuickReply
+                  onClick={() => jumpTo(0)}
+                  label={copy.skip.top}
+                  short={copy.skip.short.top}
+                  bubble
+                  icon={<ArrowUp aria-hidden className="size-3" />}
+                />
+              </m.nav>
+            )}
+          </AnimatePresence>
         </div>
       </div>
-      {/* Its room is kept from the start, so the composer never moves. */}
-      <m.nav
-        initial={false}
-        animate={{ opacity: step >= 5 ? 1 : 0, y: step >= 5 ? 0 : 8 }}
-        transition={{ duration: 0.4, ease: EASE }}
-        inert={step < 5}
-        aria-label={copy.skip.more}
-        className="mt-6 flex gap-1.5"
-      >
-        <QuickReply
-          href={`${base}/about`}
-          label={copy.skip.about}
-          short={copy.skip.short.about}
-          icon={
-            <ArrowRight aria-hidden className="text-muted-foreground size-3" />
-          }
-        />
-        <QuickReply
-          href={`${base}/work`}
-          label={copy.skip.work}
-          short={copy.skip.short.work}
-          icon={
-            <ArrowRight aria-hidden className="text-muted-foreground size-3" />
-          }
-        />
-        <QuickReply
-          onClick={() => jumpTo(0)}
-          label={copy.skip.top}
-          short={copy.skip.short.top}
-          icon={
-            <ArrowUp aria-hidden className="text-muted-foreground size-3" />
-          }
-        />
-      </m.nav>
     </div>
   );
 }
@@ -2082,7 +2104,7 @@ export function ReviewStory({
       // nothing slides when you scroll back up.
       className={cn(
         "relative w-full",
-        !still && "-mt-8 h-[1285svh] md:-mt-12 md:h-[1515svh]",
+        !still && "-mt-8 h-[1335svh] md:-mt-12 md:h-[1565svh]",
       )}
     >
       {/* Rail chapters, placed at the scroll spot of their beat. */}
@@ -2098,14 +2120,16 @@ export function ReviewStory({
             }}
           />
         ))}
-      {/* Still: no chapters; #offer is the end of it. */}
-      {still && (
-        <div
-          id="offer"
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0"
-        />
-      )}
+      {/* Still: no chapters; #offer and #more are the end of it. */}
+      {still &&
+        ["offer", "more"].map((id) => (
+          <div
+            key={id}
+            id={id}
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0"
+          />
+        ))}
       <div
         className={cn(
           "flex flex-col gap-6",
