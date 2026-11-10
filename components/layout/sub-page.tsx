@@ -12,6 +12,29 @@ import {
   SectionReveal,
 } from "@/components/shared/portfolio-motion";
 
+/** The closing ask: this page's title over the composer. Phones center the
+ * title, like the fine print under it. */
+function Ask({
+  locale,
+  path,
+  as: Heading = "h2",
+}: {
+  locale: Locale;
+  path: string;
+  as?: "h1" | "h2";
+}) {
+  const { cta } = getPortfolioCopy(locale).review;
+  const ask = cta.pages[path] ?? cta;
+  return (
+    <div className="flex flex-col gap-5">
+      <Heading className="text-center text-xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-left md:text-2xl">
+        {ask.title}
+      </Heading>
+      <AskBox locale={locale} title={ask.title} placeholder={ask} />
+    </div>
+  );
+}
+
 /** About, Work and case studies: their own page, same column, then the
  * story's closing composer and the footer. */
 export function SubPage({
@@ -29,7 +52,6 @@ export function SubPage({
   const copy = getPortfolioCopy(locale);
   // The contact page is only its composer: nothing to scroll to.
   const bare = path === "/contact";
-  const ask = copy.review.cta.pages[path] ?? copy.review.cta;
   return (
     <PortfolioMotion className="bg-background text-foreground selection:bg-foreground selection:text-background flex min-h-screen w-full justify-center overflow-x-clip">
       {/* Long pages scroll under soft edges; Contact is one screen. */}
@@ -44,12 +66,8 @@ export function SubPage({
         {!bare && (
           <>
             <SectionReveal>
-              <section id="contact" className="flex flex-col gap-5">
-                {/* Phones: centered, like the fine print under the composer. */}
-                <h2 className="text-center text-xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-left md:text-2xl">
-                  {ask.title}
-                </h2>
-                <AskBox locale={locale} title={ask.title} placeholder={ask} />
+              <section id="contact">
+                <Ask locale={locale} path={path} />
               </section>
             </SectionReveal>
             {/* Short pages push the footer to the bottom of the screen. */}
@@ -120,12 +138,9 @@ export function ContactPage({ locale }: { locale: Locale }) {
       {/* Fills the first screen (minus main's top padding), centered. */}
       <section
         id="intro"
-        className="flex min-h-[calc(100svh-2.5rem)] flex-col justify-center gap-8 md:min-h-[calc(100svh-3.5rem)]"
+        className="flex min-h-[calc(100svh-2.5rem)] flex-col justify-center md:min-h-[calc(100svh-3.5rem)]"
       >
-        <h1 className="text-[clamp(24px,4.8vw,36px)] leading-tight font-medium tracking-[-0.04em]">
-          {copy.review.cta.title}
-        </h1>
-        <AskBox locale={locale} />
+        <Ask locale={locale} path="/contact" as="h1" />
       </section>
     </SubPage>
   );
