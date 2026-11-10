@@ -121,8 +121,8 @@ export function SubPage({
                     {copy.review.skip.more}
                   </p>
                 </div>
-                {/* Chips to composer: the same gap as between the chips. */}
-                <div className="flex flex-col gap-1.5">
+                {/* Chips to composer: the same 12px as the homepage's end. */}
+                <div className="flex flex-col gap-3">
                   <Suggestions locale={locale} path={path} bare />
                   <AskBox locale={locale} title={ask.title} placeholder={ask} />
                 </div>
