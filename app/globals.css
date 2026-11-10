@@ -563,8 +563,9 @@ html {
   .composer-chip-ghost {
     padding: 0 10px;
   }
+  /* 17px of text + 14 each side: 45. */
   .tap-area::before {
-    inset: -12px -6px;
+    inset: -14px -6px;
   }
   /* Pressed, since there is no hover to answer a tap. */
   .composer-chip:active,

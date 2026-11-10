@@ -2044,6 +2044,25 @@ export function ReviewStory({
   const [atCta, setAtCta] = useState(false);
   const [ended, setEnded] = useState(false);
   const [auto, setAuto] = useAutoplay(ref);
+  // Touch: the pricing chat reaches down to the docked composer's floor.
+  // svh stops above Safari's toolbar, the floor probe doesn't.
+  const [floor, setFloor] = useState(0);
+  useLayoutEffect(() => {
+    const touch = matchMedia(BAR_QUERY);
+    const measure = () =>
+      setFloor(
+        !still && atCta && touch.matches
+          ? Math.round(
+              document
+                .querySelector("[data-dock-floor]")
+                ?.getBoundingClientRect().top ?? 0,
+            )
+          : 0,
+      );
+    measure();
+    addEventListener("resize", measure);
+    return () => removeEventListener("resize", measure);
+  }, [still, atCta]);
   // The intro line starts in the middle of the screen and makes room as the
   // composer grows. Half the stage (its height class) plus the gap, in CSS,
   // so it is right from the first paint. Lifted to the screen's middle
@@ -2091,15 +2110,16 @@ export function ReviewStory({
         className={cn(
           "flex flex-col gap-6",
           // The end is a chat: the composer at the bottom of the screen,
-          // like any chat app, my messages above it, with a little room
-          // under the fine print.
+          // like any chat app, my messages above it. Touch: the fine print
+          // on the docked composer's floor.
           !still &&
             (atCta
-              ? "sticky top-0 h-svh justify-end pb-[calc(env(safe-area-inset-bottom)+2.5rem)] md:pb-16"
+              ? "bar:pb-0 sticky top-0 h-svh justify-end pb-16"
               : "sticky top-0 h-svh justify-center"),
           // Touch: clear of the top bar.
           "bar:pt-[calc(max(env(safe-area-inset-top),12px)+3rem)]",
         )}
+        style={floor ? { height: floor } : undefined}
       >
         {!still && <Skip copy={copy} show={hello} />}
         {!still && auto !== "off" && (
