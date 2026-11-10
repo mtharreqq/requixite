@@ -25,10 +25,13 @@ function Suggestions({
   locale,
   path,
   className,
+  bare,
 }: {
   locale: Locale;
   path: string;
   className?: string;
+  /** No "Or look around first": the title over it says it. */
+  bare?: boolean;
 }) {
   const { skip } = getPortfolioCopy(locale).review;
   const base = locale === "id" ? "/id" : "";
@@ -49,7 +52,7 @@ function Suggestions({
       aria-label={skip.next}
       className={cn("flex flex-col gap-3", className)}
     >
-      <p className="text-muted-foreground text-sm">{skip.more}</p>
+      {!bare && <p className="text-muted-foreground text-sm">{skip.more}</p>}
       {/* Quick replies, as at the end of the home story. */}
       <div className="flex gap-1.5">
         {pages.map(([p, label, short, tip]) => (
@@ -110,11 +113,19 @@ export function SubPage({
               <section id="contact" className="flex flex-col gap-5">
                 {/* As the story's end: the other pages just over the
                     composer, the fine print tight under it. */}
-                <h2 className="text-center text-xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-2xl">
-                  {ask.title}
-                </h2>
-                <Suggestions locale={locale} path={path} />
-                <AskBox locale={locale} title={ask.title} placeholder={ask} />
+                <div className="flex flex-col gap-2">
+                  <h2 className="text-xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-2xl">
+                    {ask.title}
+                  </h2>
+                  <p className="text-muted-foreground text-sm">
+                    {copy.review.skip.more}
+                  </p>
+                </div>
+                {/* Chips to composer: the same gap as between the chips. */}
+                <div className="flex flex-col gap-1.5">
+                  <Suggestions locale={locale} path={path} bare />
+                  <AskBox locale={locale} title={ask.title} placeholder={ask} />
+                </div>
               </section>
             </SectionReveal>
             {/* Short pages push the footer to the bottom of the screen. */}
