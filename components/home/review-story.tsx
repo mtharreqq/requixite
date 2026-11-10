@@ -1863,12 +1863,13 @@ export function ReviewStory({
   }, [still]);
   // The intro line starts in the middle of the screen and makes room as the
   // composer grows. Half the stage (its height class) plus the gap, in CSS,
-  // so it is right from the first paint.
-  const captionY = useTransform(
-    p,
-    (v): string =>
-      `calc(${1 - ease(clamp(v, GROW[0], GROW[1]))} * (var(--stage-h) + 24px) / 2)`,
-  );
+  // so it is right from the first paint. Lifted to the screen's middle
+  // (see --bar-lift), and on the hello half the chip row more.
+  const captionY = useTransform(p, (v): string => {
+    const grow = 1 - ease(clamp(v, GROW[0], GROW[1]));
+    const hi = 1 - ease(clamp(v, HELLO_END - 0.02, HELLO_END));
+    return `calc(${grow} * ((var(--stage-h) + 24px) / 2 - var(--bar-lift)) - ${hi} * var(--hello-lift))`;
+  });
 
   return (
     <section
@@ -1947,7 +1948,9 @@ export function ReviewStory({
                   aria-hidden
                   className="grid grid-cols-1 text-[clamp(24px,4.8vw,36px)] leading-tight font-medium tracking-[-0.04em]"
                 >
-                  <Caption from={-1} to={HELLO_END} p={p}>
+                  {/* At the bottom of the stack, so the chips hang right
+                    under it even when a later caption runs a line longer. */}
+                  <Caption from={-1} to={HELLO_END} p={p} end>
                     {/* Painted as-is on load (it is the LCP); scrolling back
                       to the top replays the pop and the word rise. */}
                     <m.span

@@ -290,6 +290,21 @@ html {
     --stage-h: min(52rem, 100svh - 15rem);
   }
 }
+/* Lifts for the lines that sit alone mid-screen before the stage grows.
+   --hello-lift: half the shortcut row under the hello (chip plus its 24px
+   margin; chips are 40px on touch), so the two center together.
+   --bar-lift: half the touch top bar's clearance, so they center on the
+   screen rather than on the space under the bar. */
+:root {
+  --hello-lift: 27px;
+  --bar-lift: 0px;
+}
+@media (max-width: 767px), (pointer: coarse), (pointer: none) {
+  :root {
+    --hello-lift: 32px;
+    --bar-lift: calc((max(env(safe-area-inset-top), 12px) + 3rem) / 2);
+  }
+}
 
 /* Radix measures the actual content: opening and closing both preserve layout. */
 @keyframes disclosure-open {
@@ -541,6 +556,10 @@ html {
      each side reaches 44. */
   .composer-chip::before {
     inset: -3px;
+  }
+  /* No outline to fill, so less side padding: the hello's four fit a phone. */
+  .composer-chip-ghost {
+    padding: 0 10px;
   }
   .tap-area::before {
     inset: -12px -6px;
