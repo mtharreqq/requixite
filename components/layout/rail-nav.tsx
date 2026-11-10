@@ -28,6 +28,7 @@ import {
   User,
 } from "lucide-react";
 import { smoothScrollTo } from "@/components/layout/smooth-scroll";
+import { pickLang } from "@/components/layout/lang-hint";
 import {
   HoverCard,
   HoverCardContent,
@@ -46,10 +47,6 @@ const MINOR_PER_SECTION = 2;
 const STEP = MINOR_PER_SECTION + 1;
 // The point of the viewport (from the top) that counts as "currently reading".
 const READ_LINE = 0.4;
-// The visitor's own language pick: proxy.ts honours it over the browser's.
-const pickLang = (lang: string) => {
-  document.cookie = `lang=${lang}; path=/; max-age=31536000; samesite=lax`;
-};
 
 /** Where a click on a section scrolls to. Most land with their top at the
  * top; an anchor marked data-on-read-line sits READ_LINE below the spot
