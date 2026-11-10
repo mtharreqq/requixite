@@ -13,7 +13,7 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import {
   ArrowDown,
-  ArrowRight,
+  Briefcase,
   ArrowUp,
   Check,
   LayoutGrid,
@@ -24,6 +24,7 @@ import {
   Plus,
   Settings,
   Sparkles,
+  User,
   Users,
   Wallet,
 } from "lucide-react";
@@ -40,7 +41,11 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
-import { type Locale, type PortfolioCopy } from "@/lib/portfolio-copy";
+import {
+  getPortfolioCopy,
+  type Locale,
+  type PortfolioCopy,
+} from "@/lib/portfolio-copy";
 import {
   Tooltip,
   TooltipContent,
@@ -50,6 +55,7 @@ import { SplitReveal } from "@/components/shared/split-reveal";
 import { jumpTo, smoothScrollTo } from "@/components/layout/smooth-scroll";
 import { ContactIcons } from "@/components/shared/connect-section";
 import { QuickReply } from "@/components/shared/quick-reply";
+import { MenuAvatar } from "@/components/shared/menu-avatar";
 import {
   Foot,
   Send,
@@ -58,6 +64,7 @@ import {
 } from "@/components/chat/ask-box";
 import { cn } from "@/lib/utils";
 import { BAR_QUERY } from "@/lib/touch";
+import { usePrices } from "@/lib/prices";
 import {
   HoverCard,
   HoverCardContent,
@@ -288,14 +295,6 @@ const LOGOS = [
   ["antigravity", 8],
 ] as const;
 
-// Starting prices per plan, in whole units. Free plan first.
-const PRICES = {
-  IDR: [0, 1_500_000, 3_000_000],
-  USD: [0, 250, 600],
-};
-// Set by proxy.ts from Vercel's geo header. Missing (dev, other hosts): the
-// page language decides.
-const country = () => document.cookie.match(/(?:^|; )country=([A-Z]{2})/)?.[1];
 const noop = () => () => {};
 
 const STILL = "(prefers-reduced-motion: reduce), (max-height: 600px)";
@@ -436,25 +435,6 @@ function Tile({
       />
     </m.span>
   );
-}
-
-function usePrices(locale: Locale) {
-  const fallback = locale === "id" ? "ID" : "";
-  const where = useSyncExternalStore(
-    noop,
-    () => country() ?? fallback,
-    () => fallback,
-  );
-  const currency = where === "ID" ? "IDR" : "USD";
-  const format = new Intl.NumberFormat(locale === "id" ? "id-ID" : "en-US", {
-    style: "currency",
-    currency,
-    currencyDisplay: "narrowSymbol",
-    notation: currency === "IDR" ? "compact" : "standard",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 1,
-  });
-  return PRICES[currency].map((n) => (n ? format.format(n) : ""));
 }
 
 /** A plan chip; hovering it opens a card that plays what the plan does. */
@@ -793,12 +773,18 @@ function Composer({
       </m.div>
       {cta && (
         <m.div {...later(0.9)}>
-          <Foot offer={offer} contact={contact} />
+          <Foot offer={offer} />
         </m.div>
       )}
     </m.div>
   );
 }
+
+/** A quick reply's icon, the site menu's own for a page (an arrow for the
+ * way back up): on hover it
+ * grows a touch and darkens; it just darkens for reduced motion. */
+const NUDGE =
+  "text-muted-foreground group-hover:text-foreground size-4 transition-[color,scale] duration-200 ease-out group-hover:scale-110 motion-reduce:group-hover:scale-100";
 
 // The end's chat, as a real one: dots, my question, dots again, the nudge,
 // then the plans. Milliseconds from the previous step. Question to nudge
@@ -864,13 +850,7 @@ function ChatPick({
     <div className="mb-3">
       <div className="flex items-end gap-2">
         <m.span {...head} className="shrink-0">
-          <Image
-            src="/avatar.png"
-            alt=""
-            width={28}
-            height={28}
-            className="rounded-full"
-          />
+          <MenuAvatar label={getPortfolioCopy(locale).rail.pages.menu} />
         </m.span>
         <div className="flex min-w-0 flex-1 flex-col gap-1">
           <m.p {...head} className="text-muted-foreground ml-1 text-xs">
@@ -959,14 +939,14 @@ function ChatPick({
                     href={`${base}/about`}
                     label={copy.skip.about}
                     short={copy.skip.short.about}
-                    icon={<ArrowRight aria-hidden className="size-3.5" />}
+                    icon={<User aria-hidden className={NUDGE} />}
                   />
                   <QuickReply
                     cell
                     href={`${base}/work`}
                     label={copy.skip.work}
                     short={copy.skip.short.work}
-                    icon={<ArrowRight aria-hidden className="size-3.5" />}
+                    icon={<Briefcase aria-hidden className={NUDGE} />}
                     className="border-background border-x"
                   />
                   <QuickReply
@@ -974,7 +954,7 @@ function ChatPick({
                     onClick={() => jumpTo(0)}
                     label={copy.skip.top}
                     short={copy.skip.short.top}
-                    icon={<ArrowUp aria-hidden className="size-3.5" />}
+                    icon={<ArrowUp aria-hidden className={NUDGE} />}
                   />
                 </nav>
               </m.div>
@@ -2197,13 +2177,10 @@ export function ReviewStory({
                       }
                       transition={{ type: "spring", ...pop, delay: 0.1 }}
                     >
-                      <Image
-                        src="/avatar.png"
-                        alt=""
-                        width={40}
-                        height={40}
-                        priority
-                        className="block size-[1em] rounded-full"
+                      <MenuAvatar
+                        inline
+                        size={40}
+                        label={getPortfolioCopy(locale).rail.pages.menu}
                       />
                     </m.span>
                     <SplitReveal

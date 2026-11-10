@@ -1,6 +1,7 @@
 "use client";
 
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
+import { SiteMeta } from "@/components/shared/connect-section";
 import {
   useEffect,
   useRef,
@@ -33,6 +34,8 @@ import {
 import type { Locale } from "@/lib/portfolio-copy";
 import { Sheet, sheetRow } from "@/components/ui/sheet";
 import { BAR_QUERY } from "@/lib/touch";
+import { MENU_OPEN_EVENT } from "@/lib/menu-events";
+import { Dialog } from "radix-ui";
 
 /** A tick on the rail: an element id on this page and its label. */
 export type RailSection = { id: string; label: string };
@@ -47,7 +50,7 @@ const READ_LINE = 0.4;
  * it stands for (so the rail turns to it right there), so it lands that
  * much higher. */
 function scrollTarget(el: HTMLElement) {
-  const top = el.getBoundingClientRect().top + window.scrollY;
+  const top = pageTop(el);
   return el.hasAttribute("data-on-read-line")
     ? top - window.innerHeight * READ_LINE
     : top;
@@ -73,6 +76,22 @@ const FLASH_MS = 1200;
  * progress moves linearly between them as the reader scrolls through.
  * The top of the page is always 0 and the bottom is always 1.
  */
+/** A section's top on the page. Inside a page that closes into the chat
+ * (data-page-top: where it starts) the page holds still and shrinks at the
+ * end, so its sections count from where they sit in it, not on screen. */
+function pageTop(el: HTMLElement) {
+  const page = el.closest<HTMLElement>("[data-page-top]");
+  if (!page) return el.getBoundingClientRect().top + window.scrollY;
+  let y = 0;
+  for (let n: HTMLElement | null = el; n && n !== page; ) {
+    y += n.offsetTop;
+    n = n.offsetParent as HTMLElement | null;
+    // Offsets start inside each parent's border.
+    if (n && n !== page) y += n.clientTop;
+  }
+  return Number(page.dataset.pageTop) + y;
+}
+
 function readProgress(ids: string[]): number {
   const vh = window.innerHeight;
   const maxScroll = Math.max(document.documentElement.scrollHeight - vh, 1);
@@ -80,7 +99,7 @@ function readProgress(ids: string[]): number {
   // clamped to what is actually reachable.
   const stops = ids.map((id) => {
     const el = document.getElementById(id);
-    const top = el ? el.getBoundingClientRect().top + window.scrollY : 0;
+    const top = el ? pageTop(el) : 0;
     return Math.min(Math.max(top - vh * READ_LINE, 0), maxScroll);
   });
   stops[0] = 0;
@@ -235,24 +254,59 @@ function AvatarButton(props: React.ComponentProps<"button">) {
   );
 }
 
-/** Touch: pages, theme and language in a sheet, like an app's settings. */
+/** The menu as a dialog in the middle of a wide screen, for an avatar of
+ * mine clicked outside the rail (the rail's own opens its hover card). */
+function MenuDialog({
+  open,
+  onOpenChange,
+  title,
+  children,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-[60] bg-black/30 backdrop-blur-[2px]" />
+        <Dialog.Content
+          aria-describedby={undefined}
+          className="bg-popover text-popover-foreground border-border/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-[60] w-[min(22rem,calc(100%-2rem))] -translate-x-1/2 -translate-y-1/2 rounded-[22px] border p-2 shadow-2xl outline-none"
+        >
+          <Dialog.Title className="text-muted-foreground px-3 pt-2 pb-1 text-[13px] font-medium">
+            {title}
+          </Dialog.Title>
+          {children}
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
+
+/** Pages, theme and language, like an app's settings: in a sheet on touch,
+ * or a dialog on a wide screen. */
 function MenuSheet({
   copy,
   locale,
   path,
   open,
   onOpenChange,
+  as = "sheet",
 }: {
   copy: RailCopy;
   locale: Locale;
   path: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  as?: "sheet" | "dialog";
 }) {
   const { theme, setTheme } = useTheme();
   const base = locale === "id" ? "/id" : "";
+  const Shell = as === "dialog" ? MenuDialog : Sheet;
   return (
-    <Sheet open={open} onOpenChange={onOpenChange} title={copy.pages.menu}>
+    <Shell open={open} onOpenChange={onOpenChange} title={copy.pages.menu}>
       <nav aria-label={copy.pages.menu} className="flex flex-col">
         {PAGES.map(([p, key, Icon]) => (
           <Link
@@ -306,7 +360,9 @@ function MenuSheet({
         <Languages aria-hidden className="text-muted-foreground size-[18px]" />
         {locale === "id" ? "English" : "Bahasa Indonesia"}
       </Link>
-    </Sheet>
+      <span aria-hidden className="bg-border mx-3 my-2 block h-px" />
+      <SiteMeta className="text-muted-foreground px-3 pt-1 pb-2 text-center text-[13px]" />
+    </Shell>
   );
 }
 
@@ -323,7 +379,17 @@ function Menu({
   path: string;
   touch: boolean;
 }) {
+  // Contact is the chat with me: on a wide screen my avatar there (by the
+  // bubbles) opens the menu, so the rail doesn't show a second one.
+  const avatar = touch || path !== "/contact";
   const [open, setOpen] = useState(false);
+  // An avatar elsewhere asked: the sheet on touch, a dialog on a wide screen.
+  const [dialog, setDialog] = useState(false);
+  useEffect(() => {
+    const onOpen = () => (touch ? setOpen(true) : setDialog(true));
+    addEventListener(MENU_OPEN_EVENT, onOpen);
+    return () => removeEventListener(MENU_OPEN_EVENT, onOpen);
+  }, [touch]);
   const base = locale === "id" ? "/id" : "";
   if (touch)
     return (
@@ -345,52 +411,66 @@ function Menu({
       </>
     );
   return (
-    <HoverCard
-      open={open}
-      onOpenChange={setOpen}
-      openDelay={80}
-      closeDelay={150}
-    >
-      <HoverCardTrigger asChild>
-        <AvatarButton
-          aria-label={copy.pages.menu}
-          aria-expanded={open}
-          onClick={() => setOpen((o) => !o)}
-        />
-      </HoverCardTrigger>
-      <HoverCardContent
-        side="right"
-        align="end"
-        sideOffset={24}
-        className="bg-popover/95 border-border/80 w-44 rounded-xl p-1 shadow-xl backdrop-blur-md"
-      >
-        <nav aria-label={copy.pages.menu} className="flex flex-col">
-          {PAGES.map(([p, key, Icon]) => (
-            <Link
-              key={p}
-              href={base + p || "/"}
-              onClick={() => setOpen(false)}
-              aria-current={isHere(path, p) ? "page" : undefined}
-              className={row}
-            >
-              <Icon aria-hidden className="size-3.5" />
-              {copy.pages[key]}
-            </Link>
-          ))}
-          <span aria-hidden className="bg-border mx-2 my-1 h-px" />
-          <ThemeMenu copy={copy.pages} />
-          <Link
-            href={locale === "id" ? path || "/" : `/id${path}`}
-            hrefLang={locale === "id" ? "en" : "id"}
-            lang={locale === "id" ? "en" : "id"}
-            className={row}
+    <>
+      <MenuSheet
+        as="dialog"
+        copy={copy}
+        locale={locale}
+        path={path}
+        open={dialog}
+        onOpenChange={setDialog}
+      />
+      {avatar && (
+        <HoverCard
+          open={open}
+          onOpenChange={setOpen}
+          openDelay={80}
+          closeDelay={150}
+        >
+          <HoverCardTrigger asChild>
+            <AvatarButton
+              aria-label={copy.pages.menu}
+              aria-expanded={open}
+              onClick={() => setOpen((o) => !o)}
+            />
+          </HoverCardTrigger>
+          <HoverCardContent
+            side="right"
+            align="end"
+            sideOffset={24}
+            className="bg-popover/95 border-border/80 w-44 rounded-xl p-1 shadow-xl backdrop-blur-md"
           >
-            <Languages aria-hidden className="size-3.5" />
-            {locale === "id" ? "English" : "Bahasa Indonesia"}
-          </Link>
-        </nav>
-      </HoverCardContent>
-    </HoverCard>
+            <nav aria-label={copy.pages.menu} className="flex flex-col">
+              {PAGES.map(([p, key, Icon]) => (
+                <Link
+                  key={p}
+                  href={base + p || "/"}
+                  onClick={() => setOpen(false)}
+                  aria-current={isHere(path, p) ? "page" : undefined}
+                  className={row}
+                >
+                  <Icon aria-hidden className="size-3.5" />
+                  {copy.pages[key]}
+                </Link>
+              ))}
+              <span aria-hidden className="bg-border mx-2 my-1 h-px" />
+              <ThemeMenu copy={copy.pages} />
+              <Link
+                href={locale === "id" ? path || "/" : `/id${path}`}
+                hrefLang={locale === "id" ? "en" : "id"}
+                lang={locale === "id" ? "en" : "id"}
+                className={row}
+              >
+                <Languages aria-hidden className="size-3.5" />
+                {locale === "id" ? "English" : "Bahasa Indonesia"}
+              </Link>
+              <span aria-hidden className="bg-border mx-2 my-1 h-px" />
+              <SiteMeta className="text-muted-foreground px-2.5 pt-0.5 pb-1.5 text-[11px]" />
+            </nav>
+          </HoverCardContent>
+        </HoverCard>
+      )}
+    </>
   );
 }
 
@@ -755,7 +835,7 @@ export function RailNav({
                   className={`absolute left-11 rounded-md px-1.5 py-0.5 text-xs whitespace-nowrap backdrop-blur-sm transition-[opacity,color,background-color] duration-150 ${
                     isHovered
                       ? "bg-muted text-foreground font-medium opacity-100"
-                      : `bg-background/95 shadow-xs ${
+                      : `bg-background/95 ${
                           scrubbing
                             ? "opacity-100"
                             : isActive && flash

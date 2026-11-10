@@ -24,14 +24,18 @@ export function QuickReply({
   cell?: boolean;
 } & Omit<ComponentProps<"button">, "children">) {
   const cls = cn(
-    "flex cursor-pointer items-center gap-1",
+    // group: the icon nudges toward where it goes on hover (see callers).
+    "group flex cursor-pointer items-center gap-1",
     cell
-      ? "hover:bg-foreground/[0.04] h-11 min-w-0 justify-center px-2 text-[15px] transition-[background-color,opacity] active:opacity-60"
+      ? "hover:bg-foreground/[0.04] h-11 min-w-0 justify-center gap-1.5 px-2 text-[15px] transition-[background-color,opacity] active:opacity-60"
       : "hover:bg-muted bar:relative bar:before:absolute bar:before:inset-x-0 bar:before:-inset-y-1.25 h-9 shrink-0 rounded-full border px-3 text-[13px] transition-[background-color,scale] active:scale-95",
     className,
   );
+  // A cell leads with its icon, like the rows in the site menu; a pill
+  // trails it, like an arrow.
   const body = (
     <>
+      {cell && icon}
       {short ? (
         <>
           <span className="md:hidden">{short}</span>
@@ -40,7 +44,7 @@ export function QuickReply({
       ) : (
         label
       )}
-      {icon}
+      {!cell && icon}
     </>
   );
   if (href)

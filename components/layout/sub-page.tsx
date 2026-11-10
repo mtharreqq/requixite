@@ -1,50 +1,29 @@
 import Link from "next/link";
 import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
-import { FooterWordmark } from "@/components/layout/footer-wordmark";
+import { CloseIntoChat } from "@/components/layout/close-into-chat";
 import { RailNav, type RailSection } from "@/components/layout/rail-nav";
-import { AskBox } from "@/components/chat/ask-box";
+import { ContactChat } from "@/components/chat/contact-chat";
 import { ChatDialog } from "@/components/chat/chat-dialog-lazy";
 import { ExperienceSection } from "@/components/shared/experience-section";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import {
-  PortfolioMotion,
-  SectionReveal,
-} from "@/components/shared/portfolio-motion";
+import { PortfolioMotion } from "@/components/shared/portfolio-motion";
+import { cn } from "@/lib/utils";
 
-/** The closing ask: this page's title over the composer. Phones center the
- * title, like the fine print under it. */
-function Ask({
-  locale,
-  path,
-  as: Heading = "h2",
-}: {
-  locale: Locale;
-  path: string;
-  as?: "h1" | "h2";
-}) {
-  const { cta } = getPortfolioCopy(locale).review;
-  const ask = cta.pages[path] ?? cta;
-  return (
-    <div className="flex flex-col gap-5">
-      <Heading className="text-center text-xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-left md:text-2xl">
-        {ask.title}
-      </Heading>
-      <AskBox locale={locale} title={ask.title} placeholder={ask} />
-    </div>
-  );
-}
-
-/** About, Work and case studies: their own page, same column, then the
- * story's closing composer and the footer. */
+/** About, Work and case studies: their own page, same column. Past its end
+ * it closes into the chat with me (CloseIntoChat): a preview card of it, my
+ * question, the other pages, the composer. Contact is just the composer. */
 export function SubPage({
   locale,
   path,
+  title = "",
   sections,
   children,
 }: {
   locale: Locale;
   path: string;
+  /** The page's name, on its preview card in the chat. */
+  title?: string;
   /** This page's sections for the rail; contact is added at the end. */
   sections: RailSection[];
   children: React.ReactNode;
@@ -52,36 +31,33 @@ export function SubPage({
   const copy = getPortfolioCopy(locale);
   // The contact page is only its composer: nothing to scroll to.
   const bare = path === "/contact";
-  return (
-    <PortfolioMotion className="bg-background text-foreground selection:bg-foreground selection:text-background flex min-h-screen w-full justify-center overflow-x-clip">
-      {/* Long pages scroll under soft edges; Contact is one screen. */}
-      {!bare && (
-        <>
-          <div aria-hidden className="edge-fade top-0" />
-          <div aria-hidden className="edge-fade bottom-0 rotate-180" />
-        </>
+  const main = (
+    <main
+      className={cn(
+        "tablet:max-w-2xl tablet:px-8 flex w-full max-w-lg flex-col gap-y-14 px-4 md:max-w-xl md:gap-y-16 md:px-4",
+        // Contact is one screen, its chat at the bottom: no padding round
+        // it. Long pages: clear of the top bar, and room under the last
+        // line, so you scroll on past the end a little before it closes.
+        bare
+          ? ""
+          : "bar:pt-[calc(max(env(safe-area-inset-top),12px)+4.5rem)] pt-10 pb-[35svh] md:pt-14",
       )}
-      <main className="tablet:max-w-2xl tablet:px-8 tablet:pb-[calc(2rem+env(safe-area-inset-bottom))] bar:pt-[calc(max(env(safe-area-inset-top),12px)+4.5rem)] flex w-full max-w-lg flex-col gap-y-14 px-4 pt-10 pb-[calc(2rem+env(safe-area-inset-bottom))] md:max-w-xl md:gap-y-16 md:px-4 md:pt-14 md:pb-0">
-        {children}
-        {!bare && (
-          <>
-            <SectionReveal>
-              <section id="contact">
-                <Ask locale={locale} path={path} />
-              </section>
-            </SectionReveal>
-            {/* Short pages push the footer to the bottom of the screen. */}
-            <div className="mt-auto">
-              <footer className="relative overflow-hidden">
-                <FooterWordmark
-                  text="Requixite"
-                  className="mb-[-0.2em] text-[clamp(3.5rem,15vw,7.5rem)] leading-[0.85] font-semibold tracking-[-0.06em]"
-                />
-              </footer>
-            </div>
-          </>
-        )}
-      </main>
+    >
+      {children}
+    </main>
+  );
+  return (
+    <PortfolioMotion
+      layout
+      className="bg-background text-foreground selection:bg-foreground selection:text-background flex min-h-screen w-full justify-center overflow-x-clip"
+    >
+      {bare ? (
+        main
+      ) : (
+        <CloseIntoChat locale={locale} path={path} title={title}>
+          {main}
+        </CloseIntoChat>
+      )}
       <ChatDialog copy={copy.hero.chat} />
       <RailNav
         copy={copy.rail}
@@ -103,6 +79,7 @@ export function AboutPage({ locale }: { locale: Locale }) {
     <SubPage
       locale={locale}
       path="/about"
+      title={copy.about.title}
       sections={[
         { id: "intro", label: copy.rail.intro },
         { id: "experience", label: copy.rail.experience },
@@ -134,14 +111,8 @@ export function ContactPage({ locale }: { locale: Locale }) {
       path="/contact"
       sections={[{ id: "intro", label: copy.rail.intro }]}
     >
-      {/* Same ask as the story's end: the page leads with the composer. */}
-      {/* Fills the first screen (minus main's top padding), centered. */}
-      <section
-        id="intro"
-        className="flex min-h-[calc(100svh-2.5rem)] flex-col justify-center md:min-h-[calc(100svh-3.5rem)]"
-      >
-        <Ask locale={locale} path="/contact" as="h1" />
-      </section>
+      {/* No title: the page is the chat with me, over the composer. */}
+      <ContactChat locale={locale} />
     </SubPage>
   );
 }
@@ -152,6 +123,7 @@ export function WorkPage({ locale }: { locale: Locale }) {
     <SubPage
       locale={locale}
       path="/work"
+      title={copy.workPage.title}
       sections={[
         { id: "intro", label: copy.rail.intro },
         ...copy.workPage.projects.map((p) => ({

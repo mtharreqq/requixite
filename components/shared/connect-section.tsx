@@ -1,11 +1,5 @@
 "use client";
 
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-  useTapOpen,
-} from "@/components/ui/hover-card";
 import type { PortfolioCopy } from "@/lib/portfolio-copy";
 import { useEffect, useRef, useState } from "react";
 import { AtSign, Check, Copy, Mail } from "lucide-react";
@@ -24,11 +18,6 @@ import {
 } from "@/components/ui/tooltip";
 
 const EMAIL = "mtharreq@gmail.com";
-const REPO = "https://github.com/mtharreqq/requixite";
-const updated = process.env.NEXT_PUBLIC_UPDATED_AT;
-/** Midnight of the date in Jakarta, so "3 days ago" counts calendar days. */
-const jakartaDay = (d: Date) =>
-  Date.parse(d.toLocaleDateString("en-CA", { timeZone: "Asia/Jakarta" }));
 
 const SOCIALS = [
   {
@@ -227,86 +216,13 @@ export function ContactIcons({ copy }: { copy: PortfolioCopy["contact"] }) {
   );
 }
 
-/** "© 2026 Requixite • v0.8.1": the name opens its meaning, the version
- * opens when the site was last updated and its source. */
-export function FooterMeta({ copy }: { copy: PortfolioCopy["contact"] }) {
-  const card =
-    "bg-popover/95 border-border/80 text-muted-foreground rounded-lg p-4 text-xs leading-relaxed shadow-xl backdrop-blur-md";
-  const trigger =
-    "tap-area hover:text-foreground decoration-muted-foreground/40 cursor-pointer underline decoration-dotted underline-offset-4 transition-colors";
-  const name = useTapOpen();
-  const version = useTapOpen();
+/** "© 2026 Requixite • v0.9.0", the site's fine print, in the avatar's
+ * menu. */
+export function SiteMeta({ className }: { className?: string }) {
   return (
-    <p className="text-muted-foreground bar:text-[13px] text-xs">
-      © {new Date().getFullYear()}{" "}
-      <HoverCard
-        open={name.open}
-        onOpenChange={name.onOpenChange}
-        openDelay={120}
-        closeDelay={150}
-      >
-        <HoverCardTrigger asChild>
-          <button
-            type="button"
-            aria-label={copy.aboutName}
-            className={trigger}
-            {...name.tap}
-          >
-            Requixite
-          </button>
-        </HoverCardTrigger>
-        <HoverCardContent side="top" sideOffset={8} className={`${card} w-72`}>
-          <p className="text-foreground mb-1 font-medium">
-            Precise. Exquisite. Requisite.
-          </p>
-          {copy.nameMeaning}
-        </HoverCardContent>
-      </HoverCard>
-      {" • "}
-      <HoverCard
-        open={version.open}
-        onOpenChange={version.onOpenChange}
-        openDelay={120}
-        closeDelay={150}
-      >
-        <HoverCardTrigger asChild>
-          <button type="button" className={trigger} {...version.tap}>
-            v{process.env.NEXT_PUBLIC_VERSION}
-          </button>
-        </HoverCardTrigger>
-        <HoverCardContent
-          side="bottom"
-          align="end"
-          sideOffset={8}
-          className={`${card} flex w-auto items-center gap-3 py-2.5 pr-2.5`}
-        >
-          {/* Only mounts when open, so "now" is the reader's, not the build's. */}
-          {updated && (
-            <p>
-              {copy.updated}{" "}
-              <span className="text-foreground">
-                {new Intl.RelativeTimeFormat(copy.dateLocale, {
-                  numeric: "auto",
-                }).format(
-                  (jakartaDay(new Date(updated)) - jakartaDay(new Date())) /
-                    86_400_000,
-                  "day",
-                )}
-              </span>
-            </p>
-          )}
-          <a
-            href={REPO}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={copy.source}
-            title={copy.source}
-            className="text-muted-foreground hover:text-foreground hover:bg-muted active:bg-muted bar:p-2.5 rounded-md p-1.5 transition-colors"
-          >
-            <GithubSvg className="size-4" />
-          </a>
-        </HoverCardContent>
-      </HoverCard>
+    <p className={className}>
+      © {new Date().getFullYear()} Requixite • v
+      {process.env.NEXT_PUBLIC_VERSION}
     </p>
   );
 }
