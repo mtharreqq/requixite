@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.1](https://github.com/mtharreqq/requixite/compare/requixite-v0.9.0...requixite-v0.9.1) (2026-11-10)
+
+
+### Performance Improvements
+
+* **case-study:** load the live demo on first interaction, not on load ([155ff37](https://github.com/mtharreqq/requixite/commit/155ff3797969ec7344eeb9eb57825d0c4a011022))
+* lazy motion, drop tailwind-merge, defer lenis and case-study demo; perf budget 0.9 ([a8543a5](https://github.com/mtharreqq/requixite/commit/a8543a5372b0543527309e2361576515a2bb4e53))
+
 ## [0.9.0](https://github.com/mtharreqq/requixite/compare/requixite-v0.8.1...requixite-v0.9.0) (2026-11-09)
 
 
