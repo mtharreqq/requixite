@@ -18,7 +18,6 @@ import {
   Check,
   ChevronRight,
   Languages,
-  ListOrdered,
   Mail,
   Monitor,
   Moon,
@@ -439,7 +438,13 @@ function SectionMenu({
             className="stroke-foreground/60"
           />
         </svg>
-        <ListOrdered aria-hidden className="size-4" />
+        {/* Where you are, inside the ring that fills as you read. */}
+        <span
+          aria-hidden
+          className="text-foreground text-[11px] font-medium tabular-nums"
+        >
+          {active + 1}/{sections.length}
+        </span>
       </button>
       <Sheet open={open} onOpenChange={onOpenChange} title={copy.navigation}>
         <nav aria-label={copy.navigation} className="flex flex-col">
@@ -677,9 +682,6 @@ export function RailNav({
             // just enough backdrop to read over the page.
             className="bg-background/70 side:hidden pointer-events-auto absolute left-1/2 flex h-[42px] max-w-[calc(100%-7rem)] -translate-x-1/2 cursor-pointer items-center gap-2 rounded-full px-3 text-xs backdrop-blur-md before:absolute before:inset-x-0 before:-inset-y-px"
           >
-            <span className="text-muted-foreground tabular-nums">
-              {active + 1}/{sections.length}
-            </span>
             <span
               key={active}
               className="text-foreground motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-1 truncate font-medium duration-300"
