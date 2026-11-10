@@ -22,6 +22,9 @@ export function QuickReply({
   icon: ReactNode;
   /** A cell in a bubble's row of links instead of an outlined pill. */
   cell?: boolean;
+  /** For a link out (a new tab). */
+  target?: string;
+  rel?: string;
 } & Omit<ComponentProps<"button">, "children">) {
   const cls = cn(
     // group: the icon nudges toward where it goes on hover (see callers).

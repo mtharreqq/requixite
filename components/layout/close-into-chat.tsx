@@ -26,6 +26,7 @@ import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
 import { AskBox } from "@/components/chat/ask-box";
 import { QuickReply } from "@/components/shared/quick-reply";
 import { MenuAvatar } from "@/components/shared/menu-avatar";
+import { Moving } from "@/components/chat/replies";
 import { cn } from "@/lib/utils";
 
 const ICONS = {
@@ -298,6 +299,7 @@ export function CloseIntoChat({
               </div>
             </div>
           </div>
+          <Moving locale={locale} />
           <AskBox locale={locale} title={ask.title} placeholder={ask} />
         </section>
       </>
@@ -422,6 +424,7 @@ export function CloseIntoChat({
               </AnimatePresence>
             </div>
           </div>
+          <Moving locale={locale} />
           <AskBox locale={locale} title={ask.title} placeholder={ask} />
         </div>
       </m.div>

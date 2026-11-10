@@ -13,7 +13,9 @@ import {
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
+  ArrowLeft,
   Briefcase,
   House,
   Check,
@@ -228,6 +230,26 @@ const PAGES = [
 
 const isHere = (path: string, p: string) =>
   path === p || (!!p && path.startsWith(p + "/"));
+
+// ponytail: any earlier entry counts, so a visit that came from another
+// site goes back there. Track in-site moves if that ever bites.
+function Back({ label, locale }: { label: string; locale: Locale }) {
+  const router = useRouter();
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      onClick={() =>
+        history.length > 1
+          ? router.back()
+          : router.push(locale === "id" ? "/id" : "/")
+      }
+      className="bar:size-10 bar:before:absolute bar:before:-inset-0.5 bar:before:rounded-full text-muted-foreground hover:text-foreground hover:bg-muted side:fixed side:top-6 side:left-6 side:size-9 relative grid cursor-pointer place-items-center rounded-full transition-[scale,color,background-color] duration-150 active:scale-90"
+    >
+      <ArrowLeft aria-hidden className="size-[18px]" />
+    </button>
+  );
+}
 
 /** The avatar: the site's menu. On a mouse it opens a card on hover; on touch
  * the whole 40px circle is the button (a 2px halo makes it 44px) and it opens
@@ -749,6 +771,13 @@ export function RailNav({
       />
       {/* Touch: sections button, where you are, then the avatar. One
         section (Contact): nothing to navigate, just the avatar. */}
+      {/* Contact: sending from another page brings you here, so a way back
+        sits where the sections would. */}
+      {path === "/contact" && (
+        <div className={PILL}>
+          <Back label={copy.back} locale={locale} />
+        </div>
+      )}
       {sections.length > 1 && (
         <>
           <div className={`${PILL} side:hidden`}>

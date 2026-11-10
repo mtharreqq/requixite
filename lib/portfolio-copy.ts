@@ -56,6 +56,7 @@ const english = {
       placeholder: "Paste a link, or tell me about your app…",
       send: "Send",
       pick: "Got it. Where should I reply?",
+      moving: "Got it! Let’s continue on the contact page. Taking you there…",
       via: "Send via",
       subject: "Honest take on my app — Requixite",
       copied: "Message copied. Paste it into the DM.",
@@ -303,6 +304,7 @@ const english = {
   },
   rail: {
     navigation: "Page sections",
+    back: "Back",
     review: "Intro",
     vibecoded: "Vibecoded",
     feedback: "Comments",
@@ -383,6 +385,7 @@ const indonesian: PortfolioCopy = {
       placeholder: "Tempel link, atau ceritakan aplikasimu…",
       send: "Kirim",
       pick: "Siap. Mau dikirim lewat mana?",
+      moving: "Siap! Kita lanjut di halaman kontak, ya. Saya antar ke sana…",
       via: "Kirim lewat",
       subject: "Minta honest take untuk aplikasiku — Requixite",
       copied: "Pesan sudah disalin. Tempel di DM, ya.",
@@ -620,6 +623,7 @@ const indonesian: PortfolioCopy = {
   },
   rail: {
     navigation: "Bagian halaman",
+    back: "Kembali",
     review: "Intro",
     vibecoded: "Vibecoded",
     feedback: "Komentar",

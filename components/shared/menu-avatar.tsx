@@ -25,8 +25,12 @@ export function MenuAvatar({
       aria-haspopup="dialog"
       onClick={openMenu}
       className={cn(
-        "group shrink-0 cursor-pointer rounded-full align-[inherit] transition-[scale] duration-150 active:scale-90",
-        inline && "inline-block size-[1em]",
+        "group shrink-0 cursor-pointer rounded-full transition-[scale] duration-150 active:scale-90",
+        // A block in the hello's inline wrapper, so the wrapper is exactly
+        // 1em and its own vertical-align sets it on the line, as the plain
+        // image did; an inline-block here sat on a line box of its own and
+        // dropped low.
+        inline && "block size-[1em]",
         className,
       )}
     >

@@ -197,8 +197,10 @@ export function ContactIcons({ copy }: { copy: PortfolioCopy["contact"] }) {
         {items.map(({ label, el }, i) => (
           <TooltipPrimitive.Root key={i}>
             <TooltipTrigger asChild>{el}</TooltipTrigger>
+            {/* Radix leaves room for the arrow on top of this; 2px reads
+                as attached to the icon. */}
             <TooltipContent
-              sideOffset={8}
+              sideOffset={2}
               className="data-[state=instant-open]:animate-none! motion-reduce:animate-none!"
             >
               {label}

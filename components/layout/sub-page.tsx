@@ -3,7 +3,6 @@ import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
 import { CloseIntoChat } from "@/components/layout/close-into-chat";
 import { RailNav, type RailSection } from "@/components/layout/rail-nav";
 import { ContactChat } from "@/components/chat/contact-chat";
-import { ChatDialog } from "@/components/chat/chat-dialog-lazy";
 import { ExperienceSection } from "@/components/shared/experience-section";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
@@ -58,7 +57,6 @@ export function SubPage({
           {main}
         </CloseIntoChat>
       )}
-      <ChatDialog copy={copy.hero.chat} />
       <RailNav
         copy={copy.rail}
         locale={locale}
