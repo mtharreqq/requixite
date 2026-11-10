@@ -849,8 +849,7 @@ function ChatPick({
     transition: { ...later(0.3).transition, layout: arrive.transition },
   };
   return (
-    // Chips to composer: the same 6px as between the chips, as on sub-pages.
-    <div className="mb-1.5">
+    <div className="mb-3">
       <div className="flex items-end gap-2">
         <m.span {...head} className="shrink-0">
           <Image
