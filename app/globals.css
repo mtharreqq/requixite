@@ -53,16 +53,29 @@
 
 @media print {
   /* Scroll reveals that never ran (framer inline styles) must still print. */
-  .portfolio-motion [data-reveal],
-  .portfolio-motion [data-reveal] * {
+  [data-reveal],
+  [data-reveal] * {
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
   }
-  .portfolio-motion *,
-  .portfolio-motion *::before,
-  .portfolio-motion *::after {
+  *,
+  *::before,
+  *::after {
     animation: none !important;
+  }
+  /* Paper is white, whatever the theme on screen. */
+  :root,
+  .dark {
+    color-scheme: light;
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.4 0 0);
+    --border: oklch(0.922 0 0);
+  }
+  @page {
+    margin: 16mm 14mm;
   }
 }
 

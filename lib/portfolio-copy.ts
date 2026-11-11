@@ -7,14 +7,153 @@ const english = {
   back: "Back to home",
   about: {
     title: "About me",
-    meta: "Who Tharreq is, where he works, and how he got here.",
-    // ponytail: drafted from what's on the site; Tharreq to verify.
+    meta: "Tharreq’s CV: frontend developer and product engineer in Bandung. Experience, projects, education, and skills.",
+    name: "Muhammad Tharreq An Nahl",
+    role: "Frontend Developer & Product Engineer",
+    place: "Bandung, Indonesia",
+    status: "Open to full-time and remote roles",
+    cv: "Download CV",
+    cvNote: "PDF",
+    // Three ways to read the same me, each written on its own. {logo} puts
+    // that logo right after the word (components/about/about-text.tsx).
+    modes: {
+      label: "How to read this",
+      story: "Story",
+      summary: "Summary",
+      points: "Key points",
+    },
     story: [
-      "I’m Tharreq, a product engineer and designer from Bandung, Indonesia. I make software feel finished: the spacing, the type, the little moments nobody asks for but everyone notices.",
-      "I studied Computer Engineering at Telkom University and spent most of it designing anyway. Between 2022 and 2023 that turned into three UI/UX competition wins.",
-      "Since 2025 I’ve been a frontend developer at Telkomsigma, building internal enterprise apps. On the side, I design and build rantai.dev for RantAI.",
-      "Requixite is my own studio. These days that mostly means taking apps people built fast, often with AI, and polishing them until they don’t look like it.",
+      "I’m Tharreq, a frontend developer and product engineer from Bandung. I design and build web interfaces end to end, from Figma{figma} to production, and I care most about the parts people feel without naming them: spacing, type, interaction states, accessibility, and speed.",
+      "I studied Computer Engineering at Telkom University and graduated with a 3.93 GPA, but I spent much of it designing. Between 2022 and 2023 that turned into three UI/UX competition wins. Along the way I built the i‑Smile Lab’s practicum site and designed a soil fertility monitoring app for Cibodas Botanical Garden.",
+      "Since January 2025 I’ve been a frontend developer at Telkomsigma{telkomsigma}, building internal enterprise apps with Next.js{next}, React{react}, and Vue{vue}. Part-time, I redesigned and rebuilt rantai.dev for RantAI{rantai}, with its own CMS. It’s the project I’m proudest of so far.",
+      "Requixite is where it all comes together: I take apps people built fast, often with AI tools like Claude{claude} and Cursor{cursor}, and polish them until they feel finished.",
     ],
+    summary:
+      "I design and build web interfaces end to end, from Figma{figma} to production. At Telkomsigma{telkomsigma} I build enterprise apps with Next.js{next}, React{react}, and Vue{vue}, and for RantAI{rantai} I designed and developed rantai.dev and its CMS. I focus on spacing, typography, interaction states, accessibility, and performance.",
+    points: [
+      "Frontend developer at Telkomsigma{telkomsigma} since 2025: internal enterprise apps in Next.js{next}, React{react}, and Vue{vue}.",
+      "Part-time product developer at RantAI{rantai}: redesigned rantai.dev and built its CMS, from Figma{figma} to Vercel.",
+      "Computer Engineering, Telkom University, GPA 3.93 / 4.00.",
+      "Three UI/UX competition wins, 2022–2023.",
+      "Focused on spacing, typography, interaction states, accessibility, and performance.",
+    ],
+    experience: {
+      title: "Experience",
+      items: [
+        {
+          role: "Frontend Developer",
+          org: "Telkomsigma (PT Sigma Cipta Caraka)",
+          logo: "telkomsigma",
+          period: "Jan 2025 — Now",
+          place: "Bandung",
+          points: [
+            "Build responsive interfaces for internal enterprise applications with Next.js, React, Vue.js, shadcn/ui, and Tailwind CSS.",
+            "Lead UI/UX design for frontend features and turn Figma prototypes into production code.",
+          ],
+        },
+        {
+          role: "Product Developer, Part-time",
+          org: "RantAI",
+          logo: "rantai",
+          period: "2025 — Now",
+          place: "Remote",
+          points: [
+            "Redesigned and rebuilt rantai.dev, the website of an AI company serving enterprise and government clients, from Figma to Vercel. It now says what RantAI does in one read and shows the real products.",
+            "Built a custom CMS with scheduled publishing, Academy books, team members, tags, and a thumbnail designer, so the team publishes without a developer.",
+            "Shipped the SEO and security basics: preview images, sitemap, RSS, JSON-LD, CSP and HSTS headers, and WCAG 2.1 AA checks with axe-core.",
+          ],
+          href: "/work/rantai",
+        },
+        {
+          role: "SEO Operator, Part-time",
+          org: "Directorate of Information Technology, Telkom University",
+          logo: "",
+          period: "May 2024 — Jan 2025",
+          place: "Bandung",
+          points: [
+            "Improved the search visibility of Telkom University websites.",
+            "Automated website checks with Playwright.",
+          ],
+        },
+        {
+          role: "Digistar Class 2024 Mentee, Hipster",
+          org: "Digistar Club by Telkom Indonesia",
+          logo: "",
+          period: "Aug — Oct 2024",
+          place: "",
+          points: [
+            "Designed the Pijar Mahir Enterprise use case, with insights and recommendations, in a cross-functional team.",
+          ],
+        },
+        {
+          role: "Lab Assistant & Frontend Developer",
+          org: "i-Smile Laboratory, Telkom University",
+          logo: "",
+          period: "May 2023 — Jun 2024",
+          place: "Bandung",
+          points: [
+            "Designed and built the practicum website with Figma and React, including authentication and role management.",
+            "Taught the Artificial Intelligence practicum and joined the Object Detection study group.",
+          ],
+        },
+        {
+          role: "UI/UX Designer & Mobile Frontend Developer",
+          org: "KEDAIREKA",
+          logo: "",
+          period: "Jul — Dec 2023",
+          place: "",
+          points: [
+            "Designed a soil fertility monitoring app for Cibodas Botanical Garden in Figma and built its UI components in React Native.",
+          ],
+        },
+      ],
+    },
+    projects: {
+      title: "Projects",
+      items: [
+        {
+          name: "rantai.dev",
+          href: "/work/rantai",
+          desc: "Company website and CMS for RantAI. Design, frontend, and full-stack development.",
+          stack: "Next.js, React, Tailwind CSS, PostgreSQL",
+        },
+        {
+          name: "requixite.my.id",
+          href: "/",
+          desc: "This site: scroll-driven motion, English and Indonesian, and accessibility support.",
+          stack: "Next.js, Framer Motion",
+        },
+      ],
+    },
+    education: {
+      title: "Education & awards",
+      degree: "Bachelor of Computer Engineering",
+      school: "Telkom University",
+      period: "Aug 2020 — Aug 2024 · GPA 3.93 / 4.00",
+      coursework:
+        "Relevant coursework: Web Development, UI/UX, Algorithms, Internet of Things",
+      awards: [
+        ["Gold Award, WINTEX 2023", "Sep 2023"],
+        ["1st Place, UI/UX Centurion 2023", "Mar 2023"],
+        ["2nd Place, UI/UX JBC 2022", "Oct 2022"],
+      ],
+    },
+    skills: {
+      title: "Skills",
+      groups: [
+        [
+          "Frontend",
+          "Next.js, React, Vue.js, TypeScript, JavaScript, HTML, CSS, Tailwind CSS, shadcn/ui, Framer Motion, React Native",
+        ],
+        ["Backend & data", "PostgreSQL, Drizzle ORM, REST APIs, Python"],
+        [
+          "Design",
+          "Figma, UI/UX design, prototyping, design systems, accessibility (WCAG)",
+        ],
+        ["Tools", "Git, Vercel, Playwright, Cursor, Claude"],
+        ["Languages", "Indonesian (native), English"],
+      ],
+    },
   },
   workPage: {
     title: "My work",
@@ -261,32 +400,6 @@ const english = {
     // Chat draft when a plan is picked; {plan} is its name.
     ask: "I’m interested in {plan}. My app: ",
   },
-  experience: {
-    title: "Who you’ll work with",
-    intro:
-      "Me, directly. I design and build interfaces every day, so I fix the details in your code myself, not in a mockup someone else has to rebuild.",
-    education: "Computer Engineering, Telkom University · GPA 3.93",
-    items: [
-      {
-        role: "Frontend Developer",
-        org: "Telkomsigma",
-        logo: "telkomsigma",
-        period: "2025 — Now",
-        desc: "Building responsive, easier-to-use interfaces for internal enterprise apps with Next.js, React, Vue, shadcn/ui, and Tailwind CSS.",
-      },
-      {
-        role: "Product Developer, Part-time",
-        org: "RantAI",
-        logo: "rantai",
-        period: "2025 — Now",
-        desc: "Designing and developing rantai.dev and its CMS, from exploring ideas in Figma to deploying on Vercel.",
-      },
-    ],
-    toolkit:
-      "Toolkit: Next.js, React, Vue, TypeScript, Tailwind CSS, PostgreSQL, and Figma.",
-    recognition:
-      "Gold Award, WINTEX 2023 • 1st Place, UI/UX Centurion 2023 • 2nd Place, UI/UX JBC 2022",
-  },
   contact: {
     copy: "Copy email",
     // Phones: one button for email and socials, opening a sheet.
@@ -307,6 +420,9 @@ const english = {
     more: "Look around",
     intro: "Intro",
     experience: "Experience",
+    projects: "Projects",
+    education: "Education",
+    skills: "Skills",
     contact: "Contact",
     pages: {
       menu: "Pages",
@@ -331,13 +447,151 @@ const indonesian: PortfolioCopy = {
   back: "Kembali ke beranda",
   about: {
     title: "Tentang aku",
-    meta: "Siapa Tharreq, kerja di mana, dan gimana sampai di sini.",
+    meta: "CV Tharreq: frontend developer dan product engineer di Bandung. Pengalaman, project, pendidikan, dan keahlian.",
+    name: "Muhammad Tharreq An Nahl",
+    role: "Frontend Developer & Product Engineer",
+    place: "Bandung, Indonesia",
+    status: "Terbuka untuk kerja penuh waktu dan remote",
+    cv: "Unduh CV",
+    cvNote: "PDF, bahasa Inggris",
+    modes: {
+      label: "Cara baca",
+      story: "Cerita",
+      summary: "Ringkas",
+      points: "Poin penting",
+    },
     story: [
-      "Aku Tharreq, product engineer dan desainer dari Bandung. Kerjaku bikin software terasa jadi: jaraknya, hurufnya, momen-momen kecil yang nggak diminta siapa-siapa tapi semua orang sadar.",
-      "Aku kuliah Teknik Komputer di Telkom University, tapi kebanyakan waktunya malah dipakai buat desain. Antara 2022 dan 2023, itu jadi tiga juara lomba UI/UX.",
-      "Sejak 2025 aku frontend developer di Telkomsigma, bikin aplikasi internal enterprise. Sampingannya, aku mendesain dan membangun rantai.dev buat RantAI.",
-      "Requixite itu studioku sendiri. Sekarang isinya kebanyakan aplikasi yang dibikin cepat, sering pakai AI, terus kupoles sampai nggak kelihatan lagi kalau dibikin cepat.",
+      "Aku Tharreq, frontend developer dan product engineer dari Bandung. Aku mendesain dan membangun antarmuka web dari awal sampai akhir, dari Figma{figma} sampai produksi. Yang paling aku pedulikan justru bagian yang dirasakan orang tanpa mereka sebut: jarak, huruf, state interaksi, aksesibilitas, dan kecepatan.",
+      "Aku kuliah Teknik Komputer di Telkom University dan lulus dengan IPK 3,93, tapi banyak waktunya kupakai buat desain. Antara 2022 dan 2023, itu jadi tiga juara lomba UI/UX. Sambil kuliah, aku juga membangun situs praktikum Lab i‑Smile dan mendesain aplikasi pemantau kesuburan tanah untuk Kebun Raya Cibodas.",
+      "Sejak Januari 2025 aku frontend developer di Telkomsigma{telkomsigma}, membangun aplikasi internal enterprise dengan Next.js{next}, React{react}, dan Vue{vue}. Paruh waktu, aku mendesain dan membangun ulang rantai.dev untuk RantAI{rantai}, lengkap dengan CMS-nya sendiri. Sejauh ini, itu project yang paling aku banggakan.",
+      "Requixite itu tempat semuanya ketemu: aplikasi yang dibikin cepat, sering pakai AI seperti Claude{claude} dan Cursor{cursor}, aku poles sampai terasa jadi.",
     ],
+    summary:
+      "Aku mendesain dan membangun antarmuka web dari awal sampai akhir, dari Figma{figma} sampai produksi. Di Telkomsigma{telkomsigma} aku membangun aplikasi enterprise dengan Next.js{next}, React{react}, dan Vue{vue}, dan untuk RantAI{rantai} aku mendesain dan mengembangkan rantai.dev beserta CMS-nya. Fokusku: jarak, tipografi, state interaksi, aksesibilitas, dan performa.",
+    points: [
+      "Frontend developer di Telkomsigma{telkomsigma} sejak 2025: aplikasi internal enterprise dengan Next.js{next}, React{react}, dan Vue{vue}.",
+      "Product developer paruh waktu di RantAI{rantai}: mendesain ulang rantai.dev dan membangun CMS-nya, dari Figma{figma} sampai Vercel.",
+      "Teknik Komputer, Telkom University, IPK 3,93 / 4,00.",
+      "Tiga juara lomba UI/UX, 2022–2023.",
+      "Fokus ke jarak, tipografi, state interaksi, aksesibilitas, dan performa.",
+    ],
+    experience: {
+      title: "Pengalaman",
+      items: [
+        {
+          role: "Frontend Developer",
+          org: "Telkomsigma (PT Sigma Cipta Caraka)",
+          logo: "telkomsigma",
+          period: "Jan 2025 — Sekarang",
+          place: "Bandung",
+          points: [
+            "Membangun antarmuka responsif untuk aplikasi internal enterprise dengan Next.js, React, Vue.js, shadcn/ui, dan Tailwind CSS.",
+            "Memimpin desain UI/UX untuk fitur frontend dan mengubah prototipe Figma jadi kode produksi.",
+          ],
+        },
+        {
+          role: "Product Developer, paruh waktu",
+          org: "RantAI",
+          logo: "rantai",
+          period: "2025 — Sekarang",
+          place: "Remote",
+          points: [
+            "Mendesain dan membangun ulang rantai.dev, situs perusahaan AI dengan klien enterprise dan pemerintah, dari Figma sampai Vercel. Sekarang situsnya langsung menjelaskan apa yang RantAI kerjakan dan menampilkan produk aslinya.",
+            "Membangun CMS sendiri dengan jadwal terbit, buku Academy, anggota tim, tag, dan pembuat thumbnail, jadi timnya bisa menerbitkan konten tanpa developer.",
+            "Menerapkan dasar SEO dan keamanan: gambar pratinjau, sitemap, RSS, JSON-LD, header CSP dan HSTS, serta pengecekan WCAG 2.1 AA dengan axe-core.",
+          ],
+          href: "/id/work/rantai",
+        },
+        {
+          role: "SEO Operator, paruh waktu",
+          org: "Direktorat Teknologi Informasi, Telkom University",
+          logo: "",
+          period: "Mei 2024 — Jan 2025",
+          place: "Bandung",
+          points: [
+            "Meningkatkan visibilitas pencarian situs-situs Telkom University.",
+            "Mengotomasi pengecekan situs dengan Playwright.",
+          ],
+        },
+        {
+          role: "Mentee Digistar Class 2024, Hipster",
+          org: "Digistar Club by Telkom Indonesia",
+          logo: "",
+          period: "Agu — Okt 2024",
+          place: "",
+          points: [
+            "Mendesain use case Pijar Mahir Enterprise, lengkap dengan insight dan rekomendasi, bersama tim lintas fungsi.",
+          ],
+        },
+        {
+          role: "Asisten Lab & Frontend Developer",
+          org: "i-Smile Laboratory, Telkom University",
+          logo: "",
+          period: "Mei 2023 — Jun 2024",
+          place: "Bandung",
+          points: [
+            "Mendesain dan membangun situs praktikum dengan Figma dan React, termasuk autentikasi dan manajemen peran.",
+            "Mengajar praktikum Kecerdasan Buatan dan ikut kelompok studi Object Detection.",
+          ],
+        },
+        {
+          role: "UI/UX Designer & Mobile Frontend Developer",
+          org: "KEDAIREKA",
+          logo: "",
+          period: "Jul — Des 2023",
+          place: "",
+          points: [
+            "Mendesain aplikasi pemantau kesuburan tanah untuk Kebun Raya Cibodas di Figma dan membangun komponen UI-nya dengan React Native.",
+          ],
+        },
+      ],
+    },
+    projects: {
+      title: "Project",
+      items: [
+        {
+          name: "rantai.dev",
+          href: "/id/work/rantai",
+          desc: "Situs perusahaan dan CMS untuk RantAI. Desain, frontend, dan full-stack.",
+          stack: "Next.js, React, Tailwind CSS, PostgreSQL",
+        },
+        {
+          name: "requixite.my.id",
+          href: "/id",
+          desc: "Situs ini: motion yang mengikuti scroll, dua bahasa (Inggris dan Indonesia), dan ramah aksesibilitas.",
+          stack: "Next.js, Framer Motion",
+        },
+      ],
+    },
+    education: {
+      title: "Pendidikan & penghargaan",
+      degree: "Sarjana Teknik Komputer",
+      school: "Telkom University",
+      period: "Agu 2020 — Agu 2024 · IPK 3,93 / 4,00",
+      coursework:
+        "Mata kuliah terkait: Pengembangan Web, UI/UX, Algoritma, Internet of Things",
+      awards: [
+        ["Medali Emas, WINTEX 2023", "Sep 2023"],
+        ["Juara 1, UI/UX Centurion 2023", "Mar 2023"],
+        ["Juara 2, UI/UX JBC 2022", "Okt 2022"],
+      ],
+    },
+    skills: {
+      title: "Keahlian",
+      groups: [
+        [
+          "Frontend",
+          "Next.js, React, Vue.js, TypeScript, JavaScript, HTML, CSS, Tailwind CSS, shadcn/ui, Framer Motion, React Native",
+        ],
+        ["Backend & data", "PostgreSQL, Drizzle ORM, REST API, Python"],
+        [
+          "Desain",
+          "Figma, desain UI/UX, prototyping, design system, aksesibilitas (WCAG)",
+        ],
+        ["Tools", "Git, Vercel, Playwright, Cursor, Claude"],
+        ["Bahasa", "Indonesia (bahasa ibu), Inggris"],
+      ],
+    },
   },
   workPage: {
     title: "Karyaku",
@@ -575,32 +829,6 @@ const indonesian: PortfolioCopy = {
       "Makanya tiap detail dicek dua kali dan dikerjain sebaik mungkin. Mulai gratis, harga pasti sebelum kerja berbayar.",
     ask: "Aku tertarik dengan {plan}. Aplikasiku: ",
   },
-  experience: {
-    title: "Yang akan mengerjakan",
-    intro:
-      "Aku sendiri, langsung. Setiap hari aku mendesain dan membangun antarmuka, jadi detailnya aku perbaiki langsung di kodemu, bukan di mockup yang harus dibangun ulang orang lain.",
-    education: "Teknik Komputer, Telkom University · IPK 3,93",
-    items: [
-      {
-        role: "Frontend Developer",
-        org: "Telkomsigma",
-        logo: "telkomsigma",
-        period: "2025 — Sekarang",
-        desc: "Mengembangkan tampilan aplikasi internal perusahaan yang responsif dan lebih mudah dipakai dengan Next.js, React, Vue, shadcn/ui, dan Tailwind CSS.",
-      },
-      {
-        role: "Product Developer, paruh waktu",
-        org: "RantAI",
-        logo: "rantai",
-        period: "2025 — Sekarang",
-        desc: "Merancang dan mengembangkan rantai.dev beserta CMS-nya, mulai dari eksplorasi desain di Figma sampai rilis di Vercel.",
-      },
-    ],
-    toolkit:
-      "Alat kerja: Next.js, React, Vue, TypeScript, Tailwind CSS, PostgreSQL, dan Figma.",
-    recognition:
-      "Medali Emas, WINTEX 2023 • Juara 1, UI/UX Centurion 2023 • Juara 2, UI/UX JBC 2022",
-  },
   contact: {
     copy: "Salin email",
     more: "Email & sosmed",
@@ -620,6 +848,9 @@ const indonesian: PortfolioCopy = {
     more: "Lihat-lihat",
     intro: "Intro",
     experience: "Pengalaman",
+    projects: "Project",
+    education: "Pendidikan",
+    skills: "Keahlian",
     contact: "Kontak",
     pages: {
       menu: "Halaman",

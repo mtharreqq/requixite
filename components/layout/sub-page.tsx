@@ -3,7 +3,6 @@ import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
 import { CloseIntoChat } from "@/components/layout/close-into-chat";
 import { RailNav, type RailSection } from "@/components/layout/rail-nav";
 import { ContactChat } from "@/components/chat/contact-chat";
-import { ExperienceSection } from "@/components/shared/experience-section";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { PortfolioMotion } from "@/components/shared/portfolio-motion";
@@ -39,7 +38,7 @@ export function SubPage({
         // line, so you scroll on past the end a little before it closes.
         bare
           ? ""
-          : "bar:pt-[calc(max(env(safe-area-inset-top),12px)+4.5rem)] pt-10 pb-[35svh] md:pt-14",
+          : "bar:pt-[calc(max(env(safe-area-inset-top),12px)+4.5rem)] pt-10 pb-[35svh] md:pt-14 print:p-0",
       )}
     >
       {children}
@@ -68,36 +67,6 @@ export function SubPage({
         }
       />
     </PortfolioMotion>
-  );
-}
-
-export function AboutPage({ locale }: { locale: Locale }) {
-  const copy = getPortfolioCopy(locale);
-  return (
-    <SubPage
-      locale={locale}
-      path="/about"
-      title={copy.about.title}
-      sections={[
-        { id: "intro", label: copy.rail.intro },
-        { id: "experience", label: copy.rail.experience },
-      ]}
-    >
-      <header id="intro" className="flex flex-col gap-4">
-        <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
-          {copy.about.title}
-        </h1>
-        {copy.about.story.map((p) => (
-          <p
-            key={p}
-            className="text-muted-foreground text-[15px] leading-relaxed md:text-base"
-          >
-            {p}
-          </p>
-        ))}
-      </header>
-      <ExperienceSection copy={copy.experience} />
-    </SubPage>
   );
 }
 
