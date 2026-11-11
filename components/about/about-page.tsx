@@ -43,7 +43,7 @@ function WithLogos({ text }: { text: string }) {
         {word}
         <span
           aria-hidden
-          className="mx-[0.2em] inline-flex size-[0.92em] items-center justify-center rounded-[0.24em] bg-white align-[-0.12em] shadow-[0_0.08em_0.2em_rgba(0,0,0,0.18)] ring-[0.04em] ring-white"
+          className="mx-[0.2em] inline-flex size-[0.92em] items-center justify-center rounded-[0.24em] bg-white align-[-0.12em] shadow-[0_0.08em_0.2em_rgba(0,0,0,0.18)] ring-[0.04em] ring-white print:shadow-none"
           style={{ rotate: `${rotate}deg` }}
         >
           <Image

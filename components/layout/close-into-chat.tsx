@@ -319,7 +319,7 @@ export function CloseIntoChat({
         id="contact"
         aria-hidden
         data-on-read-line
-        className="pointer-events-none absolute inset-x-0"
+        className="pointer-events-none absolute inset-x-0 print:hidden"
         style={{ top: lift + CLOSE * 0.6 + box.vh * 0.4 }}
       />
       {/* The page. Past its end it holds, its last screen on screen, and
@@ -328,7 +328,7 @@ export function CloseIntoChat({
         ref={page}
         // For the rail: its sections count from here, not from the screen.
         data-page-top={box.top}
-        className="bg-background sticky z-10 flex min-h-svh w-full justify-center print:static! print:transform-none! print:[mask-image:none]! print:opacity-100! print:[clip-path:none]!"
+        className="bg-background sticky z-10 flex min-h-svh w-full justify-center print:static! print:min-h-0 print:transform-none! print:[mask-image:none]! print:opacity-100! print:[clip-path:none]!"
         style={{
           top: box.ready ? -lift : undefined,
           x: tx,
