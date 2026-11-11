@@ -19,9 +19,10 @@ import { landed, useChat } from "@/lib/conversation";
 import { cn } from "@/lib/utils";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-// Dots, my question, dots, the nudge, the plans, the other pages. Each in
-// milliseconds after the one before.
-const STEPS = [1200, 300, 600, 900, 500];
+// My question is there on arrival (it's the page's largest paint), then
+// dots, the nudge, the plans, the other pages. Each in milliseconds after
+// the one before.
+const STEPS = [300, 600, 900, 500];
 const bubble =
   "bg-muted w-fit max-w-[min(85%,26rem)] rounded-[20px] rounded-bl-md px-3.5 py-2 text-[15px] leading-snug";
 
@@ -34,15 +35,15 @@ export function ContactChat({ locale }: { locale: Locale }) {
   // Here mid-conversation (sent from another page, a refresh): my opening
   // is already there, no typing it again.
   const [arrived] = useState(() => sent.length > 0);
-  // 0 typing, 1 question, 2 typing, 3 nudge, 4 plans, 5 look around.
-  const [step, setStep] = useState(reduce || arrived ? 5 : 0);
+  // 1 question, 2 typing, 3 nudge, 4 plans, 5 look around.
+  const [step, setStep] = useState(reduce || arrived ? 5 : 1);
   const shown = sent.length ? 5 : step;
   useEffect(() => {
     if (reduce || arrived) return;
     let at = 0;
     const timers = STEPS.map((ms, i) => {
       at += ms;
-      return setTimeout(() => setStep(i + 1), at);
+      return setTimeout(() => setStep(i + 2), at);
     });
     return () => timers.forEach(clearTimeout);
   }, [reduce, arrived]);
@@ -60,7 +61,7 @@ export function ContactChat({ locale }: { locale: Locale }) {
       field?.setSelectionRange(text.length, text.length);
     });
   };
-  const typing = shown === 0 || shown === 2;
+  const typing = shown === 2;
   // In from below; what's already there glides up to make room.
   const arrive = {
     layout: "position" as const,
@@ -95,11 +96,9 @@ export function ContactChat({ locale }: { locale: Locale }) {
               >
                 Tharreq
               </m.p>
-              {shown >= 1 && (
-                <m.p {...arrive} className={bubble}>
-                  {copy.cta.title}
-                </m.p>
-              )}
+              <m.p {...arrive} initial={false} className={bubble}>
+                {copy.cta.title}
+              </m.p>
               {shown >= 3 && (
                 <m.p {...arrive} className={bubble}>
                   {copy.cta.pick}
