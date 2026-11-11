@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/about",
     languages: { en: "/about", id: "/id/about" },
+    types: { "text/markdown": "/llms.txt" },
   },
 };
 
