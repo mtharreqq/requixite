@@ -289,7 +289,7 @@ export function CloseIntoChat({
         <div className="flex w-full justify-center">{children}</div>
         <section
           id="contact"
-          className="bar:pb-[max(env(safe-area-inset-bottom),12px)] mx-auto flex w-full max-w-lg flex-col gap-3 px-4 pt-6 pb-16 md:max-w-xl"
+          className="bar:pb-[max(env(safe-area-inset-bottom),12px)] mx-auto flex w-full max-w-lg flex-col gap-3 px-4 pt-6 pb-16 md:max-w-xl print:hidden"
         >
           <div className="flex items-end gap-2">
             <Avatar locale={locale} />
@@ -309,7 +309,7 @@ export function CloseIntoChat({
   return (
     <div ref={root} className="relative w-full">
       {/* Long pages scroll under soft edges; they go as the chat comes. */}
-      <m.div style={{ opacity: fades }} aria-hidden>
+      <m.div style={{ opacity: fades }} aria-hidden className="print:hidden">
         <div className="edge-fade top-0" />
         <div className="edge-fade bottom-0 rotate-180" />
       </m.div>
@@ -328,7 +328,7 @@ export function CloseIntoChat({
         ref={page}
         // For the rail: its sections count from here, not from the screen.
         data-page-top={box.top}
-        className="bg-background sticky z-10 flex min-h-svh w-full justify-center"
+        className="bg-background sticky z-10 flex min-h-svh w-full justify-center print:static! print:transform-none! print:[mask-image:none]! print:opacity-100! print:[clip-path:none]!"
         style={{
           top: box.ready ? -lift : undefined,
           x: tx,
@@ -347,7 +347,11 @@ export function CloseIntoChat({
       >
         {children}
       </m.div>
-      <div aria-hidden style={{ height: CLOSE + HOLD }} />
+      <div
+        aria-hidden
+        style={{ height: CLOSE + HOLD }}
+        className="print:hidden"
+      />
 
       {/* The chat the page closes into, behind it, over the whole screen. */}
       <m.div
@@ -358,7 +362,7 @@ export function CloseIntoChat({
         onFocus={() =>
           phaseRef.current === 0 && smoothScrollTo(box.top + lift + CLOSE)
         }
-        className="fixed inset-0 z-0"
+        className="fixed inset-0 z-0 print:hidden"
       >
         <div className="bar:pb-[max(env(safe-area-inset-bottom),12px)] mx-auto flex h-full w-full max-w-lg flex-col justify-end gap-3 px-4 pb-16 md:max-w-xl">
           <div className="flex items-end gap-2">

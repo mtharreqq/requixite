@@ -62,7 +62,7 @@ export function LangHint({ locale }: { locale: Locale }) {
       lang={want}
       inert={away}
       className={cn(
-        "bg-background/90 side:top-6 fixed top-[calc(max(env(safe-area-inset-top),12px)+3.5rem)] left-1/2 z-50 flex -translate-x-1/2 items-center rounded-full border p-1 text-[13px] shadow-sm backdrop-blur-md ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:transition-opacity",
+        "bg-background/90 side:top-6 fixed top-[calc(max(env(safe-area-inset-top),12px)+3.5rem)] left-1/2 z-50 flex -translate-x-1/2 items-center rounded-full border p-1 text-[13px] shadow-sm backdrop-blur-md ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:transition-opacity print:hidden",
         away
           ? "pointer-events-none opacity-0 duration-300"
           : "motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-top-2 duration-500",

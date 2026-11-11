@@ -764,7 +764,7 @@ export function RailNav({
       // Touch: a top bar of sections, where you are and the avatar, under
       // the status bar, so the bottom stays the composer's. Mouse: anchored
       // at the avatar, so it stays put and the rail grows upward.
-      className="side:inset-x-auto side:top-auto side:bottom-[calc(50%-7rem)] side:left-8 side:flex-col side:items-start pointer-events-none fixed inset-x-4 top-[max(env(safe-area-inset-top),12px)] z-50 flex items-center justify-between"
+      className="side:inset-x-auto side:top-auto side:bottom-[calc(50%-7rem)] side:left-8 side:flex-col side:items-start pointer-events-none fixed inset-x-4 top-[max(env(safe-area-inset-top),12px)] z-50 flex items-center justify-between print:hidden"
     >
       {/* Touch: the bar's own material: solid behind the buttons, then a
         short fade, so the page slides under it instead of showing through. */}
