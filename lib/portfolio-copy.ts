@@ -24,7 +24,7 @@ const english = {
     },
     story: [
       "I’m Tharreq, a frontend developer and product engineer from Bandung. I design and build web interfaces end to end, from Figma{figma} to production, and I care most about the parts people feel without naming them: spacing, type, interaction states, accessibility, and speed.",
-      "I studied Computer Engineering at Telkom University and graduated with a 3.93 GPA, but I spent much of it designing. Between 2022 and 2023 that turned into three UI/UX competition wins. Along the way I built the i‑Smile Lab’s practicum site and designed a soil fertility monitoring app for Cibodas Botanical Garden.",
+      "I studied Computer Engineering at Telkom University{telkomuniversity} and graduated with a 3.93 GPA, but I spent much of it designing. Between 2022 and 2023 that turned into three UI/UX competition wins. Along the way I built the i‑Smile Lab’s practicum site and designed a soil fertility monitoring app for Cibodas Botanical Garden.",
       "Since January 2025 I’ve been a frontend developer at Telkomsigma{telkomsigma}, building internal enterprise apps with Next.js{next}, React{react}, and Vue{vue}. Part-time, I redesigned and rebuilt rantai.dev for RantAI{rantai}, with its own CMS. It’s the project I’m proudest of so far.",
       "Requixite is where it all comes together: I take apps people built fast, often with AI tools like Claude{claude} and Cursor{cursor}, and polish them until they feel finished.",
     ],
@@ -33,7 +33,7 @@ const english = {
     points: [
       "Frontend developer at Telkomsigma{telkomsigma} since 2025: internal enterprise apps in Next.js{next}, React{react}, and Vue{vue}.",
       "Part-time product developer at RantAI{rantai}: redesigned rantai.dev and built its CMS, from Figma{figma} to Vercel.",
-      "Computer Engineering, Telkom University, GPA 3.93 / 4.00.",
+      "Computer Engineering, Telkom University{telkomuniversity}, GPA 3.93 / 4.00.",
       "Three UI/UX competition wins, 2022–2023.",
       "Focused on spacing, typography, interaction states, accessibility, and performance.",
     ],
@@ -67,7 +67,7 @@ const english = {
         {
           role: "SEO Operator, Part-time",
           org: "Directorate of Information Technology, Telkom University",
-          logo: "",
+          logo: "telkomuniversity",
           period: "May 2024 — Jan 2025",
           place: "Bandung",
           points: [
@@ -88,7 +88,7 @@ const english = {
         {
           role: "Lab Assistant & Frontend Developer",
           org: "i-Smile Laboratory, Telkom University",
-          logo: "",
+          logo: "telkomuniversity",
           period: "May 2023 — Jun 2024",
           place: "Bandung",
           points: [
@@ -462,7 +462,7 @@ const indonesian: PortfolioCopy = {
     },
     story: [
       "Aku Tharreq, frontend developer dan product engineer dari Bandung. Aku mendesain dan membangun antarmuka web dari awal sampai akhir, dari Figma{figma} sampai produksi. Yang paling aku pedulikan justru bagian yang dirasakan orang tanpa mereka sebut: jarak, huruf, state interaksi, aksesibilitas, dan kecepatan.",
-      "Aku kuliah Teknik Komputer di Telkom University dan lulus dengan IPK 3,93, tapi banyak waktunya kupakai buat desain. Antara 2022 dan 2023, itu jadi tiga juara lomba UI/UX. Sambil kuliah, aku juga membangun situs praktikum Lab i‑Smile dan mendesain aplikasi pemantau kesuburan tanah untuk Kebun Raya Cibodas.",
+      "Aku kuliah Teknik Komputer di Telkom University{telkomuniversity} dan lulus dengan IPK 3,93, tapi banyak waktunya kupakai buat desain. Antara 2022 dan 2023, itu jadi tiga juara lomba UI/UX. Sambil kuliah, aku juga membangun situs praktikum Lab i‑Smile dan mendesain aplikasi pemantau kesuburan tanah untuk Kebun Raya Cibodas.",
       "Sejak Januari 2025 aku frontend developer di Telkomsigma{telkomsigma}, membangun aplikasi internal enterprise dengan Next.js{next}, React{react}, dan Vue{vue}. Paruh waktu, aku mendesain dan membangun ulang rantai.dev untuk RantAI{rantai}, lengkap dengan CMS-nya sendiri. Sejauh ini, itu project yang paling aku banggakan.",
       "Requixite itu tempat semuanya ketemu: aplikasi yang dibikin cepat, sering pakai AI seperti Claude{claude} dan Cursor{cursor}, aku poles sampai terasa jadi.",
     ],
@@ -471,7 +471,7 @@ const indonesian: PortfolioCopy = {
     points: [
       "Frontend developer di Telkomsigma{telkomsigma} sejak 2025: aplikasi internal enterprise dengan Next.js{next}, React{react}, dan Vue{vue}.",
       "Product developer paruh waktu di RantAI{rantai}: mendesain ulang rantai.dev dan membangun CMS-nya, dari Figma{figma} sampai Vercel.",
-      "Teknik Komputer, Telkom University, IPK 3,93 / 4,00.",
+      "Teknik Komputer, Telkom University{telkomuniversity}, IPK 3,93 / 4,00.",
       "Tiga juara lomba UI/UX, 2022–2023.",
       "Fokus ke jarak, tipografi, state interaksi, aksesibilitas, dan performa.",
     ],
@@ -505,7 +505,7 @@ const indonesian: PortfolioCopy = {
         {
           role: "SEO Operator, paruh waktu",
           org: "Direktorat Teknologi Informasi, Telkom University",
-          logo: "",
+          logo: "telkomuniversity",
           period: "Mei 2024 — Jan 2025",
           place: "Bandung",
           points: [
@@ -526,7 +526,7 @@ const indonesian: PortfolioCopy = {
         {
           role: "Asisten Lab & Frontend Developer",
           org: "i-Smile Laboratory, Telkom University",
-          logo: "",
+          logo: "telkomuniversity",
           period: "Mei 2023 — Jun 2024",
           place: "Bandung",
           points: [

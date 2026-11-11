@@ -4,19 +4,9 @@ import { ArrowRight, Building2, Download, Mail } from "lucide-react";
 import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
 import { SubPage } from "@/components/layout/sub-page";
 import { AboutModes } from "@/components/about/about-modes";
+import { LogoTile } from "@/components/about/logo-tile";
 import { GithubSvg, LinkedinSvg } from "@/components/shared/dock-icons";
 import { cn } from "@/lib/utils";
-
-const LOGOS: Record<string, string> = {
-  figma: "/logomark/figma.png",
-  next: "/logomark/next.png",
-  react: "/logomark/react.png",
-  vue: "/logomark/vue.png",
-  telkomsigma: "/logos/telkomsigma.png",
-  rantai: "/logos/rantai.png",
-  claude: "/ai-logos/claude.svg",
-  cursor: "/ai-logos/cursor.svg",
-};
 
 // Shown as handles, not "LinkedIn": they still read on a printed CV.
 const LINKS = [
@@ -29,31 +19,17 @@ const LINKS = [
   ["github.com/mtharreqq", "https://github.com/mtharreqq", GithubSvg],
 ] as const;
 
-/** "Figma{figma}," : the word, then its logo as a small tilted tile (the
- * home story's Tile), kept on one line with it and what follows. */
+/** "Figma{figma}," : the word, then its logo tile, kept on one line. */
 function WithLogos({ text }: { text: string }) {
   let n = 0;
   return text.split(/(\S+?\{\w+\}[.,:;]?)/).map((part, i) => {
     const hit = part.match(/^(\S+?)\{(\w+)\}(.*)$/);
     if (!hit) return part;
     const [, word, logo, tail] = hit;
-    const rotate = n++ % 2 ? 6 : -6;
     return (
       <span key={i} className="whitespace-nowrap">
         {word}
-        <span
-          aria-hidden
-          className="mx-[0.2em] inline-flex size-[0.92em] items-center justify-center rounded-[0.24em] bg-white align-[-0.12em] shadow-[0_0.08em_0.2em_rgba(0,0,0,0.18)] ring-[0.04em] ring-white print:shadow-none"
-          style={{ rotate: `${rotate}deg` }}
-        >
-          <Image
-            src={LOGOS[logo]}
-            alt=""
-            width={48}
-            height={48}
-            className="h-[0.55em] w-auto"
-          />
-        </span>
+        <LogoTile logo={logo} i={n++} />
         {tail}
       </span>
     );
