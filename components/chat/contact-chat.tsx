@@ -19,10 +19,10 @@ import { landed, useChat } from "@/lib/conversation";
 import { cn } from "@/lib/utils";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-// My question is there on arrival (it's the page's largest paint), then
-// dots, the nudge, the plans, the other pages. Each in milliseconds after
-// the one before.
-const STEPS = [300, 600, 900, 500];
+// My question and the nudge are there on arrival (the nudge is the page's
+// largest paint), then dots, the plans, the other pages. Each in
+// milliseconds after the one before.
+const STEPS = [300, 600, 500];
 const bubble =
   "bg-muted w-fit max-w-[min(85%,26rem)] rounded-[20px] rounded-bl-md px-3.5 py-2 text-[15px] leading-snug";
 
@@ -35,15 +35,15 @@ export function ContactChat({ locale }: { locale: Locale }) {
   // Here mid-conversation (sent from another page, a refresh): my opening
   // is already there, no typing it again.
   const [arrived] = useState(() => sent.length > 0);
-  // 1 question, 2 typing, 3 nudge, 4 plans, 5 look around.
-  const [step, setStep] = useState(reduce || arrived ? 5 : 1);
-  const shown = sent.length ? 5 : step;
+  // 0 question and nudge, 1 typing, 2 plans, 3 look around.
+  const [step, setStep] = useState(reduce || arrived ? 3 : 0);
+  const shown = sent.length ? 3 : step;
   useEffect(() => {
     if (reduce || arrived) return;
     let at = 0;
     const timers = STEPS.map((ms, i) => {
       at += ms;
-      return setTimeout(() => setStep(i + 2), at);
+      return setTimeout(() => setStep(i + 1), at);
     });
     return () => timers.forEach(clearTimeout);
   }, [reduce, arrived]);
@@ -61,7 +61,7 @@ export function ContactChat({ locale }: { locale: Locale }) {
       field?.setSelectionRange(text.length, text.length);
     });
   };
-  const typing = shown === 2;
+  const typing = shown === 1;
   // In from below; what's already there glides up to make room.
   const arrive = {
     layout: "position" as const,
@@ -99,12 +99,10 @@ export function ContactChat({ locale }: { locale: Locale }) {
               <m.p {...arrive} initial={false} className={bubble}>
                 {copy.cta.title}
               </m.p>
-              {shown >= 3 && (
-                <m.p {...arrive} className={bubble}>
-                  {copy.cta.pick}
-                </m.p>
-              )}
-              {shown >= 4 && (
+              <m.p {...arrive} initial={false} className={bubble}>
+                {copy.cta.pick}
+              </m.p>
+              {shown >= 2 && (
                 <m.div
                   {...arrive}
                   className="bg-muted w-[min(85%,26rem)] overflow-hidden rounded-[20px] rounded-bl-md"
@@ -127,7 +125,7 @@ export function ContactChat({ locale }: { locale: Locale }) {
                   ))}
                 </m.div>
               )}
-              {shown >= 5 && (
+              {shown >= 3 && (
                 <m.div
                   {...arrive}
                   className="bg-muted w-[min(85%,26rem)] overflow-hidden rounded-[20px] rounded-bl-md"
