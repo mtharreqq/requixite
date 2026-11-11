@@ -80,6 +80,34 @@ export function AboutPage({ locale }: { locale: Locale }) {
         { id: "skills", label: copy.rail.skills },
       ]}
     >
+      {/* For search engines and AI assistants: who this page is about. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Person",
+            name: a.name,
+            alternateName: "Tharreq",
+            jobTitle: a.role,
+            url: "https://requixite.my.id/about",
+            image: "https://requixite.my.id/avatar.png",
+            email: "mailto:mtharreq@gmail.com",
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Bandung",
+              addressCountry: "ID",
+            },
+            worksFor: { "@type": "Organization", name: "Telkomsigma" },
+            alumniOf: {
+              "@type": "CollegeOrUniversity",
+              name: a.education.school,
+            },
+            knowsAbout: a.skills.groups.flatMap(([, list]) => list.split(", ")),
+            sameAs: LINKS.slice(1).map(([, href]) => href),
+          }).replace(/</g, "\\u003c"),
+        }}
+      />
       <header id="intro" className="flex flex-col gap-6">
         <div className="flex items-center gap-4">
           <Image
