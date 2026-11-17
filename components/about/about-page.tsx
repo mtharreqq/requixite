@@ -1,6 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Building2, Download, Mail } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Building2,
+  Download,
+  Mail,
+} from "lucide-react";
 import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
 import { SubPage } from "@/components/layout/sub-page";
 import { AboutModes } from "@/components/about/about-modes";
@@ -234,9 +240,19 @@ export function AboutPage({ locale }: { locale: Locale }) {
             <h3 className="font-semibold">
               <Link
                 href={p.href}
-                className="underline-offset-2 hover:underline"
+                {...(p.href.startsWith("http") && {
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                })}
+                className="inline-flex items-center gap-1 underline-offset-2 hover:underline"
               >
                 {p.name}
+                {p.href.startsWith("http") && (
+                  <ArrowUpRight
+                    aria-hidden
+                    className="text-muted-foreground size-3"
+                  />
+                )}
               </Link>
             </h3>
             <p className={body}>{p.desc}</p>

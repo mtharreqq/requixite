@@ -118,6 +118,18 @@ const english = {
           stack: "Next.js, React, Tailwind CSS, PostgreSQL",
         },
         {
+          name: "TAP 1",
+          href: "/work/tap-1",
+          desc: "Top-down Formula 1 browser racing game. Sub-millisecond Canvas2D game loop, 23 real-scale circuits, authentic weekend rules, and one-button controls.",
+          stack: "Canvas2D, TypeScript, React 19, Tailwind CSS v4, Web Audio",
+        },
+        {
+          name: "Cashava",
+          href: "https://cashava.web.id",
+          desc: "Personal finance workspace and deterministic double-entry ledger for IDR. BYOK AI assistant, OAuth 2.1 MCP server, and iOS companion app.",
+          stack: "Next.js 16, Base UI, Better Auth, Drizzle ORM, Swift/iOS",
+        },
+        {
           name: "requixite.my.id",
           href: "/",
           desc: "This site: scroll-driven motion, English and Indonesian, and accessibility support.",
@@ -143,14 +155,20 @@ const english = {
       groups: [
         [
           "Frontend",
-          "Next.js, React, Vue.js, TypeScript, JavaScript, HTML, CSS, Tailwind CSS, shadcn/ui, Framer Motion, React Native",
+          "Next.js, React, Vue.js, TypeScript, JavaScript, HTML, CSS, Tailwind CSS, Base UI, shadcn/ui, Framer Motion, Canvas2D, React Native",
         ],
-        ["Backend & data", "PostgreSQL, Drizzle ORM, REST APIs, Python"],
+        [
+          "Backend & data",
+          "PostgreSQL, Drizzle ORM, REST APIs, Model Context Protocol (MCP), Better Auth, Python",
+        ],
         [
           "Design",
           "Figma, UI/UX design, prototyping, design systems, accessibility (WCAG)",
         ],
-        ["Tools", "Git, Vercel, Playwright, Cursor, Claude"],
+        [
+          "Tools & platforms",
+          "Git, Vercel, Playwright, Swift/iOS, Cursor, Claude",
+        ],
         ["Languages", "Indonesian (native), English"],
       ],
     },
@@ -160,6 +178,7 @@ const english = {
     meta: "Projects Tharreq has designed, built, or finished.",
     intro: "Things I’ve designed, built, or finished.",
     read: "Read the case study",
+    visit: "Visit site",
     projects: [
       {
         name: "rantai.dev",
@@ -169,6 +188,27 @@ const english = {
           "An AI-built company site, finished into a clear, fast, bilingual one with its own CMS.",
         image: "/work/rantai/home.jpg",
         href: "/work/rantai",
+        external: false,
+      },
+      {
+        name: "TAP 1",
+        client: "Independent · Game & Web",
+        year: "2026",
+        summary:
+          "Top-down Formula 1 browser racing game built on a 60 FPS Canvas2D loop, real-scale circuits, and accessible one-button controls.",
+        image: "/work/tap-1/cover.png",
+        href: "/work/tap-1",
+        external: false,
+      },
+      {
+        name: "Cashava",
+        client: "Independent · Product",
+        year: "2026",
+        summary:
+          "A personal finance workspace and deterministic double-entry ledger for IDR, featuring BYOK AI, OAuth 2.1 MCP server, and iOS companion app.",
+        image: "/work/cashava/home.png",
+        href: "https://cashava.web.id",
+        external: true,
       },
     ],
   },
@@ -266,6 +306,11 @@ const english = {
           title: "Got a rantai.dev of your own?",
           placeholder: "Paste the AI-built site that needs the same treatment…",
           short: "Paste your AI-built site…",
+        },
+        "/work/tap-1": {
+          title: "Building a high-performance web app or canvas game?",
+          placeholder: "Tell me about your canvas or web application project…",
+          short: "Tell me about your project…",
         },
       } as Record<
         string,
@@ -556,6 +601,18 @@ const indonesian: PortfolioCopy = {
           stack: "Next.js, React, Tailwind CSS, PostgreSQL",
         },
         {
+          name: "TAP 1",
+          href: "/id/work/tap-1",
+          desc: "Game balap Formula 1 top-down di browser. Loop fisika Canvas2D sub-milidetik, 23 sirkuit skala asli, aturan akhir pekan autentik, dan kontrol satu tombol.",
+          stack: "Canvas2D, TypeScript, React 19, Tailwind CSS v4, Web Audio",
+        },
+        {
+          name: "Cashava",
+          href: "https://cashava.web.id",
+          desc: "Workspace keuangan pribadi dan buku besar entri ganda untuk Rupiah. Asisten AI BYOK, server MCP berstandar OAuth 2.1, dan aplikasi pendamping iOS.",
+          stack: "Next.js 16, Base UI, Better Auth, Drizzle ORM, Swift/iOS",
+        },
+        {
           name: "requixite.my.id",
           href: "/id",
           desc: "Situs ini: motion yang mengikuti scroll, dua bahasa (Inggris dan Indonesia), dan ramah aksesibilitas.",
@@ -581,14 +638,20 @@ const indonesian: PortfolioCopy = {
       groups: [
         [
           "Frontend",
-          "Next.js, React, Vue.js, TypeScript, JavaScript, HTML, CSS, Tailwind CSS, shadcn/ui, Framer Motion, React Native",
+          "Next.js, React, Vue.js, TypeScript, JavaScript, HTML, CSS, Tailwind CSS, Base UI, shadcn/ui, Framer Motion, Canvas2D, React Native",
         ],
-        ["Backend & data", "PostgreSQL, Drizzle ORM, REST API, Python"],
+        [
+          "Backend & data",
+          "PostgreSQL, Drizzle ORM, REST API, Model Context Protocol (MCP), Better Auth, Python",
+        ],
         [
           "Desain",
           "Figma, desain UI/UX, prototyping, design system, aksesibilitas (WCAG)",
         ],
-        ["Tools", "Git, Vercel, Playwright, Cursor, Claude"],
+        [
+          "Tools & platform",
+          "Git, Vercel, Playwright, Swift/iOS, Cursor, Claude",
+        ],
         ["Bahasa", "Indonesia (bahasa ibu), Inggris"],
       ],
     },
@@ -598,6 +661,7 @@ const indonesian: PortfolioCopy = {
     meta: "Project yang didesain, dibangun, atau dirapikan Tharreq.",
     intro: "Yang pernah aku desain, bangun, atau rapikan.",
     read: "Baca studi kasusnya",
+    visit: "Buka situs",
     projects: [
       {
         name: "rantai.dev",
@@ -607,6 +671,27 @@ const indonesian: PortfolioCopy = {
           "Situs perusahaan buatan AI, dirapikan jadi situs yang jelas, cepat, dua bahasa, dengan CMS sendiri.",
         image: "/work/rantai/home.jpg",
         href: "/id/work/rantai",
+        external: false,
+      },
+      {
+        name: "TAP 1",
+        client: "Independen · Game & Web",
+        year: "2026",
+        summary:
+          "Game balap Formula 1 top-down di browser dengan loop Canvas2D 60 FPS, sirkuit skala asli, dan kontrol satu tombol yang mudah dimainkan.",
+        image: "/work/tap-1/cover.png",
+        href: "/id/work/tap-1",
+        external: false,
+      },
+      {
+        name: "Cashava",
+        client: "Independen · Produk",
+        year: "2026",
+        summary:
+          "Workspace keuangan pribadi dan buku besar entri ganda untuk Rupiah, dilengkapi asisten AI BYOK, server MCP OAuth 2.1, dan aplikasi pendamping iOS.",
+        image: "/work/cashava/home.png",
+        href: "https://cashava.web.id",
+        external: true,
       },
     ],
   },
@@ -698,6 +783,12 @@ const indonesian: PortfolioCopy = {
           title: "Punya rantai.dev versimu sendiri?",
           placeholder: "Tempel situs buatan AI yang butuh perlakuan yang sama…",
           short: "Tempel situs buatan AI-mu…",
+        },
+        "/work/tap-1": {
+          title: "Lagi bangun web app berkinerja tinggi atau canvas game?",
+          placeholder:
+            "Ceritakan project web atau canvas yang sedang kamu bangun…",
+          short: "Ceritakan project kamu…",
         },
       } as Record<
         string,
