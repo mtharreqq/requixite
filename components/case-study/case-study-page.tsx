@@ -5,12 +5,19 @@ import { getPortfolioCopy, type Locale } from "@/lib/portfolio-copy";
 import { RantaiLiveLazy } from "@/components/case-study/rantai-live-lazy";
 import { SubPage } from "@/components/layout/sub-page";
 
-export function CaseStudyPage({ locale }: { locale: Locale }) {
-  const copy = getCaseStudyCopy(locale);
+export function CaseStudyPage({
+  locale,
+  slug = "rantai",
+}: {
+  locale: Locale;
+  slug?: string;
+}) {
+  const copy = getCaseStudyCopy(locale, slug);
+  const path = `/work/${slug}`;
   return (
     <SubPage
       locale={locale}
-      path="/work/rantai"
+      path={path}
       title={copy.title}
       sections={[
         { id: "intro", label: getPortfolioCopy(locale).rail.intro },
@@ -33,10 +40,12 @@ export function CaseStudyPage({ locale }: { locale: Locale }) {
             </div>
           ))}
           <div>
-            <dt className="text-muted-foreground">Live</dt>
+            <dt className="text-muted-foreground">
+              {copy.visitLabel ?? "Live"}
+            </dt>
             <dd>
               <a
-                href="https://www.rantai.dev"
+                href={copy.visitUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="tap-area inline-flex items-center gap-0.5 font-medium underline-offset-2 hover:underline"
@@ -46,31 +55,72 @@ export function CaseStudyPage({ locale }: { locale: Locale }) {
               </a>
             </dd>
           </div>
+          {copy.repoUrl && (
+            <div>
+              <dt className="text-muted-foreground">Source</dt>
+              <dd>
+                <a
+                  href={copy.repoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tap-area inline-flex items-center gap-0.5 font-medium underline-offset-2 hover:underline"
+                >
+                  GitHub
+                  <ArrowUpRight aria-hidden className="size-3" />
+                </a>
+              </dd>
+            </div>
+          )}
         </dl>
       </header>
 
-      <RantaiLiveLazy copy={getPortfolioCopy(locale).hero.visual} />
+      {slug === "rantai" && (
+        <RantaiLiveLazy copy={getPortfolioCopy(locale).hero.visual} />
+      )}
 
       {copy.shots.map((shot) => (
         <figure key={shot.name} className="flex flex-col gap-3">
           <figcaption className="side:text-sm text-[15px] font-semibold">
             {shot.name}
           </figcaption>
-          {(["before", "after"] as const).map((side) => (
-            <div key={side} className="flex flex-col gap-1.5">
-              <span className="text-muted-foreground side:text-xs text-[13px]">
-                {copy[side]}
-              </span>
+          {shot.image ? (
+            <div className="flex flex-col gap-1.5">
               <Image
-                src={`/work/rantai/${shot[side]}`}
-                alt={`${shot.name}, ${copy[side]}`}
+                src={shot.image}
+                alt={shot.name}
                 width={1200}
                 height={750}
                 sizes="(min-width: 768px) 640px, 100vw"
                 className="border-border/80 w-full rounded-lg border"
               />
+              {shot.caption && (
+                <span className="text-muted-foreground side:text-xs text-[13px]">
+                  {shot.caption}
+                </span>
+              )}
             </div>
-          ))}
+          ) : (
+            (["before", "after"] as const).map(
+              (side) =>
+                shot[side] && (
+                  <div key={side} className="flex flex-col gap-1.5">
+                    {copy[side] && (
+                      <span className="text-muted-foreground side:text-xs text-[13px]">
+                        {copy[side]}
+                      </span>
+                    )}
+                    <Image
+                      src={`/work/${slug}/${shot[side]}`}
+                      alt={`${shot.name}, ${copy[side] ?? ""}`}
+                      width={1200}
+                      height={750}
+                      sizes="(min-width: 768px) 640px, 100vw"
+                      className="border-border/80 w-full rounded-lg border"
+                    />
+                  </div>
+                ),
+            )
+          )}
         </figure>
       ))}
 

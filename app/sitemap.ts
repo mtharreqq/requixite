@@ -1,7 +1,14 @@
 import type { MetadataRoute } from "next";
 
 const SITE = "https://requixite.my.id";
-const PAGES = ["", "/about", "/work", "/work/rantai", "/contact"];
+const PAGES = [
+  "",
+  "/about",
+  "/work",
+  "/work/rantai",
+  "/work/tap-1",
+  "/contact",
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return PAGES.flatMap((p) => {

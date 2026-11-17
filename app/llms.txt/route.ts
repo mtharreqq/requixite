@@ -11,7 +11,8 @@ const plain = (s: string) => s.replace(/\{\w+\}/g, "");
 export function GET() {
   const copy = getPortfolioCopy("en");
   const a = copy.about;
-  const cs = getCaseStudyCopy("en");
+  const csRantai = getCaseStudyCopy("en", "rantai");
+  const csTap1 = getCaseStudyCopy("en", "tap-1");
   const md = [
     `# ${a.name} (Tharreq)`,
     `> ${a.role} in ${a.place}. ${plain(a.summary)}`,
@@ -25,9 +26,10 @@ export function GET() {
         e.points.map((p) => `- ${p}`).join("\n"),
     ),
     `## ${a.projects.title}`,
-    ...a.projects.items.map(
-      (p) => `- [${p.name}](${SITE}${p.href}): ${p.desc} Stack: ${p.stack}.`,
-    ),
+    ...a.projects.items.map((p) => {
+      const url = p.href.startsWith("http") ? p.href : `${SITE}${p.href}`;
+      return `- [${p.name}](${url}): ${p.desc} Stack: ${p.stack}.`;
+    }),
     `## ${a.education.title}`,
     `- ${a.education.degree}, ${a.education.school}, ${a.education.period}. ${a.education.coursework}.`,
     ...a.education.awards.map(([name, date]) => `- ${name} (${date})`),
@@ -37,7 +39,8 @@ export function GET() {
     `- [About / CV](${SITE}/about): ${a.meta}`,
     `- [CV (PDF)](${SITE}/cv-tharreq.pdf)`,
     `- [Work](${SITE}/work): ${copy.workPage.meta}`,
-    `- [Case study: ${cs.title}](${SITE}/work/rantai): ${cs.description}`,
+    `- [Case study: ${csRantai.title}](${SITE}/work/rantai): ${csRantai.description}`,
+    `- [Case study: ${csTap1.title}](${SITE}/work/tap-1): ${csTap1.description}`,
     `- [Contact](${SITE}/contact): ${copy.contactPage.meta}`,
     `- Indonesian versions live under ${SITE}/id`,
   ].join("\n\n");

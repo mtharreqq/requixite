@@ -4,7 +4,7 @@ import { CloseIntoChat } from "@/components/layout/close-into-chat";
 import { RailNav, type RailSection } from "@/components/layout/rail-nav";
 import { ContactChat } from "@/components/chat/contact-chat";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { PortfolioMotion } from "@/components/shared/portfolio-motion";
 import { cn } from "@/lib/utils";
 
@@ -108,33 +108,49 @@ export function WorkPage({ locale }: { locale: Locale }) {
         </p>
       </header>
       <ul className="flex flex-col gap-10">
-        {copy.workPage.projects.map((p) => (
-          <li key={p.href} id={p.href.split("/").pop()}>
-            <Link href={p.href} className="group flex flex-col gap-3">
-              <Image
-                src={p.image}
-                alt={p.name}
-                width={1200}
-                height={750}
-                sizes="(min-width: 768px) 640px, 100vw"
-                className="border-border/80 w-full rounded-lg border transition-opacity group-hover:opacity-90"
-              />
-              <div className="flex items-baseline justify-between gap-4">
-                <h2 className="font-semibold">{p.name}</h2>
-                <span className="text-muted-foreground side:text-xs text-[13px]">
-                  {p.client} · {p.year}
+        {copy.workPage.projects.map((p) => {
+          const isExternal = Boolean(p.external || p.href.startsWith("http"));
+          return (
+            <li key={p.href} id={p.href.split("/").pop()}>
+              <Link
+                href={p.href}
+                {...(isExternal && {
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                })}
+                className="group flex flex-col gap-3"
+              >
+                <Image
+                  src={p.image}
+                  alt={p.name}
+                  width={1200}
+                  height={750}
+                  sizes="(min-width: 768px) 640px, 100vw"
+                  className="border-border/80 w-full rounded-lg border transition-opacity group-hover:opacity-90"
+                />
+                <div className="flex items-baseline justify-between gap-4">
+                  <h2 className="font-semibold">{p.name}</h2>
+                  <span className="text-muted-foreground side:text-xs text-[13px]">
+                    {p.client} · {p.year}
+                  </span>
+                </div>
+                <p className="text-muted-foreground side:text-sm text-[15px] leading-relaxed">
+                  {p.summary}
+                </p>
+                <span className="text-muted-foreground group-hover:text-foreground side:text-xs inline-flex items-center gap-1 text-sm font-medium transition-colors">
+                  {isExternal
+                    ? (copy.workPage.visit ?? "Visit site")
+                    : copy.workPage.read}
+                  {isExternal ? (
+                    <ArrowUpRight aria-hidden className="size-3" />
+                  ) : (
+                    <ArrowRight aria-hidden className="size-3" />
+                  )}
                 </span>
-              </div>
-              <p className="text-muted-foreground side:text-sm text-[15px] leading-relaxed">
-                {p.summary}
-              </p>
-              <span className="text-muted-foreground group-hover:text-foreground side:text-xs inline-flex items-center gap-1 text-sm font-medium transition-colors">
-                {copy.workPage.read}
-                <ArrowRight aria-hidden className="size-3" />
-              </span>
-            </Link>
-          </li>
-        ))}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </SubPage>
   );

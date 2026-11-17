@@ -10,6 +10,7 @@
         "http://127.0.0.1:3000/about",
         "http://127.0.0.1:3000/work",
         "http://127.0.0.1:3000/work/rantai",
+        "http://127.0.0.1:3000/work/tap-1",
         "http://127.0.0.1:3000/contact"
       ],
       "numberOfRuns": 3,
